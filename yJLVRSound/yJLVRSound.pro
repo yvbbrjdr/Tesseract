@@ -17,7 +17,7 @@ SOURCES += main.cpp\
 
 HEADERS  += yjlvrsoundwidget.h
 
-FORMS    +=
+FORMS    += yjlvrsoundwidget.ui
 
 #-------------------------------------------------
 #

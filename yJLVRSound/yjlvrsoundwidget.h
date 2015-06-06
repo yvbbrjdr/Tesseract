@@ -6,6 +6,9 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alut.h>
+#include <QtNetwork/QTcpSocket>
+#include <QThread>
+#include <QTimer>
 
 
 namespace Ui {
