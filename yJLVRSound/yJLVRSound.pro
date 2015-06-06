@@ -17,4 +17,14 @@ SOURCES += main.cpp\
 
 HEADERS  += yjlvrsoundwidget.h
 
-FORMS    += yjlvrsoundwidget.ui
+FORMS    +=
+
+#-------------------------------------------------
+#
+# Additional Libraries added by yvbbrjdr
+#
+#-------------------------------------------------
+
+QT += opengl
+
+LIBS += -lopenal -lalut
