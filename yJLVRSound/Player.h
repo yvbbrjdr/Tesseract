@@ -25,10 +25,10 @@ public:
         turn(0,0);
     }
     void go(double front,double left) {
-        pos.x+=face.x*front;
-        pos.y+=face.y*front;
-        pos.x-=face.y*left;
-        pos.y+=face.x*left;
+        pos.x+=cos(theta)*front;
+        pos.y+=sin(theta)*front;
+        pos.x-=sin(theta)*left;
+        pos.y+=cos(theta)*left;
     }
     void turn(double up,double left) {
         if (phi-up>=0&&phi-up<=PI)
@@ -41,7 +41,7 @@ public:
         face.x=cos(theta)*sin(phi);
         face.y=sin(theta)*sin(phi);
         face.z=cos(phi);
-        at=(pos+face);//.ToDirection();
+        at=pos+face;
     }
 };
 
