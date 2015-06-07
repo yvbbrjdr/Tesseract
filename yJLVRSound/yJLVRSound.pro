@@ -15,7 +15,11 @@ TEMPLATE = app
 SOURCES += main.cpp\
         yjlvrsoundwidget.cpp
 
-HEADERS  += yjlvrsoundwidget.h
+HEADERS  += yjlvrsoundwidget.h \
+    World.h \
+    Player.h \
+    Coordinate.h \
+    GLFuncs.h
 
 FORMS    += yjlvrsoundwidget.ui
 

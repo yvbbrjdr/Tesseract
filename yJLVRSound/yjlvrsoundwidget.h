@@ -9,7 +9,9 @@
 #include <QtNetwork/QTcpSocket>
 #include <QThread>
 #include <QTimer>
-
+#include "Coordinate.h"
+#include "Player.h"
+#include "World.h"
 
 namespace Ui {
     class yJLVRSoundWidget;
