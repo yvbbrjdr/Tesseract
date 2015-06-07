@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QtOpenGL/QtOpenGL>
+#include <GL/glu.h>
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alut.h>
@@ -27,7 +28,8 @@ public:
 protected:
     void initializeGL();
     void paintGL();
-    void keyPressEvent(QKeyEvent *e);
+    void keyPressEvent(QKeyEvent*);
+    void resizeGL(int,int);
 
 private:
     Ui::yJLVRSoundWidget *ui;

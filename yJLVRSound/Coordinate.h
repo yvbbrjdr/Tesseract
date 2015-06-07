@@ -3,7 +3,7 @@
 
 #include <cmath>
 #ifndef ZERO
-#define ZERO 0.00000001f
+#define ZERO (0.00000001f)
 #endif
 
 class Coordinate {
@@ -41,7 +41,7 @@ public:
     double Length() {return sqrt(x*x+y*y+z*z);}
     Coordinate ToDirection() {
         double l=Length();
-        Coordinate res;
+        Coordinate res=*this;
         if (fabs(l)>ZERO) {
             res.x/=l;
             res.y/=l;

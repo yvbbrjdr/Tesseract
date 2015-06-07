@@ -31,4 +31,4 @@ FORMS    += yjlvrsoundwidget.ui
 
 QT += opengl
 
-LIBS += -lopenal -lalut
+LIBS += -lopenal -lalut -lGLU
