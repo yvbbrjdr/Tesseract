@@ -4,6 +4,8 @@
 #include "yjlvrsoundwidget.h"
 #include <cstdio>
 
+bool keystatus[128];
+
 void yJLVRSoundWidget::initializeGL() {
     setGeometry(0,0,800,600);
     glClearColor(.7,1,1,0);
@@ -54,29 +56,15 @@ void yJLVRSoundWidget::keyPressEvent(QKeyEvent *e) {
         case Qt::Key_Escape:
             close();
             break;
-        case Qt::Key_W:
-            p.go(.1,0,0);
-            break;
-        case Qt::Key_A:
-            p.go(0,.1,0);
-            break;
-        case Qt::Key_S:
-            p.go(-.1,0,0);
-            break;
-        case Qt::Key_D:
-            p.go(0,-.1,0);
-            break;
-        case Qt::Key_X:
-            p.go(0,0,.1);
-            break;
-        case Qt::Key_Z:
-            p.go(0,0,-.1);
-        break;
         case Qt::Key_R:
             p=Player(&w);
+            break;
+        default:
+            keystatus[int(e->text().toStdString()[0])]=1;
     }
-    updateGL();
 }
+
+void yJLVRSoundWidget::keyReleaseEvent(QKeyEvent *e) {keystatus[int(e->text().toStdString()[0])]=0;}
 
 void yJLVRSoundWidget::mouseMoveEvent(QMouseEvent *event) {
     if (event->x()>400)
@@ -87,7 +75,6 @@ void yJLVRSoundWidget::mouseMoveEvent(QMouseEvent *event) {
         p.turn(-.01*(event->y()-300),0);
     if (event->y()<300)
         p.turn(.01*(300-event->y()),0);
-    updateGL();
     QCursor::setPos(this->mapToGlobal(QPoint(400,300)));
 }
 

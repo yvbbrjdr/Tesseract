@@ -3,17 +3,19 @@
 
 #include <QWidget>
 #include <QtOpenGL/QtOpenGL>
-#include <QtOpenGL/QGLFormat>
 #include <GL/glu.h>
 #include <AL/al.h>
 #include <AL/alc.h>
 #include <AL/alut.h>
 #include <QtNetwork/QTcpSocket>
 #include <QThread>
+#include <QTime>
 #include <QTimer>
 #include "Coordinate.h"
 #include "Player.h"
 #include "World.h"
+
+class GameThread;
 
 namespace Ui {
     class yJLVRSoundWidget;
@@ -25,16 +27,22 @@ class yJLVRSoundWidget : public QGLWidget {
 public:
     explicit yJLVRSoundWidget(QGLWidget *parent = 0);
     ~yJLVRSoundWidget();
-    void mouseMoveEvent(QMouseEvent*);
+
+public slots:
+    void DrawScene();
 
 protected:
     void initializeGL();
     void paintGL();
     void keyPressEvent(QKeyEvent*);
+    void keyReleaseEvent(QKeyEvent*);
+    void mouseMoveEvent(QMouseEvent*);
     void resizeGL(int,int);
 
 private:
     Ui::yJLVRSoundWidget *ui;
+    GameThread *gt;
+    QTimer *GLTimer;
 };
 
 #endif // YJLVRSOUNDWIDGET_H
