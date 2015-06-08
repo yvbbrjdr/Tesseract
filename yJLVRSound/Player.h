@@ -5,7 +5,7 @@
 #include "Coordinate.h"
 
 #ifndef ZERO
-#define ZERO (0.00000001f)
+#define ZERO (0.0000001f)
 #endif
 
 #ifndef PI
@@ -14,12 +14,12 @@
 
 class Player {
 public:
-    Coordinate pos,face,at;
+    Coordinate pos,face,at,up;
     double theta,phi;
     World *w;
     Player(World *world) {
         w=world;
-        pos=Coordinate(0,0,0);
+        pos=Coordinate(0,0,1);
         theta=0;
         phi=PI/2;
         turn(0,0);
@@ -29,10 +29,15 @@ public:
         pos.y+=sin(theta)*front;
         pos.x-=sin(theta)*left;
         pos.y+=cos(theta)*left;
+        at=pos+face;
     }
-    void turn(double up,double left) {
-        if (phi-up>=0&&phi-up<=PI)
-            phi-=up;
+    void turn(double raise,double left) {
+	if (phi-raise<0)
+		phi=0;
+	else if (phi-raise>PI)
+		phi=PI;
+        else
+            phi-=raise;
         theta+=left;
         while (theta<0)
             theta+=2*PI;
@@ -42,6 +47,9 @@ public:
         face.y=sin(theta)*sin(phi);
         face.z=cos(phi);
         at=pos+face;
+	up.x=-cos(theta)*cos(phi);
+	up.y=-sin(theta)*cos(phi);
+	up.z=sin(phi);
     }
 };
 

@@ -3,7 +3,7 @@
 
 #include <cmath>
 #ifndef ZERO
-#define ZERO (0.00000001f)
+#define ZERO (0.0000001f)
 #endif
 
 class Coordinate {
