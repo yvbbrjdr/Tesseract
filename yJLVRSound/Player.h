@@ -24,11 +24,12 @@ public:
         phi=PI/2;
         turn(0,0);
     }
-    void go(double front,double left) {
+    void go(double front,double left,double raise) {
         pos.z+=cos(theta)*front;
         pos.x+=sin(theta)*front;
         pos.z-=sin(theta)*left;
         pos.x+=cos(theta)*left;
+        pos.y+=raise;
         at=pos+face;
     }
     void turn(double raise,double left) {

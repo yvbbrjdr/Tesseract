@@ -1,22 +1,25 @@
 #ifndef GLFUNCS_H
 #define GLFUNCS_H
 
-//#include <cstdio>
+#include <cstdio>
 
 void yJLVRSoundWidget::initializeGL() {
     setGeometry(0,0,800,600);
     glClearColor(.7,1,1,0);
     glEnable(GL_DEPTH_TEST);
+    p.turn(0,0);
+    p.go(0,0,0);
+    p.turn(0,0);
+    printf("%f %f %f %f %f %f %f %f %f\n",p.pos.x,p.pos.y,p.pos.z,p.at.x,p.at.y,p.at.z,p.up.x,p.up.y,p.up.z);
 }
 
 void yJLVRSoundWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    //gluPerspective(,4.0/3,,);
+    gluPerspective(75,4.0/3,1,50);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    //printf("%f %f %f %f %f %f %f %f %f\n",p.pos.x,p.pos.y,p.pos.z,p.at.x,p.at.y,p.at.z,p.up.x,p.up.y,p.up.z);
     gluLookAt(p.pos.x,p.pos.y,p.pos.z,p.at.x,p.at.y,p.at.z,p.up.x,p.up.y,p.up.z);
     glColor3f(0,1,0);
     glBegin(GL_QUADS);
