@@ -19,16 +19,16 @@ public:
     World *w;
     Player(World *world) {
         w=world;
-        pos=Coordinate(0,0,1);
+        pos=Coordinate(0,1,0);
         theta=0;
         phi=PI/2;
         turn(0,0);
     }
     void go(double front,double left) {
-        pos.x+=cos(theta)*front;
-        pos.y+=sin(theta)*front;
-        pos.x-=sin(theta)*left;
-        pos.y+=cos(theta)*left;
+        pos.z+=cos(theta)*front;
+        pos.x+=sin(theta)*front;
+        pos.z-=sin(theta)*left;
+        pos.x+=cos(theta)*left;
         at=pos+face;
     }
     void turn(double raise,double left) {
@@ -43,13 +43,13 @@ public:
             theta+=2*PI;
         while (theta>=2*PI)
             theta-=2*PI;
-        face.x=cos(theta)*sin(phi);
-        face.y=sin(theta)*sin(phi);
-        face.z=cos(phi);
+        face.z=cos(theta)*sin(phi);
+        face.x=sin(theta)*sin(phi);
+        face.y=cos(phi);
         at=pos+face;
-        up.x=-cos(theta)*cos(phi);
-        up.y=-sin(theta)*cos(phi);
-        up.z=sin(phi);
+        up.z=-cos(theta)*cos(phi);
+        up.x=-sin(theta)*cos(phi);
+        up.y=sin(phi);
     }
 };
 

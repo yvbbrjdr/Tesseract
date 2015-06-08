@@ -20,10 +20,10 @@ void yJLVRSoundWidget::paintGL() {
     gluLookAt(p.pos.x,p.pos.y,p.pos.z,p.at.x,p.at.y,p.at.z,p.up.x,p.up.y,p.up.z);
     glColor3f(0,1,0);
     glBegin(GL_QUADS);
-        glVertex3f(-w.size.x/2,w.size.y/2,0);
-        glVertex3f(w.size.x/2,w.size.y/2,0);
-        glVertex3f(w.size.x/2,-w.size.y/2,0);
-        glVertex3f(-w.size.x/2,-w.size.y/2,0);
+        glVertex3f(w.size.x/2,0,w.size.z/2);
+        glVertex3f(-w.size.x/2,0,w.size.z/2);
+        glVertex3f(-w.size.x/2,0,-w.size.z/2);
+        glVertex3f(w.size.x/2,0,-w.size.z/2);
     glEnd();
     glFlush();
 }
