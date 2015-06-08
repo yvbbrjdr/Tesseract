@@ -32,10 +32,10 @@ public:
         at=pos+face;
     }
     void turn(double raise,double left) {
-	if (phi-raise<0)
-		phi=0;
-	else if (phi-raise>PI)
-		phi=PI;
+        if (phi-raise<0)
+            phi=0;
+        else if (phi-raise>PI)
+            phi=PI;
         else
             phi-=raise;
         theta+=left;
@@ -47,9 +47,9 @@ public:
         face.y=sin(theta)*sin(phi);
         face.z=cos(phi);
         at=pos+face;
-	up.x=-cos(theta)*cos(phi);
-	up.y=-sin(theta)*cos(phi);
-	up.z=sin(phi);
+        up.x=-cos(theta)*cos(phi);
+        up.y=-sin(theta)*cos(phi);
+        up.z=sin(phi);
     }
 };
 

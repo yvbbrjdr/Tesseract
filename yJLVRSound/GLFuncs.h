@@ -32,7 +32,7 @@ void yJLVRSoundWidget::keyPressEvent(QKeyEvent *e) {
 
 void yJLVRSoundWidget::resizeGL(int width,int height) {
     if(!height)
-        height = 1;
+        height=1;
     glViewport(0,0,(GLint)width,(GLint)height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
