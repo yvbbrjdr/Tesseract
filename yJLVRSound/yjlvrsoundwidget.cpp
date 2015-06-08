@@ -10,7 +10,11 @@ yJLVRSoundWidget::yJLVRSoundWidget(QGLWidget *parent) :
     QGLWidget(parent),
     ui(new Ui::yJLVRSoundWidget) {
     ui->setupUi(this);
-
+    this->setMouseTracking(true);
+    QApplication::setOverrideCursor(Qt::BlankCursor);
+    QGLFormat glf;
+    glf.setDoubleBuffer(true);
+    QGLFormat::setDefaultFormat(glf);
 }
 
 yJLVRSoundWidget::~yJLVRSoundWidget() {

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QtOpenGL/QtOpenGL>
+#include <QtOpenGL/QGLFormat>
 #include <GL/glu.h>
 #include <AL/al.h>
 #include <AL/alc.h>
@@ -24,6 +25,7 @@ class yJLVRSoundWidget : public QGLWidget {
 public:
     explicit yJLVRSoundWidget(QGLWidget *parent = 0);
     ~yJLVRSoundWidget();
+    void mouseMoveEvent(QMouseEvent*);
 
 protected:
     void initializeGL();
