@@ -4,6 +4,7 @@
 World w(Coordinate(50,50,50));
 Player p(&w);
 
+#include "ALFuncs.h"
 #include "GLFuncs.h"
 
 class GameThread : public QThread {
@@ -22,6 +23,7 @@ public:
                 p.go(0,0,.1);
             if (keystatus['z'])
                 p.go(0,0,-.1);
+            SetListenerValues();
             QTime dieTime=QTime::currentTime().addMSecs(10);
             while (QTime::currentTime()<dieTime)
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
@@ -41,6 +43,7 @@ yJLVRSoundWidget::yJLVRSoundWidget(QGLWidget *parent) :
     GLTimer->setInterval(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
+    AddNewSound(Coordinate(0,2,6),"sample.wav");
 }
 
 void yJLVRSoundWidget::DrawScene() {updateGL();}
