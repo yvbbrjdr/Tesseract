@@ -31,8 +31,7 @@ public:
         Coordinate a=*this;
         return Coordinate(a.x/d,a.y/d,a.z/d);
     }
-    double* ToArray() {
-        double *res=new double[3];
+    double* ToArray(double res[3]) {
         res[0]=this->x;
         res[1]=this->y;
         res[2]=this->z;
