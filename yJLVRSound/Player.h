@@ -30,6 +30,18 @@ public:
         pos.z-=sin(theta)*left;
         pos.x+=cos(theta)*left;
         pos.y+=raise;
+        if (pos.z<-w->size.z/2)
+            pos.z=-w->size.z/2;
+        if (pos.z>w->size.z/2)
+            pos.z=w->size.z/2;
+        if (pos.x<-w->size.x/2)
+            pos.x=-w->size.x/2;
+        if (pos.x>w->size.x/2)
+            pos.x=w->size.x/2;
+        if (pos.y<1)
+            pos.y=1;
+        if (pos.y>w->size.y)
+            pos.y=w->size.y;
         at=pos+face;
     }
     void turn(double raise,double left) {

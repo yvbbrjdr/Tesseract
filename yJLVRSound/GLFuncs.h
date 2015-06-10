@@ -5,6 +5,7 @@
 #include <cstdio>
 
 bool keystatus[128];
+double aspect;
 
 void yJLVRSoundWidget::initializeGL() {
     setGeometry(0,0,800,600);
@@ -16,7 +17,7 @@ void yJLVRSoundWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(75,4.0/3,.5,50);
+    gluPerspective(75,aspect,.5,50);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(p.pos.x,p.pos.y,p.pos.z,p.at.x,p.at.y,p.at.z,p.up.x,p.up.y,p.up.z);
@@ -67,20 +68,15 @@ void yJLVRSoundWidget::keyPressEvent(QKeyEvent *e) {
 void yJLVRSoundWidget::keyReleaseEvent(QKeyEvent *e) {keystatus[int(e->text().toStdString()[0])]=0;}
 
 void yJLVRSoundWidget::mouseMoveEvent(QMouseEvent *event) {
-    if (event->x()>400)
-        p.turn(0,-.01*(event->x()-400));
-    if (event->x()<400)
-        p.turn(0,.01*(400-event->x()));
-    if (event->y()>300)
-        p.turn(-.01*(event->y()-300),0);
-    if (event->y()<300)
-        p.turn(.01*(300-event->y()),0);
+    p.turn(0,.01*(400-event->x()));
+    p.turn(.01*(300-event->y()),0);
     QCursor::setPos(this->mapToGlobal(QPoint(400,300)));
 }
 
 void yJLVRSoundWidget::resizeGL(int width,int height) {
     if(!height)
         height=1;
+    aspect=width/double(height);
     glViewport(0,0,(GLint)width,(GLint)height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
