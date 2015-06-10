@@ -1707,8 +1707,12 @@ yjlvrsoundwidget.o: ../yJLVRSound/yjlvrsoundwidget.cpp ../yJLVRSound/yjlvrsoundw
 		../yJLVRSound/Player.h \
 		../yJLVRSound/World.h \
 		ui_yjlvrsoundwidget.h \
-		../yJLVRSound/GLFuncs.h \
-		../yJLVRSound/ALFuncs.h
+		/usr/include/qt5/QtWidgets/QAction \
+		/usr/include/qt5/QtWidgets/QApplication \
+		/usr/include/qt5/QtWidgets/QButtonGroup \
+		/usr/include/qt5/QtWidgets/QHeaderView \
+		../yJLVRSound/ALFuncs.h \
+		../yJLVRSound/GLFuncs.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o yjlvrsoundwidget.o ../yJLVRSound/yjlvrsoundwidget.cpp
 
 moc_yjlvrsoundwidget.o: moc_yjlvrsoundwidget.cpp 

@@ -6,6 +6,7 @@
 
 bool keystatus[128];
 double aspect;
+int debugX,debugY;//Debug Test (Mouse Position)
 
 void yJLVRSoundWidget::initializeGL() {
     setGeometry(0,0,800,600);
@@ -49,6 +50,8 @@ void yJLVRSoundWidget::paintGL() {
     renderText(20,40,s,QFont());
     sprintf(s,"Orientation: Theta=%.3f Phi=%.3f",p.theta*180/PI,p.phi*180/PI);
     renderText(20,60,s,QFont());
+    sprintf(s,"Debug Test Mouse Moving : X=%d Y=%d",debugX,debugY);
+    renderText(20,80,s,QFont());
     glFlush();
 }
 
@@ -68,8 +71,11 @@ void yJLVRSoundWidget::keyPressEvent(QKeyEvent *e) {
 void yJLVRSoundWidget::keyReleaseEvent(QKeyEvent *e) {keystatus[int(e->text().toStdString()[0])]=0;}
 
 void yJLVRSoundWidget::mouseMoveEvent(QMouseEvent *event) {
-    p.turn(0,.01*(400-event->x()));
-    p.turn(.01*(300-event->y()),0);
+    if((event->x()==400)&&(event->y()==300))return;
+    if(event->x()!=400)debugX=event->x();
+    if(event->y()!=300)debugY=event->y();
+    p.turn(0,.0001*(400-event->x()));
+    p.turn(.0001*(300-event->y()),0);
     QCursor::setPos(this->mapToGlobal(QPoint(400,300)));
 }
 
