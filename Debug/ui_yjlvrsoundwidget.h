@@ -27,6 +27,7 @@ public:
         if (yJLVRSoundWidget->objectName().isEmpty())
             yJLVRSoundWidget->setObjectName(QStringLiteral("yJLVRSoundWidget"));
         yJLVRSoundWidget->resize(800, 600);
+        yJLVRSoundWidget->setMouseTracking(false);
 
         retranslateUi(yJLVRSoundWidget);
 
