@@ -38,6 +38,7 @@ protected:
     void keyReleaseEvent(QKeyEvent*);
     void mouseMoveEvent(QMouseEvent*);
     void resizeGL(int,int);
+    void SetSquare(int,int,int,int);
 
 private:
     Ui::yJLVRSoundWidget *ui;
