@@ -29,21 +29,6 @@ void yJLVRSoundWidget::SetSquare(int sx,int sy,int sz,int id){
             }
         glEnd();
         }
-/*    glColor3f(1,0,0);
-    glBegin(GL_QUADS);
-        glVertex3f(2,0,4);
-        glVertex3f(-2,0,4);
-        glVertex3f(-2,4,4);
-        glVertex3f(2,4,4);
-    glEnd();
-    glColor3f(0,0,1);
-    glBegin(GL_QUADS);
-        glVertex3f(2,0,8);
-        glVertex3f(-2,0,8);
-        glVertex3f(-2,4,8);
-        glVertex3f(2,4,8);
-    glEnd();
-    */
 }
 
 void yJLVRSoundWidget::paintGL() {
@@ -54,14 +39,20 @@ void yJLVRSoundWidget::paintGL() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(p.pos.x,p.pos.y,p.pos.z,p.at.x,p.at.y,p.at.z,p.up.x,p.up.y,p.up.z);
-    glColor3f(0,1,0);
+    glColor3f(0.6,0.6,0);
     glBegin(GL_QUADS);
         glVertex3f(w.size.x/2,0,w.size.z/2);
         glVertex3f(-w.size.x/2,0,w.size.z/2);
         glVertex3f(-w.size.x/2,0,-w.size.z/2);
         glVertex3f(w.size.x/2,0,-w.size.z/2);
     glEnd();
+
+    SetSquare(0,5,0,0);
     SetSquare(0,3,0,0);
+    SetSquare(0,1,0,0);
+    SetSquare(2,1,0,0);
+    SetSquare(0,1,2,0);
+
     glColor3f(0,0,0);
     renderText(20,20,"yJLVRSound Debug Data",QFont());
     char s[1000]={};
