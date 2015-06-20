@@ -11,9 +11,11 @@
 #include <QThread>
 #include <QTime>
 #include <QTimer>
+#include "Block.h"
 #include "Coordinate.h"
 #include "Player.h"
 #include "World.h"
+
 
 class GameThread;
 
@@ -38,7 +40,7 @@ protected:
     void keyReleaseEvent(QKeyEvent*);
     void mouseMoveEvent(QMouseEvent*);
     void resizeGL(int,int);
-    void SetSquare(int,int,int,int);
+    void mousePressEvent(QMouseEvent*);
 
 private:
     Ui::yJLVRSoundWidget *ui;

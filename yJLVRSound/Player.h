@@ -56,9 +56,9 @@ public:
             theta+=2*PI;
         while (theta>=2*PI)
             theta-=2*PI;
-        face.z=cos(theta)*sin(phi);
-        face.x=sin(theta)*sin(phi);
-        face.y=cos(phi);
+        face.z=cos(theta)*sin(phi)*2;
+        face.x=sin(theta)*sin(phi)*2;
+        face.y=cos(phi)*2;
         at=pos+face;
         up.z=-cos(theta)*cos(phi);
         up.x=-sin(theta)*cos(phi);
