@@ -1,7 +1,7 @@
 #include "yjlvrsoundwidget.h"
 #include "ui_yjlvrsoundwidget.h"
 
-World w(Coordinate(50,50,50));
+World w(Coordinate(100,100,100));
 Player p(&w);
 
 #include "ALFuncs.h"
@@ -44,6 +44,9 @@ yJLVRSoundWidget::yJLVRSoundWidget(QGLWidget *parent) :
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
     AddNewSound(Coordinate(0,2,6),"sample.wav");
+    w.RegisterBlock("Stone",Coordinate(.5,.5,.5),"",1);
+    w.RegisterBlock("Speaker",Coordinate(1,0,0),"",1);
+    w.AddBlock(1,Coordinate(0,2,6),Coordinate(.5,.5,.5));
 }
 
 void yJLVRSoundWidget::DrawScene() {updateGL();}

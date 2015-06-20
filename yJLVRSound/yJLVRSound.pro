@@ -20,7 +20,8 @@ HEADERS  += yjlvrsoundwidget.h \
     Player.h \
     Coordinate.h \
     GLFuncs.h \
-    ALFuncs.h
+    ALFuncs.h \
+    Block.h
 
 FORMS    += yjlvrsoundwidget.ui
 
