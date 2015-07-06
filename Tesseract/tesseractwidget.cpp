@@ -1,5 +1,5 @@
-#include "yjlvrsoundwidget.h"
-#include "ui_yjlvrsoundwidget.h"
+#include "tesseractwidget.h"
+#include "ui_tesseractwidget.h"
 
 World w(Coordinate(100,100,100));
 Player p(&w);
@@ -31,9 +31,9 @@ public:
     }
 };
 
-yJLVRSoundWidget::yJLVRSoundWidget(QGLWidget *parent) :
+TesseractWidget::TesseractWidget(QGLWidget *parent) :
     QGLWidget(parent),
-    ui(new Ui::yJLVRSoundWidget) {
+    ui(new Ui::TesseractWidget) {
     ui->setupUi(this);
     this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);
@@ -49,6 +49,6 @@ yJLVRSoundWidget::yJLVRSoundWidget(QGLWidget *parent) :
     w.AddBlock(1,Coordinate(0,2,6),Coordinate(.5,.5,.5));
 }
 
-void yJLVRSoundWidget::DrawScene() {updateGL();}
+void TesseractWidget::DrawScene() {updateGL();}
 
-yJLVRSoundWidget::~yJLVRSoundWidget() {delete ui;}
+TesseractWidget::~TesseractWidget() {delete ui;}

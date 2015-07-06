@@ -1,7 +1,7 @@
 #ifndef ALFUNCS_H
 #define ALFUNCS_H
 
-#include "yjlvrsoundwidget.h"
+#include "tesseractwidget.h"
 #include <cstring>
 
 void SetListenerValues() {
