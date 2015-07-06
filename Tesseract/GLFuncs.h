@@ -1,14 +1,14 @@
 #ifndef GLFUNCS_H
 #define GLFUNCS_H
 
-#include "yjlvrsoundwidget.h"
+#include "tesseractwidget.h"
 #include <cstdio>
 
 bool keystatus[128],creatingblock;
 double aspect;
 Coordinate tempc;
 
-void yJLVRSoundWidget::initializeGL() {
+void TesseractWidget::initializeGL() {
     setGeometry(0,0,800,600);
     glClearColor(.7,1,1,0);
     glPointSize(3);
@@ -44,7 +44,7 @@ void DrawBlock(Bnode TheBlock,int Mode) {
     }
 }
 
-void yJLVRSoundWidget::paintGL() {
+void TesseractWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -59,8 +59,8 @@ void yJLVRSoundWidget::paintGL() {
         glVertex3f(-w.size.x/2,0,-w.size.z/2);
         glVertex3f(w.size.x/2,0,-w.size.z/2);
     glEnd();
-    for (int i=0;i<w.Blocks.size();++i)
-        DrawBlock(w.Blocks.value(i),3);
+    for (QList<Bnode>::iterator it=w.Blocks.begin();it!=w.Blocks.end();++it)
+        DrawBlock(*it,3);
     if (creatingblock)
         DrawBlock(Bnode(0,(p.at+tempc)/2,(p.at-tempc)/2),1);
     glColor3f(1,0,0);
@@ -74,7 +74,7 @@ void yJLVRSoundWidget::paintGL() {
     glEnd();
     glEnable(GL_DEPTH_TEST);
     glColor3f(0,0,0);
-    renderText(20,20,"yJLVRSound Debug Data",QFont());
+    renderText(20,20,"Tesseract Debug Data",QFont());
     char s[1000]={};
     sprintf(s,"Position: x=%.3f y=%.3f z=%.3f",p.pos.x,p.pos.y,p.pos.z);
     renderText(20,40,s,QFont());
@@ -83,7 +83,7 @@ void yJLVRSoundWidget::paintGL() {
     glFlush();
 }
 
-void yJLVRSoundWidget::keyPressEvent(QKeyEvent *e) {
+void TesseractWidget::keyPressEvent(QKeyEvent *e) {
     switch(e->key()) {
         case Qt::Key_Escape:
             close();
@@ -96,16 +96,16 @@ void yJLVRSoundWidget::keyPressEvent(QKeyEvent *e) {
     }
 }
 
-void yJLVRSoundWidget::keyReleaseEvent(QKeyEvent *e) {keystatus[int(e->text().toStdString()[0])]=0;}
+void TesseractWidget::keyReleaseEvent(QKeyEvent *e) {keystatus[int(e->text().toStdString()[0])]=0;}
 
-void yJLVRSoundWidget::mouseMoveEvent(QMouseEvent *event) {
+void TesseractWidget::mouseMoveEvent(QMouseEvent *event) {
     p.turn(0,.01*(400-event->x()));
     p.turn(.01*(300-event->y()),0);
     QCursor::setPos(this->mapToGlobal(QPoint(400,300)));
 }
 
-void yJLVRSoundWidget::mousePressEvent(QMouseEvent *event) {
-    if (event->button()==Qt::LeftButton)
+void TesseractWidget::mousePressEvent(QMouseEvent *event) {
+    if (event->button()==Qt::LeftButton) {
         if (creatingblock) {
             w.AddBlock(0,(p.at+tempc)/2,(p.at-tempc)/2);
             creatingblock=0;
@@ -113,11 +113,17 @@ void yJLVRSoundWidget::mousePressEvent(QMouseEvent *event) {
             tempc=p.at;
             creatingblock=1;
         }
-    else if (event->button()==Qt::RightButton)
-        creatingblock=0;
+    } else if (event->button()==Qt::RightButton) {
+        if (creatingblock) {
+            creatingblock=0;
+        } else {
+            w.RemoveBlock(w.InBlock(p.pos));
+            //w.RemoveBlock(w.ThroughBlock(p.pos,p.at));
+        }
+    }
 }
 
-void yJLVRSoundWidget::resizeGL(int width,int height) {
+void TesseractWidget::resizeGL(int width,int height) {
     if(!height)
         height=1;
     aspect=width/double(height);

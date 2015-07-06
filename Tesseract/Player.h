@@ -12,6 +12,8 @@
 #define PI (3.14159265358979323846264338f)
 #endif
 
+#define INTERVAL 4
+
 class Player {
 public:
     Coordinate pos,face,at,up;
@@ -56,14 +58,16 @@ public:
             theta+=2*PI;
         while (theta>=2*PI)
             theta-=2*PI;
-        face.z=cos(theta)*sin(phi)*2;
-        face.x=sin(theta)*sin(phi)*2;
-        face.y=cos(phi)*2;
+        face.z=cos(theta)*sin(phi)*INTERVAL;
+        face.x=sin(theta)*sin(phi)*INTERVAL;
+        face.y=cos(phi)*INTERVAL;
         at=pos+face;
         up.z=-cos(theta)*cos(phi);
         up.x=-sin(theta)*cos(phi);
         up.y=sin(phi);
     }
 };
+
+#undef INTERVAL
 
 #endif // PLAYER_H

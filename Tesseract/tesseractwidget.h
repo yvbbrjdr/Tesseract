@@ -1,5 +1,5 @@
-#ifndef YJLVRSOUNDWIDGET_H
-#define YJLVRSOUNDWIDGET_H
+#ifndef TESSERACTWIDGET_H
+#define TESSERACTWIDGET_H
 
 #include <QWidget>
 #include <QtOpenGL/QtOpenGL>
@@ -20,15 +20,15 @@
 class GameThread;
 
 namespace Ui {
-    class yJLVRSoundWidget;
+    class TesseractWidget;
 }
 
-class yJLVRSoundWidget : public QGLWidget {
+class TesseractWidget : public QGLWidget {
     Q_OBJECT
 
 public:
-    explicit yJLVRSoundWidget(QGLWidget *parent = 0);
-    ~yJLVRSoundWidget();
+    explicit TesseractWidget(QGLWidget *parent = 0);
+    ~TesseractWidget();
 
 public slots:
     void DrawScene();
@@ -43,9 +43,9 @@ protected:
     void mousePressEvent(QMouseEvent*);
 
 private:
-    Ui::yJLVRSoundWidget *ui;
+    Ui::TesseractWidget *ui;
     GameThread *gt;
     QTimer *GLTimer;
 };
 
-#endif // YJLVRSOUNDWIDGET_H
+#endif // TESSERACTWIDGET_H

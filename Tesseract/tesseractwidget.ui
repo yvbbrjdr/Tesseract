@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>yJLVRSoundWidget</class>
- <widget class="QWidget" name="yJLVRSoundWidget">
+ <class>TesseractWidget</class>
+ <widget class="QWidget" name="TesseractWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>yJLVRSound Inspired By Minecraft</string>
+   <string>Tesseract Inspired By Minecraft</string>
   </property>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

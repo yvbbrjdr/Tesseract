@@ -48,6 +48,13 @@ public:
         }
         return res;
     }
+    Coordinate Abs() {
+        Coordinate res=*this;
+        res.x=fabs(x);
+        res.y=fabs(y);
+        res.z=fabs(z);
+        return res;
+    }
 };
 
 #endif // COORDINATE_H
