@@ -17,6 +17,11 @@ namespace Ui {
 class MainWindow;
 }
 
+class myQTcpServer:public QTcpServer {
+protected:
+    void incomingConnection(qintptr handle);
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -30,11 +35,10 @@ public:
 
 private slots:
     void on_lineEdit_editingFinished();
-    void newConnectionSlot();
 
 private:
     Ui::MainWindow *ui;
-    QTcpServer *server;
+    myQTcpServer *server;
 
 };
 

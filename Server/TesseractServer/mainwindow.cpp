@@ -18,22 +18,6 @@ public:
     }
 };
 
-MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow) {
-    ui->setupUi(this);
-    ui->lineEdit->setFocus();
-    log("Welcome to TesseractServer");
-    w=new World(Coordinate(100,100,100));
-    log("World generated");
-    MainLoop *ml=new MainLoop;
-    ml->start();
-    server=new QTcpServer;
-    connect(server,SIGNAL(newConnection()),this,SLOT(newConnectionSlot()));
-    if (server->listen(QHostAddress::Any,8377))
-        log("Server is listening at port 8377. . . ");
-    else
-        log("Failed to initialize the server");
-}
-
 class TcpThread;
 
 QVector<TcpThread*>TcpThreads;
@@ -50,7 +34,7 @@ public:
         maintain=1;
         p=new Player(w);
         sock=new QTcpSocket;
-        connect(sock,SIGNAL(readyRead()),this,SLOT(readdata()));
+        connect(sock,SIGNAL(readyRead()),this,SLOT(readdata()));          //There are some problems here...
         connect(sock,SIGNAL(disconnected()),this,SLOT(disconnect()));
         sock->setSocketDescriptor(handle);
         puts("hello");
@@ -83,17 +67,25 @@ public slots:
     }
 };
 
-void QTcpServer::incomingConnection(qintptr handle) {
+MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow) {
+    ui->setupUi(this);
+    ui->lineEdit->setFocus();
+    log("Welcome to TesseractServer");
+    w=new World(Coordinate(100,100,100));
+    log("World generated");
+    MainLoop *ml=new MainLoop;
+    ml->start();
+    server=new myQTcpServer;
+    if (server->listen(QHostAddress::Any,8377))
+        log("Server is listening at port 8377. . . ");
+    else
+        log("Failed to initialize the server");
+}
+
+void myQTcpServer::incomingConnection(qintptr handle) {
     TcpThread *tt=new TcpThread(TcpThreads.count(),handle);
     TcpThreads.push_back(tt);
     tt->start();
-}
-
-void MainWindow::newConnectionSlot() {
-    QTcpSocket *sock=server->nextPendingConnection();
-    log("New connection from "+sock->peerAddress().toString());
-    sock->disconnect();
-    sock->close();
 }
 
 void MainWindow::log(QString s) {ui->plainTextEdit->appendPlainText(s);}
