@@ -36,6 +36,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     QGLWidget(parent),
     ui(new Ui::TesseractWidget) {
     ui->setupUi(this);
+    connectserver("127.0.0.1");
     this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);
     gt=new GameThread;
