@@ -1,20 +1,24 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow) {
     ui->setupUi(this);
     ui->lineEdit->setFocus();
     log("Welcome to TesseractServer");
     server=new QTcpServer;
     connect(server,SIGNAL(newConnection()),this,SLOT(newConnectionSlot()));
-    server->listen(QHostAddress::Any,8377);
-    log("Server is listening at 8377. . . ");
+    if (server->listen(QHostAddress::Any,8377))
+        log("Server is listening at port 8377. . . ");
+    else
+        log("Failed to initialize the server");
 }
 
-void MainWindow::newConnectionSlot() {}
+void MainWindow::newConnectionSlot() {
+    QTcpSocket *sock=server->nextPendingConnection();
+    log("New connection from "+sock->peerAddress().toString());
+    sock->disconnect();
+    sock->close();
+}
 
 void MainWindow::log(QString s) {ui->plainTextEdit->appendPlainText(s);}
 

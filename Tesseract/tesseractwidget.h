@@ -8,6 +8,7 @@
 #include <AL/alc.h>
 #include <AL/alut.h>
 #include <QtNetwork/QTcpSocket>
+#include <QHostAddress>
 #include <QThread>
 #include <QTime>
 #include <QTimer>

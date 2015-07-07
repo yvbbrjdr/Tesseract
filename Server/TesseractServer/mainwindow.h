@@ -6,6 +6,7 @@
 #include <QThread>
 #include <QString>
 #include <QVector>
+#include <QtNetwork/QTcpSocket>
 #include "../../Tesseract/Block.h"
 #include "../../Tesseract/Coordinate.h"
 #include "../../Tesseract/Player.h"

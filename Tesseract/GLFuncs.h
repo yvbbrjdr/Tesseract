@@ -99,8 +99,7 @@ void TesseractWidget::keyPressEvent(QKeyEvent *e) {
 void TesseractWidget::keyReleaseEvent(QKeyEvent *e) {keystatus[int(e->text().toStdString()[0])]=0;}
 
 void TesseractWidget::mouseMoveEvent(QMouseEvent *event) {
-    p.turn(0,.01*(400-event->x()));
-    p.turn(.01*(300-event->y()),0);
+    p.turn(.01*(300-event->y()),.01*(400-event->x()));
     QCursor::setPos(this->mapToGlobal(QPoint(400,300)));
 }
 
@@ -114,12 +113,10 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
             creatingblock=1;
         }
     } else if (event->button()==Qt::RightButton) {
-        if (creatingblock) {
+        if (creatingblock)
             creatingblock=0;
-        } else {
-            w.RemoveBlock(w.InBlock(p.pos));
-            //w.RemoveBlock(w.ThroughBlock(p.pos,p.at));
-        }
+        else
+            w.RemoveBlock(w.InBlock(p.pos));//w.RemoveBlock(w.ThroughBlock(p.pos,p.at));
     }
 }
 
