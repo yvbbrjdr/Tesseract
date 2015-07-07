@@ -1,16 +1,92 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+World *w;
+
+QQueue<QString>UniMsgQue;
+
+class MainLoop:public QThread {
+public:
+    void run() {
+        while (1) {
+            if (UniMsgQue.empty()) {
+                sleep(10);
+                continue;
+            }
+
+        }
+    }
+};
+
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindow) {
     ui->setupUi(this);
     ui->lineEdit->setFocus();
     log("Welcome to TesseractServer");
+    w=new World(Coordinate(100,100,100));
+    log("World generated");
+    MainLoop *ml=new MainLoop;
+    ml->start();
     server=new QTcpServer;
     connect(server,SIGNAL(newConnection()),this,SLOT(newConnectionSlot()));
     if (server->listen(QHostAddress::Any,8377))
         log("Server is listening at port 8377. . . ");
     else
         log("Failed to initialize the server");
+}
+
+class TcpThread;
+
+QVector<TcpThread*>TcpThreads;
+
+class TcpThread:public QThread {
+public:
+    int id;
+    bool maintain;
+    QTcpSocket *sock;
+    Player *p;
+    QQueue<QString>MsgQue;
+    TcpThread(int ID,qintptr handle) {
+        id=ID;
+        maintain=1;
+        p=new Player(w);
+        sock=new QTcpSocket;
+        connect(sock,SIGNAL(readyRead()),this,SLOT(readdata()));
+        connect(sock,SIGNAL(disconnected()),this,SLOT(disconnect()));
+        sock->setSocketDescriptor(handle);
+        puts("hello");
+    }
+    void run() {
+        while (maintain) {
+            if (MsgQue.empty()) {
+                sleep(10);
+                continue;
+            }
+            sock->write(MsgQue.front().toStdString().c_str());
+        }
+    }
+    void process(QString data) {
+
+    }
+
+public slots:
+    void readdata() {
+        char data[1001]={};
+        sock->readLine(data,1000);
+        process(data);
+    }
+    void disconnect() {
+        sock->disconnect();
+        sock->close();
+        TcpThreads.remove(id);
+        maintain=0;
+        delete this;
+    }
+};
+
+void QTcpServer::incomingConnection(qintptr handle) {
+    TcpThread *tt=new TcpThread(TcpThreads.count(),handle);
+    TcpThreads.push_back(tt);
+    tt->start();
 }
 
 void MainWindow::newConnectionSlot() {

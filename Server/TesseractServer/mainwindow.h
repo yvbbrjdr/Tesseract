@@ -6,6 +6,7 @@
 #include <QThread>
 #include <QString>
 #include <QVector>
+#include <QQueue>
 #include <QtNetwork/QTcpSocket>
 #include "../../Tesseract/Block.h"
 #include "../../Tesseract/Coordinate.h"
@@ -26,6 +27,7 @@ public:
     void process(QVector<QString>);
     ~MainWindow();
 
+
 private slots:
     void on_lineEdit_editingFinished();
     void newConnectionSlot();
@@ -33,6 +35,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QTcpServer *server;
+
 };
 
 #endif // MAINWINDOW_H
