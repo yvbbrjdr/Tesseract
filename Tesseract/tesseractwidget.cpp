@@ -6,6 +6,7 @@ Player p(&w);
 
 #include "ALFuncs.h"
 #include "GLFuncs.h"
+#include "NetFuncs.h"
 
 class GameThread : public QThread {
 public:
