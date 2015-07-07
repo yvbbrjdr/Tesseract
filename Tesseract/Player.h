@@ -3,6 +3,7 @@
 
 #include "World.h"
 #include "Coordinate.h"
+#include <QString>
 
 #ifndef ZERO
 #define ZERO (0.0000001f)
@@ -16,6 +17,7 @@
 
 class Player {
 public:
+    QString name;
     Coordinate pos,face,at,up;
     double theta,phi;
     World *w;

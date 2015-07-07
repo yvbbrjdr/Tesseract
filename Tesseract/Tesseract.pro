@@ -21,7 +21,8 @@ HEADERS  += tesseractwidget.h \
     GLFuncs.h \
     Coordinate.h \
     Block.h \
-    ALFuncs.h
+    ALFuncs.h \
+    NetFuncs.h
 
 FORMS    += tesseractwidget.ui
 
@@ -32,5 +33,7 @@ FORMS    += tesseractwidget.ui
 #-------------------------------------------------
 
 QT += opengl
+
+QT += network
 
 LIBS += -lopenal -lalut -lGLU
