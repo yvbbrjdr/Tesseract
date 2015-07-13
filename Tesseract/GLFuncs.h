@@ -116,7 +116,7 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
         if (creatingblock)
             creatingblock=0;
         else
-            w.RemoveBlock(w.InBlock(p.pos));//w.RemoveBlock(w.ThroughBlock(p.pos,p.at));
+            w.RemoveBlock(w.ThroughBlock(p.pos,p.at));
     }
 }
 
