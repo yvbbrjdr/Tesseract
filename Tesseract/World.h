@@ -5,6 +5,7 @@
 #include "Block.h"
 #include <QList>
 #include <QVector>
+#include "Player.h"
 using namespace std;
 
 struct Bnode {
@@ -14,6 +15,30 @@ struct Bnode {
         Type=Ty;
         Pos=Po;
         HalfSize=HS;
+    }
+
+    double dmin(double a,double b){
+        return a>b?b:a;
+    }
+
+    double dmax(double a,double b){
+        return a>b?a:b;
+    }
+
+    double GetPierceLength(Player p){
+      double length=0;
+      double dx[4][2]={0};
+      dx[0][0]=Pos.x-HalfSize.x;
+      dx[0][1]=Pos.x+HalfSize.x;
+      dx[1][0]=p.at.x/p.at.y*(Pos.y-HalfSize.y-p.pos.y)+p.pos.x;
+      dx[1][1]=p.at.x/p.at.y*(Pos.y+HalfSize.y-p.pos.y)+p.pos.x;
+      dx[2][0]=p.at.x/p.at.z*(Pos.z-HalfSize.z-p.pos.z)+p.pos.x;
+      dx[2][1]=p.at.x/p.at.z*(Pos.z+HalfSize.z-p.pos.z)+p.pos.x;
+      for(int i=0;i<=2;i++)if (dx[i][0]>dx[i][1]){double c;c=dx[i][0];dx[i][0]=dx[i][1];dx[i][1]=c;}//Swap dx0 & dx1
+      dx[3][0]=dmax(dmax(dx[0][0],dx[1][0]),dx[2][0]);
+      dx[3][1]=dmin(dmin(dx[0][1],dx[1][1]),dx[2][1]);
+      length=dx[3][1]-dx[3][0];
+      if (length<=0)return 0;else return length;
     }
     Bnode(){}
 };
