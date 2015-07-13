@@ -62,24 +62,22 @@ public:
         return Blocks.end();
     }
 
-    double GetPierceLength(QList<Bnode>::iterator TheBlock,Player p,Coordinate Pos1,Coordinate Pos2) {
-          double length=0;
-          double dx[4][2]={0};
+    double ThroughBlock(QList<Bnode>::iterator TheBlock,Coordinate Pos1,Coordinate Pos2) {
+          double dx[4][2]={};
           dx[0][0]=TheBlock->Pos.x-TheBlock->HalfSize.x;
           dx[0][1]=TheBlock->Pos.x+TheBlock->HalfSize.x;
-          dx[1][0]=p.at.x/p.at.y*(TheBlock->Pos.y-TheBlock->HalfSize.y-p.pos.y)+p.pos.x;
-          dx[1][1]=p.at.x/p.at.y*(TheBlock->Pos.y+TheBlock->HalfSize.y-p.pos.y)+p.pos.x;
-          dx[2][0]=p.at.x/p.at.z*(TheBlock->Pos.z-TheBlock->HalfSize.z-p.pos.z)+p.pos.x;
-          dx[2][1]=p.at.x/p.at.z*(TheBlock->Pos.z+TheBlock->HalfSize.z-p.pos.z)+p.pos.x;
+          dx[1][0]=Pos1.x/Pos1.y*(TheBlock->Pos.y-TheBlock->HalfSize.y-Pos2.y)+Pos2.x;
+          dx[1][1]=Pos1.x/Pos1.y*(TheBlock->Pos.y+TheBlock->HalfSize.y-Pos2.y)+Pos2.x;
+          dx[2][0]=Pos1.x/Pos1.z*(TheBlock->Pos.z-TheBlock->HalfSize.z-Pos2.z)+Pos2.x;
+          dx[2][1]=Pos1.x/Pos1.z*(TheBlock->Pos.z+TheBlock->HalfSize.z-Pos2.z)+Pos2.x;
           for(int i=0;i<=2;i++)if (dx[i][0]>dx[i][1]){double c;c=dx[i][0];dx[i][0]=dx[i][1];dx[i][1]=c;}//Swap dx0 & dx1
           dx[3][0]=dmax(dmax(dx[0][0],dx[1][0]),dx[2][0]);
           dx[3][1]=dmin(dmin(dx[0][1],dx[1][1]),dx[2][1]);
-          length=dx[3][1]-dx[3][0];
-          if (length<=0)return 0;else return length;
+          return dx[3][1]-dx[3][0];
     }
     QList<Bnode>::iterator ThroughBlock(Coordinate Pos1, Coordinate Pos2) {
         for (QList<Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
-            if (ThroughBlock(it,Pos1,Pos2)>=0)
+            if (ThroughBlock(it,Pos1,Pos2)>0)
                 return it;
         return Blocks.end();
     }
