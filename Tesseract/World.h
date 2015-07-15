@@ -1,14 +1,12 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#define dmin(a,b) (((a)>(b))?(b):(a))
-#define dmax(a,b) (((a)>(b))?(a):(b))
-
 #include "Coordinate.h"
 #include "Block.h"
 #include <QList>
 #include <QVector>
 #include "Player.h"
+#include <algorithm>
 using namespace std;
 
 struct Bnode {
@@ -63,17 +61,55 @@ public:
     }
 
     double ThroughBlock(QList<Bnode>::iterator TheBlock,Coordinate Pos1,Coordinate Pos2) {
-          double dx[4][2]={};
-          dx[0][0]=TheBlock->Pos.x-TheBlock->HalfSize.x;
-          dx[0][1]=TheBlock->Pos.x+TheBlock->HalfSize.x;
-          dx[1][0]=Pos1.x/Pos1.y*(TheBlock->Pos.y-TheBlock->HalfSize.y-Pos2.y)+Pos2.x;
-          dx[1][1]=Pos1.x/Pos1.y*(TheBlock->Pos.y+TheBlock->HalfSize.y-Pos2.y)+Pos2.x;
-          dx[2][0]=Pos1.x/Pos1.z*(TheBlock->Pos.z-TheBlock->HalfSize.z-Pos2.z)+Pos2.x;
-          dx[2][1]=Pos1.x/Pos1.z*(TheBlock->Pos.z+TheBlock->HalfSize.z-Pos2.z)+Pos2.x;
-          for(int i=0;i<=2;i++)if (dx[i][0]>dx[i][1]){double c;c=dx[i][0];dx[i][0]=dx[i][1];dx[i][1]=c;}//Swap dx0 & dx1
-          dx[3][0]=dmax(dmax(dx[0][0],dx[1][0]),dx[2][0]);
-          dx[3][1]=dmin(dmin(dx[0][1],dx[1][1]),dx[2][1]);
-          return dx[3][1]-dx[3][0];
+        double &x1=Pos1.x,&y1=Pos1.y,&z1=Pos1.z,
+               &x2=Pos2.x,&y2=Pos2.y,&z2=Pos2.z,
+               a=TheBlock->Pos.x-TheBlock->HalfSize.x,
+               b=TheBlock->Pos.x+TheBlock->HalfSize.x,
+               c=TheBlock->Pos.y-TheBlock->HalfSize.y,
+               d=TheBlock->Pos.y+TheBlock->HalfSize.y,
+               e=TheBlock->Pos.z-TheBlock->HalfSize.z,
+               f=TheBlock->Pos.z+TheBlock->HalfSize.z;
+        Coordinate point[6];
+        point[0].x=a;
+        point[0].y=(y1-y2)*(a-x1)/(x1-x2)+y1;
+        point[0].z=(z1-z2)*(a-x1)/(x1-x2)+z1;
+        point[1].x=b;
+        point[1].y=(y1-y2)*(b-x1)/(x1-x2)+y1;
+        point[1].z=(z1-z2)*(b-x1)/(x1-x2)+z1;
+        point[2].x=(x1-x2)*(c-y1)/(y1-y2)+x1;
+        point[2].y=c;
+        point[2].z=(z1-z2)*(c-y1)/(y1-y2)+z1;
+        point[3].x=(x1-x2)*(d-y1)/(y1-y2)+x1;
+        point[3].y=d;
+        point[3].z=(z1-z2)*(d-y1)/(y1-y2)+z1;
+        point[4].x=(x1-x2)*(e-z1)/(z1-z2)+x1;
+        point[4].y=(y1-y2)*(e-z1)/(z1-z2)+y1;
+        point[4].z=e;
+        point[5].x=(x1-x2)*(f-z1)/(z1-z2)+x1;
+        point[5].y=(y1-y2)*(f-z1)/(z1-z2)+y1;
+        point[5].z=f;
+        int n=0,arr[2];
+        for (int i=0;i<6;++i)
+            if (InBlock(TheBlock,point[i]))
+                arr[n++]=i;
+        if (n<2)
+            return -1;
+        Coordinate Pos[4]={Pos1,Pos2,point[arr[0]],point[arr[1]]};
+        if (Pos[0].x>Pos[1].x) {
+            Coordinate t=Pos[0];
+            Pos[0]=Pos[1];
+            Pos[1]=t;
+        }
+        if ((Pos[2].x<Pos[0].x||Pos[2].x>Pos[1].x)&&(Pos[3].x<Pos[0].x||Pos[3].x>Pos[1].x))
+            return -1;
+        for (int i=0;i<3;++i)
+            for (int j=i+1;j<4;++j)
+                if (Pos[i].x>Pos[j].x) {
+                    Coordinate t=Pos[i];
+                    Pos[i]=Pos[j];
+                    Pos[j]=t;
+                }
+        return (Pos[2]-Pos[1]).Length();
     }
     QList<Bnode>::iterator ThroughBlock(Coordinate Pos1, Coordinate Pos2) {
         for (QList<Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
@@ -83,6 +119,4 @@ public:
     }
 };
 
-#undef dmax
-#undef dmin
 #endif // WORLD_H

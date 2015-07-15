@@ -9,7 +9,6 @@ double aspect;
 Coordinate tempc;
 
 void TesseractWidget::initializeGL() {
-    setGeometry(0,0,800,600);
     glClearColor(.7,1,1,0);
     glPointSize(3);
     glEnable(GL_DEPTH_TEST);
