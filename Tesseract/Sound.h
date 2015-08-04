@@ -7,8 +7,8 @@
 
 class Sound {
 public:
-    static void SetListenerValues(Coordinate position,Coordinate face,Coordinate up);
-    static HSTREAM AddNewSound(Coordinate,QString);
+    static void SetListenerValues(Coordinate,Coordinate,Coordinate);
+    static HSTREAM AddNewFileSound(Coordinate,QString);
     static void RemoveASound(HCHANNEL);
     static void PauseASound(HCHANNEL);
     static void PlayASound(HCHANNEL);

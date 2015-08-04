@@ -16,13 +16,13 @@
 
 class Player {
 public:
-    QString name;
-    Coordinate pos,face,at,up,size;
-    double theta,phi;
+    QString Name;
+    Coordinate Position,EyeVector,LookAt,HeadVector;
+    double Theta,Phi;
     Player();
     Player(Coordinate);
-    void go(double,double,double);
-    void turn(double,double);
+    void Go(double,double,double);
+    void Turn(double,double);
 };
 
 #endif // PLAYER_H

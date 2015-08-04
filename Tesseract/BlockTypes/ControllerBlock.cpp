@@ -4,6 +4,6 @@ ControllerBlock::ControllerBlock() {
     Name="Controller";
     Color=Coordinate(0,0,.5);
     TextureName="";
-    SoundCanGetThrough=false;
+    SoundCanGoOut=false;
 }
 

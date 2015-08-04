@@ -19,21 +19,15 @@ public:
     QString Name;
     Coordinate Color;
     QString TextureName;
-    bool SoundCanGetThrough;
-    virtual void Create(World&,Player&,Bnode&);
-    virtual void E(World&,Player&,Bnode&);
-    virtual void F(World&,Player&,Bnode&);
-    virtual void G(World&,Player&,Bnode&);
-    virtual void Global(World&,Player&,Bnode&);
-    virtual void Destroy(World&,Player&,Bnode&);
+    bool SoundCanGoOut;
 };
 
 class Bnode {
 public:
-    int Type;
-    Coordinate Pos,HalfSize;
+    int Type,Belong;
+    Coordinate Position,HalfSize;
     void *Data;
-    Bnode(int,Coordinate,Coordinate);
+    Bnode(int,int,Coordinate,Coordinate);
 };
 
 #include "tesseractwidget.h"
