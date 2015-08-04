@@ -2,7 +2,7 @@
 
 Player::Player() {}
 
-Player::Player(Coordinate s) {
+Player::Player(Coordinate _Size) {
     size=s;
     pos=Coordinate(0,1,0);
     theta=0;
@@ -10,7 +10,7 @@ Player::Player(Coordinate s) {
     turn(0,0);
 }
 
-void Player::go(double front,double left,double raise) {
+void Player::go(double _Front,double _Left,double _Up) {
     pos.z+=cos(theta)*front;
     pos.x+=sin(theta)*front;
     pos.z-=sin(theta)*left;
@@ -31,7 +31,7 @@ void Player::go(double front,double left,double raise) {
     at=pos+face;
 }
 
-void Player::turn(double raise,double left) {
+void Player::turn(double _Raise,double _Left) {
     if (phi-raise<0)
         phi=0;
     else if (phi-raise>PI)
