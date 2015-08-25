@@ -37,7 +37,6 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     QGLWidget(parent),
     ui(new Ui::TesseractWidget) {
     ui->setupUi(this);
-    connectserver("127.0.0.1");
     this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);
     gt=new GameThread;
@@ -46,7 +45,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     GLTimer->setInterval(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
-    AddNewSound(Coordinate(0,2,6),"sample.wav");
+    AddNewSound(Coordinate(0,2,6),"sample.mp3");
     w.RegisterBlock("Stone",Coordinate(.5,.5,.5),"",1);
     w.RegisterBlock("Speaker",Coordinate(1,0,0),"",1);
     w.AddBlock(1,Coordinate(0,2,6),Coordinate(.5,.5,.5));

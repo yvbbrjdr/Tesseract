@@ -5,35 +5,17 @@
 #include <cstring>
 
 void SetListenerValues() {
-    ALfloat Vel[]={0,0,0},LPos[]={float(p.pos.x),float(p.pos.y),float(p.pos.z)},LOri[]={float(p.at.x),float(p.at.y),float(p.at.z),float(p.up.x),float(p.up.y),float(p.up.z)};
-    alListenerfv(AL_POSITION,LPos);
-    alListenerfv(AL_VELOCITY,Vel);
-    alListenerfv(AL_ORIENTATION,LOri);
+    BASS_3DVECTOR pos(p.pos.x,p.pos.y,p.pos.z),front(p.face.x,p.face.y,p.face.z),top(p.up.x,p.up.y,p.up.z);
+    BASS_Set3DPosition(&pos,NULL,&top,&front);
+    BASS_Apply3D();
 }
 
 void AddNewSound(Coordinate Position,QString Filename) {
-    ALuint Buf,Source;
-    ALfloat SPos[]={float(Position.x),float(Position.y),float(Position.z)},Vel[]={0,0,0};
-    SetListenerValues();
-    alGenBuffers(1,&Buf);
-    ALenum format;
-    ALsizei size;
-    ALvoid* data;
-    ALsizei freq;
-    ALboolean loop;
-    ALbyte fn[256];
-    strcpy((char*)fn,Filename.toStdString().c_str());
-    alutLoadWAVFile(fn,&format,&data,&size,&freq,&loop);
-    alBufferData(Buf,format,data,size,freq);
-    alutUnloadWAV(format,data,size,freq);
-    alGenSources(1,&Source);
-    alSourcei(Source,AL_BUFFER,Buf);
-    alSourcef(Source,AL_PITCH,1);
-    alSourcef(Source,AL_GAIN,10);
-    alSourcefv(Source,AL_POSITION,SPos);
-    alSourcefv(Source,AL_VELOCITY,Vel);
-    alSourcei(Source,AL_LOOPING,AL_TRUE);
-    alSourcePlay(Source);
+    HSTREAM hs=BASS_StreamCreateFile(FALSE,Filename.toStdString().c_str(),0,0,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_SAMPLE_LOOP);
+    BASS_3DVECTOR v(Position.x,Position.y,Position.z);
+    BASS_ChannelSet3DPosition(hs,&v,NULL,NULL);
+    BASS_Apply3D();
+    BASS_ChannelPlay(hs,FALSE);
 }
 
 #endif // ALFUNCS_H

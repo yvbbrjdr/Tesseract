@@ -4,9 +4,7 @@
 #include <QWidget>
 #include <QtOpenGL/QtOpenGL>
 #include <GL/glu.h>
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alut.h>
+#include <bass.h>
 #include <QtNetwork/QTcpSocket>
 #include <QHostAddress>
 #include <QThread>

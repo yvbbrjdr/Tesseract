@@ -36,4 +36,4 @@ QT += opengl
 
 QT += network
 
-LIBS += -lopenal -lalut -lGLU
+LIBS += -lbass -lopengl32 -lglu32
