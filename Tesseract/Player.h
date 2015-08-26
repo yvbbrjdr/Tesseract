@@ -21,6 +21,7 @@ public:
     Coordinate pos,face,at,up;
     double theta,phi;
     World *w;
+    Player() {}
     Player(World *world) {
         w=world;
         pos=Coordinate(0,1,0);

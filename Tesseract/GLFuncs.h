@@ -4,17 +4,13 @@
 #include "tesseractwidget.h"
 #include <cstdio>
 
-bool keystatus[128],creatingblock;
-double aspect;
-Coordinate tempc;
-
 void TesseractWidget::initializeGL() {
     glClearColor(.7,1,1,0);
     glPointSize(3);
     glEnable(GL_DEPTH_TEST);
 }
 
-void DrawBlock(Bnode TheBlock,int Mode) {
+void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
     const Coordinate Points[8]={Coordinate(1,1,1),Coordinate(1,1,-1),Coordinate(1,-1,1),Coordinate(1,-1,-1),Coordinate(-1,1,1),Coordinate(-1,1,-1),Coordinate(-1,-1,1),Coordinate(-1,-1,-1)};
     const int Surfaces[6][4]={{7,3,2,6},{5,1,0,4},{0,1,3,2},{4,5,7,6},{4,0,2,6},{5,1,3,7}};
     if (Mode&2) {
