@@ -113,7 +113,7 @@ public:
     }
     QList<Bnode>::iterator ThroughBlock(Coordinate Pos1, Coordinate Pos2) {
         for (QList<Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
-            if (ThroughBlock(it,Pos1,Pos2)>0)
+            if (ThroughBlock(it,Pos1,Pos2)>=0)
                 return it;
         return Blocks.end();
     }
