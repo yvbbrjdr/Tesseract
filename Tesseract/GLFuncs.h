@@ -41,6 +41,17 @@ void DrawBlock(Bnode TheBlock,int Mode) {
                 glEnd();
         }
     }
+    if (Mode&4) {
+        glColor3f(1,1,1);
+        for (int i=0;i<6;++i) {
+                glBegin(GL_LINE_LOOP);
+                    for (int j=0;j<4;++j)
+                        glVertex3f(TheBlock.Pos.x+Points[Surfaces[i][j]].x*TheBlock.HalfSize.x,
+                                   TheBlock.Pos.y+Points[Surfaces[i][j]].y*TheBlock.HalfSize.y,
+                                   TheBlock.Pos.z+Points[Surfaces[i][j]].z*TheBlock.HalfSize.z);
+                glEnd();
+        }
+    }
 }
 
 void TesseractWidget::paintGL() {
@@ -59,7 +70,10 @@ void TesseractWidget::paintGL() {
         glVertex3f(w.size.x/2,0,-w.size.z/2);
     glEnd();
     for (QList<Bnode>::iterator it=w.Blocks.begin();it!=w.Blocks.end();++it)
-        DrawBlock(*it,3);
+        if (w.ThroughBlock(it,p.pos,p.at)<0)
+            DrawBlock(*it,3);
+        else
+            DrawBlock(*it,6);
     if (creatingblock)
         DrawBlock(Bnode(0,(p.at+tempc)/2,(p.at-tempc)/2),1);
     glColor3f(1,0,0);
