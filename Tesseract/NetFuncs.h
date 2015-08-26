@@ -5,7 +5,7 @@
 
 QTcpSocket sock;
 
-void connectserver(QString IP) {
+void TesseractWidget::connectserver(QString IP) {
     sock.connectToHost(QHostAddress(IP),8377);
 }
 

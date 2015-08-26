@@ -32,7 +32,7 @@ public:
 public slots:
     void DrawScene();
 
-protected:
+public:
     void initializeGL();
     void paintGL();
     void keyPressEvent(QKeyEvent*);
@@ -40,6 +40,15 @@ protected:
     void mouseMoveEvent(QMouseEvent*);
     void resizeGL(int,int);
     void mousePressEvent(QMouseEvent*);
+    void SetListenerValues();
+    void AddNewSound(Coordinate,QString);
+    void DrawBlock(Bnode,int);
+    void connectserver(QString);
+    World w;
+    Player p;
+    bool keystatus[128],creatingblock;
+    double aspect;
+    Coordinate tempc;
 
 private:
     Ui::TesseractWidget *ui;

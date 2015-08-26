@@ -25,6 +25,7 @@ class World {
 public:
     Coordinate size;
     World(Coordinate s) {size=s;}
+    World() {}
     QVector<Block>BlockTypes;
     int RegisterBlock(QString Name,Coordinate Color,QString TextureName,bool SoundCanGetThrough) {
         Block b;
