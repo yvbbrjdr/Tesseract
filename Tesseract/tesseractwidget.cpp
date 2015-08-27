@@ -33,6 +33,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     QGLWidget(parent),
     ui(new Ui::TesseractWidget) {
     ui->setupUi(this);
+    this->showFullScreen();
     memset(keystatus,0,sizeof(keystatus));
     creatingblock=0;
     w=World(Coordinate(100,100,100));
