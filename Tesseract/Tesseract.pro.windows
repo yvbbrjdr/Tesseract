@@ -37,3 +37,5 @@ QT += opengl
 QT += network
 
 LIBS += -lbass -lopengl32 -lglu32
+
+RC_FILE += Icon.rc
