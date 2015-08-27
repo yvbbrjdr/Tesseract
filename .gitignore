@@ -2,6 +2,6 @@
 !.gitignore
 !README.md
 !/Tesseract/
-!/Server/
+!/TesseractServer/
 *.user
 *.pro
