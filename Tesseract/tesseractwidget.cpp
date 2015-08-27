@@ -21,7 +21,7 @@ public:
                 tw->p.go(0,0,.1);
             if (tw->keystatus['z'])
                 tw->p.go(0,0,-.1);
-            tw->w.SetListenerValues(tw->p.pos,tw->p.face,tw->p.up);
+            tw->w.SetListenerValues(tw->p.pos,tw->p.at,tw->p.up);
             QTime dieTime=QTime::currentTime().addMSecs(10);
             while (QTime::currentTime()<dieTime)
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
