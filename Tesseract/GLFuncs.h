@@ -95,10 +95,19 @@ void TesseractWidget::paintGL() {
 void TesseractWidget::keyPressEvent(QKeyEvent *e) {
     switch(e->key()) {
         case Qt::Key_Escape:
+            while (!w.Blocks.empty())
+                w.RemoveBlock(w.Blocks.begin());
+            BASS_Free();
             close();
             break;
         case Qt::Key_R:
             p=Player(&w);
+            break;
+        case Qt::Key_O:
+            w.AttachSoundToBlock(w.ThroughBlock(p.pos,p.at),"sample.mp3");
+            break;
+        case Qt::Key_P:
+            w.DetachSoundFromBlock(w.ThroughBlock(p.pos,p.at));
             break;
         default:
             keystatus[int(e->text().toStdString()[0])]=1;
