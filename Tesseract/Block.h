@@ -12,4 +12,18 @@ public:
     bool SoundCanGetThrough;
 };
 
+struct Bnode {
+    int Type;
+    Coordinate Pos,HalfSize;
+    HSTREAM hs;
+    Bnode(int Ty,Coordinate Po,Coordinate HS) {
+        Type=Ty;
+        Pos=Po;
+        HalfSize=HS;
+        hs=0;
+    }
+
+    Bnode(){}
+};
+
 #endif // BLOCK_H

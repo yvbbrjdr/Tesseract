@@ -1,10 +1,7 @@
 #include "tesseractwidget.h"
 #include "ui_tesseractwidget.h"
 
-#include "ALFuncs.h"
 #include "GLFuncs.h"
-#include "NetFuncs.h"
-#include "World.h"
 
 class GameThread : public QThread {
 public:
@@ -24,7 +21,7 @@ public:
                 tw->p.go(0,0,.1);
             if (tw->keystatus['z'])
                 tw->p.go(0,0,-.1);
-            tw->SetListenerValues();
+            tw->w.SetListenerValues(tw->p.pos,tw->p.face,tw->p.up);
             QTime dieTime=QTime::currentTime().addMSecs(10);
             while (QTime::currentTime()<dieTime)
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
@@ -48,10 +45,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     GLTimer->setInterval(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
-    AddNewSound(Coordinate(0,2,6),"sample.mp3");
     w.RegisterBlock("Stone",Coordinate(.5,.5,.5),"",1);
-    w.RegisterBlock("Speaker",Coordinate(1,0,0),"",1);
-    w.AddBlock(1,Coordinate(0,2,6),Coordinate(.5,.5,.5));
 }
 
 void TesseractWidget::DrawScene() {updateGL();}

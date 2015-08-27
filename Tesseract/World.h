@@ -9,24 +9,31 @@
 #include <algorithm>
 using namespace std;
 
-struct Bnode {
-    int Type;
-    Coordinate Pos,HalfSize;
-    Bnode(int Ty,Coordinate Po,Coordinate HS) {
-        Type=Ty;
-        Pos=Po;
-        HalfSize=HS;
-    }
-
-    Bnode(){}
-};
-
 class World {
 public:
     Coordinate size;
     World(Coordinate s) {size=s;}
     World() {}
     QVector<Block>BlockTypes;
+    void SetListenerValues(Coordinate position,Coordinate face,Coordinate up) {
+        BASS_3DVECTOR pos(position.x,position.y,position.z),front(face.x,face.y,face.z),top(up.x,up.y,up.z);
+        BASS_Set3DPosition(&pos,NULL,&top,&front);
+        BASS_Apply3D();
+    }
+    HSTREAM AddNewSound(Coordinate Position,QString Filename) {
+        HSTREAM hs=BASS_StreamCreateFile(FALSE,Filename.toStdString().c_str(),0,0,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_SAMPLE_LOOP);
+        BASS_3DVECTOR v(Position.x,Position.y,Position.z);
+        BASS_ChannelSet3DPosition(hs,&v,NULL,NULL);
+        BASS_Apply3D();
+        BASS_ChannelPlay(hs,FALSE);
+        return hs;
+    }
+    void RemoveASound(HSTREAM hs) {
+        if (hs!=0) {
+            BASS_ChannelStop(hs);
+            BASS_StreamFree(hs);
+        }
+    }
     int RegisterBlock(QString Name,Coordinate Color,QString TextureName,bool SoundCanGetThrough) {
         Block b;
         b.Name=Name;
@@ -44,15 +51,25 @@ public:
             Blocks.push_back(b);
         }
     }
-    void RemoveBlock(QList<Bnode>::iterator it) {
-        if (it!=Blocks.end())
-            Blocks.erase(it);
+    void AttachSoundToBlock(QList<Bnode>::iterator TheBlock,QString Filename) {
+        if (TheBlock!=Blocks.end()&&TheBlock->hs==0)
+            TheBlock->hs=AddNewSound(TheBlock->Pos,Filename);
+    }
+    void DetachSoundFromBlock(QList<Bnode>::iterator TheBlock) {
+        if (TheBlock!=Blocks.end()) {
+            RemoveASound(TheBlock->hs);
+            TheBlock->hs=0;
+        }
+    }
+    void RemoveBlock(QList<Bnode>::iterator TheBlock) {
+        if (TheBlock!=Blocks.end()) {
+            DetachSoundFromBlock(TheBlock);
+            Blocks.erase(TheBlock);
+        }
     }
     bool InBlock(QList<Bnode>::iterator TheBlock,Coordinate Pos) {
         Coordinate a=TheBlock->Pos-TheBlock->HalfSize,b=TheBlock->Pos+TheBlock->HalfSize;
-        if (a.x<=Pos.x&&b.x>=Pos.x&&a.y<=Pos.y&&b.y>=Pos.y&&a.z<=Pos.z&&b.z>=Pos.z)
-            return 1;
-        return 0;
+        return (a.x<=Pos.x&&b.x>=Pos.x&&a.y<=Pos.y&&b.y>=Pos.y&&a.z<=Pos.z&&b.z>=Pos.z);
     }
     QList<Bnode>::iterator InBlock(Coordinate Pos) {
         for (QList<Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
@@ -60,7 +77,6 @@ public:
                 return it;
         return Blocks.end();
     }
-
     double ThroughBlock(QList<Bnode>::iterator TheBlock,Coordinate Pos1,Coordinate Pos2) {
         double &x1=Pos1.x,&y1=Pos1.y,&z1=Pos1.z,
                &x2=Pos2.x,&y2=Pos2.y,&z2=Pos2.z,

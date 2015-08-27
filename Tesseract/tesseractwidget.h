@@ -40,20 +40,18 @@ public:
     void mouseMoveEvent(QMouseEvent*);
     void resizeGL(int,int);
     void mousePressEvent(QMouseEvent*);
-    void SetListenerValues();
-    void AddNewSound(Coordinate,QString);
     void DrawBlock(Bnode,int);
-    void connectserver(QString);
     World w;
     Player p;
-    bool keystatus[128],creatingblock;
-    double aspect;
-    Coordinate tempc;
+    bool keystatus[128];
 
 private:
     Ui::TesseractWidget *ui;
     GameThread *gt;
     QTimer *GLTimer;
+    bool creatingblock;
+    double aspect;
+    Coordinate tempc;
 };
 
 #endif // TESSERACTWIDGET_H
