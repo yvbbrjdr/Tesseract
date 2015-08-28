@@ -10,70 +10,44 @@ void TesseractWidget::initializeGL() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    GLfloat pos[4]={0,GLfloat(w.size.y),0,1};
+    glLightfv(GL_LIGHT0,GL_POSITION,pos);
+}
+
+void TesseractWidget::SetColor(Coordinate color) {
+    GLfloat c1[4]={GLfloat(color.x),GLfloat(color.y),GLfloat(color.z),1},c2[4]={0,0,0,1};
+    glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,c1);
+    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,c2);
+    glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,c1);
 }
 
 void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
     const Coordinate Points[8]={Coordinate(1,1,1),Coordinate(1,1,-1),Coordinate(1,-1,1),Coordinate(1,-1,-1),Coordinate(-1,1,1),Coordinate(-1,1,-1),Coordinate(-1,-1,1),Coordinate(-1,-1,-1)};
-    const int Sur1[]={0,1,2,3,6,7,4,5,0,1},Sur2[]={6,2,4,0,5,1,7,3};
-    const int Line1[]={0,1,3,2,6,4,5,1},Line2[]={2,0,4},Line3[]={6,7,3,7,5};
+    const int Sur[][4]={{0,2,3,1},{0,4,6,2},{4,5,7,6},{5,1,3,7},{0,1,5,4},{2,6,7,3}};
+    const int Line[]={0,1,1,3,3,2,2,0,0,4,1,5,3,7,2,6,6,4,4,5,5,7,7,6};
+    const float normal[][3]={{1,0,0},{0,0,1},{-1,0,0},{0,0,-1},{0,1,0},{0,-1,0}};
     if (Mode&2) {
-        glColor3f(w.BlockTypes[TheBlock.Type].Color.x,
-                  w.BlockTypes[TheBlock.Type].Color.y,
-                  w.BlockTypes[TheBlock.Type].Color.z);
-        glBegin(GL_QUAD_STRIP);
-            for (int i=0;i<10;++i)
-                glVertex3f(TheBlock.Pos.x+Points[Sur1[i]].x*TheBlock.HalfSize.x,
-                           TheBlock.Pos.y+Points[Sur1[i]].y*TheBlock.HalfSize.y,
-                           TheBlock.Pos.z+Points[Sur1[i]].z*TheBlock.HalfSize.z);
-        glEnd();
-        glBegin(GL_QUAD_STRIP);
-            for (int i=0;i<8;++i)
-                glVertex3f(TheBlock.Pos.x+Points[Sur2[i]].x*TheBlock.HalfSize.x,
-                           TheBlock.Pos.y+Points[Sur2[i]].y*TheBlock.HalfSize.y,
-                           TheBlock.Pos.z+Points[Sur2[i]].z*TheBlock.HalfSize.z);
-        glEnd();
+        SetColor(w.BlockTypes[TheBlock.Type].Color);
+        glPolygonMode(GL_FRONT,GL_FILL);
+        glPolygonMode(GL_BACK,GL_LINE);
+        for (int i=0;i<6;++i) {
+            glBegin(GL_POLYGON);
+                glNormal3f(normal[i][0],normal[i][1],normal[i][2]);
+                for (int j=0;j<4;++j) {
+                    glVertex3f(TheBlock.Pos.x+Points[Sur[i][j]].x*TheBlock.HalfSize.x,
+                               TheBlock.Pos.y+Points[Sur[i][j]].y*TheBlock.HalfSize.y,
+                               TheBlock.Pos.z+Points[Sur[i][j]].z*TheBlock.HalfSize.z);
+                }
+            glEnd();
+        }
     }
     if (Mode&1) {
-        glColor3f(0,0,0);
-        glBegin(GL_LINE_STRIP);
-            for (int i=0;i<8;++i)
-                glVertex3f(TheBlock.Pos.x+Points[Line1[i]].x*TheBlock.HalfSize.x,
-                           TheBlock.Pos.y+Points[Line1[i]].y*TheBlock.HalfSize.y,
-                           TheBlock.Pos.z+Points[Line1[i]].z*TheBlock.HalfSize.z);
-        glEnd();
-        glBegin(GL_LINE_STRIP);
-            for (int i=0;i<3;++i)
-                glVertex3f(TheBlock.Pos.x+Points[Line2[i]].x*TheBlock.HalfSize.x,
-                           TheBlock.Pos.y+Points[Line2[i]].y*TheBlock.HalfSize.y,
-                           TheBlock.Pos.z+Points[Line2[i]].z*TheBlock.HalfSize.z);
-        glEnd();
-        glBegin(GL_LINE_STRIP);
-            for (int i=0;i<5;++i)
-                glVertex3f(TheBlock.Pos.x+Points[Line3[i]].x*TheBlock.HalfSize.x,
-                           TheBlock.Pos.y+Points[Line3[i]].y*TheBlock.HalfSize.y,
-                           TheBlock.Pos.z+Points[Line3[i]].z*TheBlock.HalfSize.z);
-        glEnd();
-    }
-    if (Mode&4) {
-        glColor3f(1,1,1);
-        glBegin(GL_LINE_STRIP);
-            for (int i=0;i<8;++i)
-                glVertex3f(TheBlock.Pos.x+Points[Line1[i]].x*TheBlock.HalfSize.x,
-                           TheBlock.Pos.y+Points[Line1[i]].y*TheBlock.HalfSize.y,
-                           TheBlock.Pos.z+Points[Line1[i]].z*TheBlock.HalfSize.z);
-        glEnd();
-        glBegin(GL_LINE_STRIP);
-            for (int i=0;i<3;++i)
-                glVertex3f(TheBlock.Pos.x+Points[Line2[i]].x*TheBlock.HalfSize.x,
-                           TheBlock.Pos.y+Points[Line2[i]].y*TheBlock.HalfSize.y,
-                           TheBlock.Pos.z+Points[Line2[i]].z*TheBlock.HalfSize.z);
-        glEnd();
-        glBegin(GL_LINE_STRIP);
-            for (int i=0;i<5;++i)
-                glVertex3f(TheBlock.Pos.x+Points[Line3[i]].x*TheBlock.HalfSize.x,
-                           TheBlock.Pos.y+Points[Line3[i]].y*TheBlock.HalfSize.y,
-                           TheBlock.Pos.z+Points[Line3[i]].z*TheBlock.HalfSize.z);
-        glEnd();
+        SetColor(Coordinate(1,1,1));
+        glBegin(GL_LINES);
+            for (int i=0;i<24;++i)
+                glVertex3f(TheBlock.Pos.x+Points[Line[i]].x*TheBlock.HalfSize.x,
+                           TheBlock.Pos.y+Points[Line[i]].y*TheBlock.HalfSize.y,
+                           TheBlock.Pos.z+Points[Line[i]].z*TheBlock.HalfSize.z);
     }
 }
 
@@ -86,17 +60,19 @@ void TesseractWidget::paintGL() {
     glLoadIdentity();
     gluLookAt(p.pos.x,p.pos.y,p.pos.z,p.at.x,p.at.y,p.at.z,p.up.x,p.up.y,p.up.z);
     glColor3f(.1,1,.2);
+    SetColor(Coordinate(0,1,0));
+    glNormal3f(0,1,0);
     glBegin(GL_QUADS);
-        glVertex3f(w.size.x/2,0,w.size.z/2);
-        glVertex3f(-w.size.x/2,0,w.size.z/2);
-        glVertex3f(-w.size.x/2,0,-w.size.z/2);
         glVertex3f(w.size.x/2,0,-w.size.z/2);
+        glVertex3f(-w.size.x/2,0,-w.size.z/2);
+        glVertex3f(-w.size.x/2,0,w.size.z/2);
+        glVertex3f(w.size.x/2,0,w.size.z/2);
     glEnd();
     for (QList<Bnode>::iterator it=w.Blocks.begin();it!=w.Blocks.end();++it)
         if (w.ThroughBlock(it,p.pos,p.at)<0)
-            DrawBlock(*it,3);
+            DrawBlock(*it,2);
         else
-            DrawBlock(*it,6);
+            DrawBlock(*it,3);
     if (creatingblock)
         DrawBlock(Bnode(0,(p.at+tempc)/2,(p.at-tempc)/2),1);
     glColor3f(1,0,0);

@@ -41,6 +41,7 @@ public:
     void resizeGL(int,int);
     void mousePressEvent(QMouseEvent*);
     void DrawBlock(Bnode,int);
+    void SetColor(Coordinate);
     World w;
     Player p;
     bool keystatus[128];
