@@ -128,10 +128,10 @@ void TesseractWidget::keyPressEvent(QKeyEvent *e) {
         case Qt::Key_R:
             p=Player(&w);
             break;
-        case Qt::Key_O:
+        case Qt::Key_R:
             w.AttachSoundToBlock(w.ThroughBlock(p.pos,p.at),"sample.mp3");
             break;
-        case Qt::Key_P:
+        case Qt::Key_T:
             w.DetachSoundFromBlock(w.ThroughBlock(p.pos,p.at));
             break;
         default:
