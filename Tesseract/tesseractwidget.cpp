@@ -37,7 +37,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     memset(keystatus,0,sizeof(keystatus));
     creatingblock=0;
     w=World(Coordinate(100,100,100));
-    p=Player(&w);
+    p=Player(w.size);
     this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);
     gt=new GameThread(this);

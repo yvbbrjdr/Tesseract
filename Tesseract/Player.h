@@ -1,7 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "World.h"
 #include "Coordinate.h"
 #include <QString>
 
@@ -18,12 +17,11 @@
 class Player {
 public:
     QString name;
-    Coordinate pos,face,at,up;
+    Coordinate pos,face,at,up,size;
     double theta,phi;
-    World *w;
     Player() {}
-    Player(World *world) {
-        w=world;
+    Player(Coordinate s) {
+        size=s;
         pos=Coordinate(0,1,0);
         theta=0;
         phi=PI/2;
@@ -35,18 +33,18 @@ public:
         pos.z-=sin(theta)*left;
         pos.x+=cos(theta)*left;
         pos.y+=raise;
-        if (pos.z<-w->size.z/2)
-            pos.z=-w->size.z/2;
-        if (pos.z>w->size.z/2)
-            pos.z=w->size.z/2;
-        if (pos.x<-w->size.x/2)
-            pos.x=-w->size.x/2;
-        if (pos.x>w->size.x/2)
-            pos.x=w->size.x/2;
+        if (pos.z<-size.z/2)
+            pos.z=-size.z/2;
+        if (pos.z>size.z/2)
+            pos.z=size.z/2;
+        if (pos.x<-size.x/2)
+            pos.x=-size.x/2;
+        if (pos.x>size.x/2)
+            pos.x=size.x/2;
         if (pos.y<1)
             pos.y=1;
-        if (pos.y>w->size.y)
-            pos.y=w->size.y;
+        if (pos.y>size.y)
+            pos.y=size.y;
         at=pos+face;
     }
     void turn(double raise,double left) {

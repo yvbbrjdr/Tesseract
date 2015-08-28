@@ -12,6 +12,10 @@ void TesseractWidget::initializeGL() {
     glEnable(GL_LIGHT0);
     GLfloat pos[4]={0,GLfloat(w.size.y),0,1};
     glLightfv(GL_LIGHT0,GL_POSITION,pos);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_POLYGON_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
+    glHint(GL_POLYGON_SMOOTH_HINT,GL_NICEST);
 }
 
 void TesseractWidget::SetColor(Coordinate color) {
@@ -104,7 +108,7 @@ void TesseractWidget::keyPressEvent(QKeyEvent *e) {
             close();
             break;
         case Qt::Key_R:
-            p=Player(&w);
+            p=Player(w.size);
             break;
         case Qt::Key_F:
             w.AttachSoundToBlock(w.ThroughBlock(p.pos,p.at),"sample.mp3");
