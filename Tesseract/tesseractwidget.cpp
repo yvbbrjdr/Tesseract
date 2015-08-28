@@ -46,7 +46,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     GLTimer->setInterval(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
-    w.RegisterBlock("Stone",Coordinate(.5,.5,.5),"",1);
+    w.RegisterBlock("Stone",Coordinate(.2,.2,.2),"",1);
 }
 
 void TesseractWidget::DrawScene() {updateGL();}
