@@ -8,6 +8,8 @@ void TesseractWidget::initializeGL() {
     glClearColor(.7,1,1,0);
     glPointSize(3);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
 }
 
 void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
@@ -128,10 +130,10 @@ void TesseractWidget::keyPressEvent(QKeyEvent *e) {
         case Qt::Key_R:
             p=Player(&w);
             break;
-        case Qt::Key_R:
+        case Qt::Key_F:
             w.AttachSoundToBlock(w.ThroughBlock(p.pos,p.at),"sample.mp3");
             break;
-        case Qt::Key_T:
+        case Qt::Key_G:
             w.DetachSoundFromBlock(w.ThroughBlock(p.pos,p.at));
             break;
         default:
