@@ -10,8 +10,10 @@ void TesseractWidget::initializeGL() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    GLfloat pos[4]={0,GLfloat(w.size.y),0,1};
-    glLightfv(GL_LIGHT0,GL_POSITION,pos);
+    GLfloat ambient[]={1,1,1,1};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambient);
+    glPolygonMode(GL_FRONT,GL_FILL);
+    glPolygonMode(GL_BACK,GL_LINE);
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POLYGON_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
@@ -19,10 +21,8 @@ void TesseractWidget::initializeGL() {
 }
 
 void TesseractWidget::SetColor(Coordinate color) {
-    GLfloat c1[4]={GLfloat(color.x),GLfloat(color.y),GLfloat(color.z),1},c2[4]={0,0,0,1};
-    glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,c1);
-    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT,c2);
-    glMaterialfv(GL_FRONT_AND_BACK,GL_SPECULAR,c1);
+    GLfloat c[4]={GLfloat(color.x),GLfloat(color.y),GLfloat(color.z),1};
+    glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,c);
 }
 
 void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
@@ -32,8 +32,6 @@ void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
     const float normal[][3]={{1,0,0},{0,0,1},{-1,0,0},{0,0,-1},{0,1,0},{0,-1,0}};
     if (Mode&2) {
         SetColor(w.BlockTypes[TheBlock.Type].Color);
-        glPolygonMode(GL_FRONT,GL_FILL);
-        glPolygonMode(GL_BACK,GL_LINE);
         for (int i=0;i<6;++i) {
             glBegin(GL_POLYGON);
                 glNormal3f(normal[i][0],normal[i][1],normal[i][2]);
@@ -63,8 +61,7 @@ void TesseractWidget::paintGL() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(p.pos.x,p.pos.y,p.pos.z,p.at.x,p.at.y,p.at.z,p.up.x,p.up.y,p.up.z);
-    glColor3f(.1,1,.2);
-    SetColor(Coordinate(0,1,0));
+    SetColor(Coordinate(.1,1,.2));
     glNormal3f(0,1,0);
     glBegin(GL_QUADS);
         glVertex3f(w.size.x/2,0,-w.size.z/2);
@@ -78,8 +75,8 @@ void TesseractWidget::paintGL() {
         else
             DrawBlock(*it,3);
     if (creatingblock)
-        DrawBlock(Bnode(0,(p.at+tempc)/2,(p.at-tempc)/2),1);
-    glColor3f(1,0,0);
+        DrawBlock(Bnode(0/*To be edited*/,(p.at+tempc)/2,(p.at-tempc)/2),1);
+    SetColor(Coordinate(1,0,0));
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);
@@ -89,17 +86,12 @@ void TesseractWidget::paintGL() {
         glVertex2f(0,0);
     glEnd();
     glEnable(GL_DEPTH_TEST);
-    glColor3f(0,0,0);
-    renderText(20,20,"Tesseract Debug Data",QFont());
-    char s[1000]={};
-    sprintf(s,"Position: x=%.3f y=%.3f z=%.3f",p.pos.x,p.pos.y,p.pos.z);
-    renderText(20,40,s,QFont());
-    sprintf(s,"Orientation: Theta=%.3f Phi=%.3f",p.theta*180/PI,p.phi*180/PI);
-    renderText(20,60,s,QFont());
     glFlush();
 }
 
 void TesseractWidget::keyPressEvent(QKeyEvent *e) {
+    QFileDialog qfd;
+    QList<Bnode>::iterator it;
     switch(e->key()) {
         case Qt::Key_Escape:
             while (!w.Blocks.empty())
@@ -111,7 +103,8 @@ void TesseractWidget::keyPressEvent(QKeyEvent *e) {
             p=Player(w.size);
             break;
         case Qt::Key_F:
-            w.AttachSoundToBlock(w.ThroughBlock(p.pos,p.at),"sample.mp3");
+            if ((it=w.ThroughBlock(p.pos,p.at))!=w.Blocks.end()&&it->hs==0)
+                w.AttachSoundToBlock(w.ThroughBlock(p.pos,p.at),qfd.getOpenFileName(0,"","","MP3 Files(*.mp3);;Wave Files(*.wav)"));
             break;
         case Qt::Key_G:
             w.DetachSoundFromBlock(w.ThroughBlock(p.pos,p.at));
