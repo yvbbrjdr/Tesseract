@@ -12,41 +12,66 @@ void TesseractWidget::initializeGL() {
 
 void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
     const Coordinate Points[8]={Coordinate(1,1,1),Coordinate(1,1,-1),Coordinate(1,-1,1),Coordinate(1,-1,-1),Coordinate(-1,1,1),Coordinate(-1,1,-1),Coordinate(-1,-1,1),Coordinate(-1,-1,-1)};
-    const int Surfaces[6][4]={{7,3,2,6},{5,1,0,4},{0,1,3,2},{4,5,7,6},{4,0,2,6},{5,1,3,7}};
+    const int Sur1[]={0,1,2,3,6,7,4,5,0,1},Sur2[]={6,2,4,0,5,1,7,3};
+    const int Line1[]={0,1,3,2,6,4,5,1},Line2[]={2,0,4},Line3[]={6,7,3,7,5};
     if (Mode&2) {
         glColor3f(w.BlockTypes[TheBlock.Type].Color.x,
                   w.BlockTypes[TheBlock.Type].Color.y,
                   w.BlockTypes[TheBlock.Type].Color.z);
-        for (int i=0;i<6;++i) {
-                glBegin(GL_QUADS);
-                    for (int j=0;j<4;++j)
-                        glVertex3f(TheBlock.Pos.x+Points[Surfaces[i][j]].x*TheBlock.HalfSize.x,
-                                   TheBlock.Pos.y+Points[Surfaces[i][j]].y*TheBlock.HalfSize.y,
-                                   TheBlock.Pos.z+Points[Surfaces[i][j]].z*TheBlock.HalfSize.z);
-                glEnd();
-        }
+        glBegin(GL_QUAD_STRIP);
+            for (int i=0;i<10;++i)
+                glVertex3f(TheBlock.Pos.x+Points[Sur1[i]].x*TheBlock.HalfSize.x,
+                           TheBlock.Pos.y+Points[Sur1[i]].y*TheBlock.HalfSize.y,
+                           TheBlock.Pos.z+Points[Sur1[i]].z*TheBlock.HalfSize.z);
+        glEnd();
+        glBegin(GL_QUAD_STRIP);
+            for (int i=0;i<8;++i)
+                glVertex3f(TheBlock.Pos.x+Points[Sur2[i]].x*TheBlock.HalfSize.x,
+                           TheBlock.Pos.y+Points[Sur2[i]].y*TheBlock.HalfSize.y,
+                           TheBlock.Pos.z+Points[Sur2[i]].z*TheBlock.HalfSize.z);
+        glEnd();
     }
     if (Mode&1) {
         glColor3f(0,0,0);
-        for (int i=0;i<6;++i) {
-                glBegin(GL_LINE_LOOP);
-                    for (int j=0;j<4;++j)
-                        glVertex3f(TheBlock.Pos.x+Points[Surfaces[i][j]].x*TheBlock.HalfSize.x,
-                                   TheBlock.Pos.y+Points[Surfaces[i][j]].y*TheBlock.HalfSize.y,
-                                   TheBlock.Pos.z+Points[Surfaces[i][j]].z*TheBlock.HalfSize.z);
-                glEnd();
-        }
+        glBegin(GL_LINE_STRIP);
+            for (int i=0;i<8;++i)
+                glVertex3f(TheBlock.Pos.x+Points[Line1[i]].x*TheBlock.HalfSize.x,
+                           TheBlock.Pos.y+Points[Line1[i]].y*TheBlock.HalfSize.y,
+                           TheBlock.Pos.z+Points[Line1[i]].z*TheBlock.HalfSize.z);
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+            for (int i=0;i<3;++i)
+                glVertex3f(TheBlock.Pos.x+Points[Line2[i]].x*TheBlock.HalfSize.x,
+                           TheBlock.Pos.y+Points[Line2[i]].y*TheBlock.HalfSize.y,
+                           TheBlock.Pos.z+Points[Line2[i]].z*TheBlock.HalfSize.z);
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+            for (int i=0;i<5;++i)
+                glVertex3f(TheBlock.Pos.x+Points[Line3[i]].x*TheBlock.HalfSize.x,
+                           TheBlock.Pos.y+Points[Line3[i]].y*TheBlock.HalfSize.y,
+                           TheBlock.Pos.z+Points[Line3[i]].z*TheBlock.HalfSize.z);
+        glEnd();
     }
     if (Mode&4) {
         glColor3f(1,1,1);
-        for (int i=0;i<6;++i) {
-                glBegin(GL_LINE_LOOP);
-                    for (int j=0;j<4;++j)
-                        glVertex3f(TheBlock.Pos.x+Points[Surfaces[i][j]].x*TheBlock.HalfSize.x,
-                                   TheBlock.Pos.y+Points[Surfaces[i][j]].y*TheBlock.HalfSize.y,
-                                   TheBlock.Pos.z+Points[Surfaces[i][j]].z*TheBlock.HalfSize.z);
-                glEnd();
-        }
+        glBegin(GL_LINE_STRIP);
+            for (int i=0;i<8;++i)
+                glVertex3f(TheBlock.Pos.x+Points[Line1[i]].x*TheBlock.HalfSize.x,
+                           TheBlock.Pos.y+Points[Line1[i]].y*TheBlock.HalfSize.y,
+                           TheBlock.Pos.z+Points[Line1[i]].z*TheBlock.HalfSize.z);
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+            for (int i=0;i<3;++i)
+                glVertex3f(TheBlock.Pos.x+Points[Line2[i]].x*TheBlock.HalfSize.x,
+                           TheBlock.Pos.y+Points[Line2[i]].y*TheBlock.HalfSize.y,
+                           TheBlock.Pos.z+Points[Line2[i]].z*TheBlock.HalfSize.z);
+        glEnd();
+        glBegin(GL_LINE_STRIP);
+            for (int i=0;i<5;++i)
+                glVertex3f(TheBlock.Pos.x+Points[Line3[i]].x*TheBlock.HalfSize.x,
+                           TheBlock.Pos.y+Points[Line3[i]].y*TheBlock.HalfSize.y,
+                           TheBlock.Pos.z+Points[Line3[i]].z*TheBlock.HalfSize.z);
+        glEnd();
     }
 }
 
