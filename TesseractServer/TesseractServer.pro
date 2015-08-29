@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     ../Tesseract/Block.cpp \
     ../Tesseract/Coordinate.cpp \
     ../Tesseract/Player.cpp \
-    ../Tesseract/World.cpp
+    ../Tesseract/World.cpp \
+    ../Tesseract/Sound.cpp
 
 HEADERS  += mainwindow.h \
     ../../Tesseract/Block.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     ../Tesseract/Block.h \
     ../Tesseract/Coordinate.h \
     ../Tesseract/Player.h \
-    ../Tesseract/World.h
+    ../Tesseract/World.h \
+    ../Tesseract/Sound.h
 
 FORMS    += mainwindow.ui
 
@@ -38,3 +40,5 @@ FORMS    += mainwindow.ui
 #-------------------------------------------------
 
 QT += network
+
+LIBS += -lbass

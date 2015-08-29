@@ -22,6 +22,8 @@ protected:
     void incomingConnection(qintptr handle);
 };
 
+class TcpThread;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -31,8 +33,9 @@ public:
     void log(QString);
     void process(QVector<QString>);
     ~MainWindow();
-    World w;
-    QQueue<QString>UniMsgQue;
+    static World w;
+    static QQueue<QString>UniMsgQue;
+    static QVector<TcpThread*>TcpThreads;
 
 
 private slots:
