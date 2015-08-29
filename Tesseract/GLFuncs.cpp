@@ -50,6 +50,7 @@ void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
                 glVertex3f(TheBlock.Pos.x+Points[Line[i]].x*TheBlock.HalfSize.x,
                            TheBlock.Pos.y+Points[Line[i]].y*TheBlock.HalfSize.y,
                            TheBlock.Pos.z+Points[Line[i]].z*TheBlock.HalfSize.z);
+        glEnd();
     }
 }
 
