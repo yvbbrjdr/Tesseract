@@ -3,29 +3,31 @@
 
 class GameThread : public QThread {
 public:
-    TesseractWidget *tw;
-    GameThread(TesseractWidget *t) {tw=t;}
     void run() {
         while (1) {
-            if (tw->keystatus['w'])
-                tw->p.go(.1,0,0);
-            if (tw->keystatus['a'])
-                tw->p.go(0,.1,0);
-            if (tw->keystatus['s'])
-                tw->p.go(-.1,0,0);
-            if (tw->keystatus['d'])
-                tw->p.go(0,-.1,0);
-            if (tw->keystatus['x'])
-                tw->p.go(0,0,.1);
-            if (tw->keystatus['z'])
-                tw->p.go(0,0,-.1);
-            tw->w.SetListenerValues(tw->p.pos,tw->p.face,tw->p.up);
+            if (TesseractWidget::keystatus['w'])
+                TesseractWidget::p.go(.1,0,0);
+            if (TesseractWidget::keystatus['a'])
+                TesseractWidget::p.go(0,.1,0);
+            if (TesseractWidget::keystatus['s'])
+                TesseractWidget::p.go(-.1,0,0);
+            if (TesseractWidget::keystatus['d'])
+                TesseractWidget::p.go(0,-.1,0);
+            if (TesseractWidget::keystatus['x'])
+                TesseractWidget::p.go(0,0,.1);
+            if (TesseractWidget::keystatus['z'])
+                TesseractWidget::p.go(0,0,-.1);
+            TesseractWidget::w.SetListenerValues(TesseractWidget::p.pos,TesseractWidget::p.face,TesseractWidget::p.up);
             QTime dieTime=QTime::currentTime().addMSecs(10);
             while (QTime::currentTime()<dieTime)
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
         }
     }
 };
+
+World TesseractWidget::w(Coordinate(100,100,100));
+Player TesseractWidget::p(Coordinate(100,100,100));
+bool TesseractWidget::keystatus[128]={};
 
 TesseractWidget::TesseractWidget(QGLWidget *parent) :
     QGLWidget(parent),
@@ -34,11 +36,9 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     this->showFullScreen();
     memset(keystatus,0,sizeof(keystatus));
     creatingblock=0;
-    w.size=Coordinate(100,100,100);
-    p=Player(w.size);
     this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);
-    gt=new GameThread(this);
+    gt=new GameThread;
     gt->start();
     GLTimer=new QTimer;
     GLTimer->setInterval(16);
