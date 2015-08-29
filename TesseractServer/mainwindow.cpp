@@ -6,7 +6,7 @@ public:
 
     void run() {
         while (1) {
-            if (UniMsgQue.empty()) {
+            if (MainWindow::UniMsgQue.empty()) {
                 sleep(10);
                 continue;
             }
@@ -17,7 +17,9 @@ public:
 
 class TcpThread;
 
-QVector<TcpThread*>TcpThreads;
+World MainWindow::w;
+QQueue<QString>MainWindow::UniMsgQue;
+QVector<TcpThread*>MainWindow::TcpThreads;
 
 class TcpThread:public QThread {
 public:
@@ -29,7 +31,7 @@ public:
     TcpThread(int ID,qintptr handle) {
         id=ID;
         maintain=1;
-        p=new Player(w.size);
+        p=new Player(MainWindow::w.size);
         sock=new QTcpSocket;
         connect(sock,SIGNAL(readyRead()),this,SLOT(readdata()));          //There are some problems here...
         connect(sock,SIGNAL(disconnected()),this,SLOT(disconnect()));
@@ -58,7 +60,7 @@ public slots:
     void disconnect() {
         sock->disconnect();
         sock->close();
-        TcpThreads.remove(id);
+        MainWindow::TcpThreads.remove(id);
         maintain=0;
         delete this;
     }
@@ -80,8 +82,8 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
 }
 
 void myQTcpServer::incomingConnection(qintptr handle) {
-    TcpThread *tt=new TcpThread(TcpThreads.count(),handle);
-    TcpThreads.push_back(tt);
+    TcpThread *tt=new TcpThread(MainWindow::TcpThreads.count(),handle);
+    MainWindow::TcpThreads.push_back(tt);
     tt->start();
 }
 
