@@ -104,10 +104,10 @@ void TesseractWidget::keyPressEvent(QKeyEvent *e) {
             break;
         case Qt::Key_F:
             if ((it=w.ThroughBlock(p.pos,p.at))!=w.Blocks.end()&&it->hs==0)
-                w.AttachSoundToBlock(w.ThroughBlock(p.pos,p.at),qfd.getOpenFileName(0,"","","MP3 Files(*.mp3);;Wave Files(*.wav)"));
+                Sound::AttachSoundToBlock(w.ThroughBlock(p.pos,p.at),qfd.getOpenFileName(0,"","","MP3 Files(*.mp3);;Wave Files(*.wav)"));
             break;
         case Qt::Key_G:
-            w.DetachSoundFromBlock(w.ThroughBlock(p.pos,p.at));
+            Sound::DetachSoundFromBlock(w.ThroughBlock(p.pos,p.at));
             break;
         default:
             keystatus[int(e->text().toStdString()[0])]=1;

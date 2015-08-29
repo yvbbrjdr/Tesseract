@@ -17,7 +17,7 @@ public:
                 TesseractWidget::p.go(0,0,.1);
             if (TesseractWidget::keystatus['z'])
                 TesseractWidget::p.go(0,0,-.1);
-            TesseractWidget::w.SetListenerValues(TesseractWidget::p.pos,TesseractWidget::p.face,TesseractWidget::p.up);
+            Sound::SetListenerValues(TesseractWidget::p.pos,TesseractWidget::p.face,TesseractWidget::p.up);
             QTime dieTime=QTime::currentTime().addMSecs(10);
             while (QTime::currentTime()<dieTime)
                 QCoreApplication::processEvents(QEventLoop::AllEvents, 100);

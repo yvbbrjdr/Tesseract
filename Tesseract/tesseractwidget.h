@@ -14,6 +14,7 @@
 #include "Coordinate.h"
 #include "Player.h"
 #include "World.h"
+#include "Sound.h"
 
 
 class GameThread;
