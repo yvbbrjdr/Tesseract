@@ -18,7 +18,8 @@ SOURCES += main.cpp\
     Coordinate.cpp \
     Block.cpp \
     GLFuncs.cpp \
-    Player.cpp
+    Player.cpp \
+    Sound.cpp
 
 HEADERS  += tesseractwidget.h \
     World.h \
@@ -26,7 +27,8 @@ HEADERS  += tesseractwidget.h \
     Coordinate.h \
     Block.h \
     ALFuncs.h \
-    NetFuncs.h
+    NetFuncs.h \
+    Sound.h
 
 FORMS    += tesseractwidget.ui
 
