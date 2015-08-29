@@ -4,4 +4,4 @@
 !/Tesseract/
 !/TesseractServer/
 *.user
-*.pro
+/Tesseract/*.pro
