@@ -1,8 +1,6 @@
 #include "tesseractwidget.h"
 #include "ui_tesseractwidget.h"
 
-#include "GLFuncs.h"
-
 class GameThread : public QThread {
 public:
     TesseractWidget *tw;
@@ -36,7 +34,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     this->showFullScreen();
     memset(keystatus,0,sizeof(keystatus));
     creatingblock=0;
-    w=World(Coordinate(100,100,100));
+    w.size=Coordinate(100,100,100);
     p=Player(w.size);
     this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);

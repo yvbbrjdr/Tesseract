@@ -8,10 +8,10 @@
 #include <QVector>
 #include <QQueue>
 #include <QtNetwork/QTcpSocket>
-#include "../../Tesseract/Block.h"
-#include "../../Tesseract/Coordinate.h"
-#include "../../Tesseract/Player.h"
-#include "../../Tesseract/World.h"
+#include "../Tesseract/Block.h"
+#include "../Tesseract/Coordinate.h"
+#include "../Tesseract/Player.h"
+#include "../Tesseract/World.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +31,8 @@ public:
     void log(QString);
     void process(QVector<QString>);
     ~MainWindow();
+    World w;
+    QQueue<QString>UniMsgQue;
 
 
 private slots:
