@@ -42,9 +42,9 @@ public:
     void mousePressEvent(QMouseEvent*);
     void DrawBlock(Bnode,int);
     void SetColor(Coordinate);
-    World w;
-    Player p;
-    bool keystatus[128];
+    static World w;
+    static Player p;
+    static bool keystatus[128];
 
 private:
     Ui::TesseractWidget *ui;
