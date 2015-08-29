@@ -1,12 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-World *w;
-
-QQueue<QString>UniMsgQue;
-
 class MainLoop:public QThread {
 public:
+
     void run() {
         while (1) {
             if (UniMsgQue.empty()) {
@@ -32,7 +29,7 @@ public:
     TcpThread(int ID,qintptr handle) {
         id=ID;
         maintain=1;
-        p=new Player(w);
+        p=new Player(w.size);
         sock=new QTcpSocket;
         connect(sock,SIGNAL(readyRead()),this,SLOT(readdata()));          //There are some problems here...
         connect(sock,SIGNAL(disconnected()),this,SLOT(disconnect()));
@@ -71,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent):QMainWindow(parent),ui(new Ui::MainWindo
     ui->setupUi(this);
     ui->lineEdit->setFocus();
     log("Welcome to TesseractServer");
-    w=new World(Coordinate(100,100,100));
+    w=World(Coordinate(100,100,100));
     log("World generated");
     MainLoop *ml=new MainLoop;
     ml->start();
