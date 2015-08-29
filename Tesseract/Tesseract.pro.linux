@@ -26,8 +26,6 @@ HEADERS  += tesseractwidget.h \
     Player.h \
     Coordinate.h \
     Block.h \
-    ALFuncs.h \
-    NetFuncs.h \
     Sound.h
 
 FORMS    += tesseractwidget.ui
