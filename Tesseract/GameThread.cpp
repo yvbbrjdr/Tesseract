@@ -15,6 +15,8 @@ void GameThread::run() {
         if (TesseractWidget::keystatus['z'])
             TesseractWidget::p.go(0,0,-.1);
         Sound::SetListenerValues(TesseractWidget::p.pos,TesseractWidget::p.face,TesseractWidget::p.up);
+        for (QList<Bnode>::iterator it=TesseractWidget::w.Blocks.begin();it!=TesseractWidget::w.Blocks.end();++it)
+            TesseractWidget::w.BlockTypes[it->Type]->Global(TesseractWidget::w,TesseractWidget::p,*it);
         QTime dieTime=QTime::currentTime().addMSecs(10);
         while (QTime::currentTime()<dieTime)
             QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
