@@ -30,11 +30,10 @@ public:
 
 class Bnode {
 public:
-    int Type,sizeofData;
+    int Type;
     Coordinate Pos,HalfSize;
     void *Data;
-    Bnode(int,Coordinate,Coordinate,bool);
-    ~Bnode();
+    Bnode(int,Coordinate,Coordinate);
 };
 
 #include "tesseractwidget.h"

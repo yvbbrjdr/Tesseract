@@ -77,7 +77,7 @@ void TesseractWidget::paintGL() {
         else
             DrawBlock(*it,3);
     if (creatingblock)
-        DrawBlock(Bnode(currentblocktype,(p.at+tempc)/2,(p.at-tempc)/2,0),1);
+        DrawBlock(Bnode(currentblocktype,(p.at+tempc)/2,(p.at-tempc)/2),1);
     SetColor(Coordinate(1,0,0));
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
