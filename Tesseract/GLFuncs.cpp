@@ -23,6 +23,7 @@ void TesseractWidget::initializeGL() {
 void TesseractWidget::SetColor(Coordinate color) {
     GLfloat c[4]={GLfloat(color.x),GLfloat(color.y),GLfloat(color.z),1};
     glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,c);
+    glColor4fv(c);
 }
 
 void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
@@ -76,16 +77,20 @@ void TesseractWidget::paintGL() {
         else
             DrawBlock(*it,3);
     if (creatingblock)
-        DrawBlock(Bnode(0/*To be edited*/,(p.at+tempc)/2,(p.at-tempc)/2),1);
+        DrawBlock(Bnode(currentblocktype,(p.at+tempc)/2,(p.at-tempc)/2),1);
     SetColor(Coordinate(1,0,0));
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_LIGHTING);
     glBegin(GL_POINTS);
         glVertex2f(0,0);
     glEnd();
+    SetColor(w.BlockTypes[currentblocktype]->Color);
+    renderText(20,20,w.BlockTypes[currentblocktype]->Name,QFont());
+    glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
     glFlush();
 }
@@ -129,7 +134,7 @@ void TesseractWidget::mouseMoveEvent(QMouseEvent *event) {
 void TesseractWidget::mousePressEvent(QMouseEvent *event) {
     if (event->button()==Qt::LeftButton) {
         if (creatingblock) {
-            w.AddBlock(0,(p.at+tempc)/2,(p.at-tempc)/2);
+            w.AddBlock(currentblocktype,(p.at+tempc)/2,(p.at-tempc)/2);
             creatingblock=0;
         } else {
             tempc=p.at;
@@ -153,6 +158,18 @@ void TesseractWidget::resizeGL(int width,int height) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     QCursor::setPos(this->mapToGlobal(QPoint(400,300)));
+}
+
+void TesseractWidget::wheelEvent(QWheelEvent *event) {
+    if (event->delta()<0) {
+        ++currentblocktype;
+        if (currentblocktype==w.BlockTypes.size())
+            currentblocktype=0;
+    } else if (event->delta()>0) {
+        --currentblocktype;
+        if (currentblocktype==-1)
+            currentblocktype=w.BlockTypes.size()-1;
+    }
 }
 
 #endif // GLFUNCS_H

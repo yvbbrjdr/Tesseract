@@ -16,7 +16,6 @@ void World::AddBlock(int Type,Coordinate Pos,Coordinate HalfSize) {
 
 void World::RemoveBlock(QList<Bnode>::iterator TheBlock) {
     if (TheBlock!=Blocks.end()) {
-        TheBlock->DetachSound();
         Blocks.erase(TheBlock);
     }
 }
