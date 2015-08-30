@@ -12,6 +12,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     this->showFullScreen();
     memset(keystatus,0,sizeof(keystatus));
     creatingblock=0;
+    currentblocktype=0;
     this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);
     gt=new GameThread;
@@ -21,6 +22,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
     w.RegisterBlock(SpeakerBlock());
+    w.RegisterBlock(ControllerBlock());
 }
 
 void TesseractWidget::DrawScene() {updateGL();}

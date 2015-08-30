@@ -4,25 +4,24 @@ Bnode::Bnode(int Ty,Coordinate Po,Coordinate HS) {
     Type=Ty;
     Pos=Po;
     HalfSize=HS;
-    hc=0;
+    Data=NULL;
+    TesseractWidget::w.BlockTypes[Type]->Create(TesseractWidget::w,TesseractWidget::p,*this);
 }
 
-void Bnode::AttachSound(QString Filename) {
-    if (hc==0)
-        hc=Sound::AddNewSound(Pos,Filename);
-    else
-        Sound::PlayASound(hc);
+Bnode::~Bnode() {
+    TesseractWidget::w.BlockTypes[Type]->Destroy(TesseractWidget::w,TesseractWidget::p,*this);
+    if (Data!=NULL)
+        free(Data);
 }
 
-void Bnode::DetachSound() {
-    Sound::RemoveASound(hc);
-    hc=0;
-}
+void Block::E(World&,Player&,Bnode&) {}
 
-bool Bnode::SoundAttached() {
-    return hc;
-}
+void Block::F(World&,Player&,Bnode&) {}
 
-void Bnode::PauseSound() {
-    Sound::PauseASound(hc);
-}
+void Block::G(World&,Player&,Bnode&) {}
+
+void Block::Global(World&,Player&,Bnode&) {}
+
+void Block::Create(World&,Player&,Bnode&) {}
+
+void Block::Destroy(World&,Player&,Bnode&) {}

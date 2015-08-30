@@ -10,14 +10,18 @@
 #include <QThread>
 #include <QTime>
 #include <QTimer>
+#include <QWheelEvent>
 #include "Block.h"
 #include "Coordinate.h"
 #include "Player.h"
 #include "World.h"
 #include "GameThread.h"
 #include "BlockTypes/SpeakerBlock.h"
+#include "BlockTypes/ControllerBlock.h"
 
 class GameThread;
+class Bnode;
+class World;
 
 namespace Ui {
     class TesseractWidget;
@@ -41,6 +45,7 @@ public:
     void mouseMoveEvent(QMouseEvent*);
     void resizeGL(int,int);
     void mousePressEvent(QMouseEvent*);
+    void wheelEvent(QWheelEvent*);
     void DrawBlock(Bnode,int);
     void SetColor(Coordinate);
     static World w;
@@ -54,6 +59,7 @@ private:
     bool creatingblock;
     double aspect;
     Coordinate tempc;
+    int currentblocktype;
 };
 
 #endif // TESSERACTWIDGET_H

@@ -6,12 +6,12 @@
 #include "../Player.h"
 #include <QFileDialog>
 
+class Block;
+
 class SpeakerBlock:public Block {
 public:
     SpeakerBlock();
-    virtual void E(World&,Player&,Bnode&);
-    virtual void F(World&,Player&,Bnode&);
-    virtual void G(World&,Player&,Bnode&);
+
 };
 
 #endif // SPEAKERBLOCK_H
