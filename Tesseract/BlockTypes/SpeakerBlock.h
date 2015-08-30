@@ -4,6 +4,7 @@
 #include "../Block.h"
 #include "../World.h"
 #include "../Player.h"
+#include "../Sound.h"
 #include <QFileDialog>
 
 class Block;
@@ -11,7 +12,8 @@ class Block;
 class SpeakerBlock:public Block {
 public:
     SpeakerBlock();
-
+    virtual void Create(World&,Player&,Bnode&);
+    virtual void E(World&,Player&,Bnode&);
 };
 
 #endif // SPEAKERBLOCK_H

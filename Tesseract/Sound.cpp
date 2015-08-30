@@ -11,7 +11,6 @@ HSTREAM Sound::AddNewSound(Coordinate Position,QString Filename) {
     BASS_3DVECTOR v(Position.x,Position.y,Position.z);
     BASS_ChannelSet3DPosition(hs,&v,NULL,NULL);
     BASS_Apply3D();
-    BASS_ChannelPlay(hs,FALSE);
     return hs;
 }
 
