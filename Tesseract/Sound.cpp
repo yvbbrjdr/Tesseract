@@ -21,12 +21,3 @@ void Sound::RemoveASound(HSTREAM hs) {
         BASS_StreamFree(hs);
     }
 }
-
-void Sound::AttachSoundToBlock(QList<Bnode>::iterator TheBlock,QString Filename) {
-    TheBlock->hs=AddNewSound(TheBlock->Pos,Filename);
-}
-
-void Sound::DetachSoundFromBlock(QList<Bnode>::iterator TheBlock) {
-    RemoveASound(TheBlock->hs);
-    TheBlock->hs=0;
-}

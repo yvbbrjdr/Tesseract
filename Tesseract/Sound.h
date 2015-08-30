@@ -11,8 +11,6 @@ public:
     static int RegisterBlock(QString,Coordinate,QString,bool);
     static HSTREAM AddNewSound(Coordinate,QString);
     static void RemoveASound(HSTREAM);
-    static void AttachSoundToBlock(QList<Bnode>::iterator,QString);
-    static void DetachSoundFromBlock(QList<Bnode>::iterator);
 };
 
 #endif // SOUND
