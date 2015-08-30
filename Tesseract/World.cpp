@@ -9,13 +9,15 @@ World::World(Coordinate s) {
 void World::AddBlock(int Type,Coordinate Pos,Coordinate HalfSize) {
     if (Type<BlockTypes.size()) {
         HalfSize=HalfSize.Abs();
-        Bnode b(Type,Pos,HalfSize,1);
+        Bnode b(Type,Pos,HalfSize);
         Blocks.push_back(b);
+        BlockTypes[Type]->Create(*this,TesseractWidget::p,*(Blocks.end()-1));
     }
 }
 
 void World::RemoveBlock(QList<Bnode>::iterator TheBlock) {
     if (TheBlock!=Blocks.end()) {
+        BlockTypes[TheBlock->Type]->Destroy(*this,TesseractWidget::p,*TheBlock);
         Blocks.erase(TheBlock);
     }
 }
