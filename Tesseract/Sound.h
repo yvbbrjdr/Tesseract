@@ -10,7 +10,9 @@ public:
     static void SetListenerValues(Coordinate position,Coordinate face,Coordinate up);
     static int RegisterBlock(QString,Coordinate,QString,bool);
     static HSTREAM AddNewSound(Coordinate,QString);
-    static void RemoveASound(HSTREAM);
+    static void RemoveASound(HCHANNEL);
+    static void PauseASound(HCHANNEL);
+    static void PlayASound(HCHANNEL);
 };
 
 #endif // SOUND

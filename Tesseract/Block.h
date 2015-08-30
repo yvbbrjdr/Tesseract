@@ -6,6 +6,10 @@
 #include <bass.h>
 #include <QList>
 #include "Sound.h"
+#include "Player.h"
+
+class World;
+class Bnode;
 
 class Block {
 public:
@@ -13,6 +17,9 @@ public:
     Coordinate Color;
     QString TextureName;
     bool SoundCanGetThrough;
+    virtual void E(World&,Player&,Bnode&)=0;
+    virtual void F(World&,Player&,Bnode&)=0;
+    virtual void G(World&,Player&,Bnode&)=0;
 };
 
 class Bnode {
@@ -22,6 +29,7 @@ public:
     Bnode(int,Coordinate,Coordinate);
     void AttachSound(QString);
     void DetachSound();
+    void PauseSound();
     bool SoundAttached();
 
 private:

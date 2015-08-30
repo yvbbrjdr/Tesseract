@@ -15,6 +15,9 @@
 #include "Player.h"
 #include "World.h"
 #include "GameThread.h"
+#include "BlockTypes/SpeakerBlock.h"
+
+class GameThread;
 
 namespace Ui {
     class TesseractWidget;

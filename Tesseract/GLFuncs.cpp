@@ -31,7 +31,7 @@ void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
     const int Line[]={0,1,1,3,3,2,2,0,0,4,1,5,3,7,2,6,6,4,4,5,5,7,7,6};
     const float normal[][3]={{1,0,0},{0,0,1},{-1,0,0},{0,0,-1},{0,1,0},{0,-1,0}};
     if (Mode&2) {
-        SetColor(w.BlockTypes[TheBlock.Type].Color);
+        SetColor(w.BlockTypes[TheBlock.Type]->Color);
         for (int i=0;i<6;++i) {
             glBegin(GL_POLYGON);
                 glNormal3f(normal[i][0],normal[i][1],normal[i][2]);
@@ -91,7 +91,6 @@ void TesseractWidget::paintGL() {
 }
 
 void TesseractWidget::keyPressEvent(QKeyEvent *e) {
-    QFileDialog qfd;
     QList<Bnode>::iterator it;
     switch(e->key()) {
         case Qt::Key_Escape:
@@ -103,13 +102,17 @@ void TesseractWidget::keyPressEvent(QKeyEvent *e) {
         case Qt::Key_R:
             p=Player(w.size);
             break;
+        case Qt::Key_E:
+            if ((it=w.ThroughBlock(p.pos,p.at))!=w.Blocks.end())
+                w.BlockTypes[it->Type]->E(w,p,*it);
+            break;
         case Qt::Key_F:
-            if ((it=w.ThroughBlock(p.pos,p.at))!=w.Blocks.end()&&!it->SoundAttached())
-                it->AttachSound(qfd.getOpenFileName(0,"","","MP3 Files(*.mp3);;Wave Files(*.wav)"));
+            if ((it=w.ThroughBlock(p.pos,p.at))!=w.Blocks.end())
+                w.BlockTypes[it->Type]->F(w,p,*it);
             break;
         case Qt::Key_G:
             if ((it=w.ThroughBlock(p.pos,p.at))!=w.Blocks.end())
-                it->DetachSound();
+                w.BlockTypes[it->Type]->G(w,p,*it);
             break;
         default:
             keystatus[int(e->text().toStdString()[0])]=1;
