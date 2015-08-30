@@ -11,12 +11,17 @@
 class World {
 public:
     Coordinate size;
-    QVector<Block>BlockTypes;
+    QVector<Block*>BlockTypes;
     QList<Bnode>Blocks;
     QList<Player>Players;
     World();
     World(Coordinate);
-    int RegisterBlock(QString,Coordinate,QString,bool);
+    template<class T>int RegisterBlock(T BT) {
+        T *b=new T;
+        *b=BT;
+        BlockTypes.push_back(b);
+        return BlockTypes.size()-1;
+    }
     void AddBlock(int,Coordinate,Coordinate);
     void RemoveBlock(QList<Bnode>::iterator);
     bool InBlock(QList<Bnode>::iterator,Coordinate);

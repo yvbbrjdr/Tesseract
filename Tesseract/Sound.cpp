@@ -15,9 +15,17 @@ HSTREAM Sound::AddNewSound(Coordinate Position,QString Filename) {
     return hs;
 }
 
-void Sound::RemoveASound(HSTREAM hs) {
-    if (hs!=0) {
-        BASS_ChannelStop(hs);
-        BASS_StreamFree(hs);
+void Sound::RemoveASound(HCHANNEL hc) {
+    if (hc!=0) {
+        BASS_ChannelStop(hc);
+        BASS_StreamFree(hc);
     }
+}
+
+void Sound::PauseASound(HCHANNEL hc) {
+    BASS_ChannelPause(hc);
+}
+
+void Sound::PlayASound(HCHANNEL hc) {
+    BASS_ChannelPlay(hc,FALSE);
 }

@@ -6,16 +6,6 @@ World::World(Coordinate s) {
     size=s;
 }
 
-int World::RegisterBlock(QString Name,Coordinate Color,QString TextureName,bool SoundCanGetThrough) {
-    Block b;
-    b.Name=Name;
-    b.Color=Color;
-    b.TextureName=TextureName;
-    b.SoundCanGetThrough=SoundCanGetThrough;
-    BlockTypes.push_back(b);
-    return BlockTypes.size()-1;
-}
-
 void World::AddBlock(int Type,Coordinate Pos,Coordinate HalfSize) {
     if (Type<BlockTypes.size()) {
         HalfSize=HalfSize.Abs();
