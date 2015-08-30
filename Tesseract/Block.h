@@ -33,7 +33,7 @@ public:
     int Type,sizeofData;
     Coordinate Pos,HalfSize;
     void *Data;
-    Bnode(int,Coordinate,Coordinate);
+    Bnode(int,Coordinate,Coordinate,bool);
     ~Bnode();
 };
 

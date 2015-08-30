@@ -1,17 +1,16 @@
 #include "Block.h"
 
-Bnode::Bnode(int Ty,Coordinate Po,Coordinate HS) {
+Bnode::Bnode(int Ty,Coordinate Po,Coordinate HS,bool created) {
     Type=Ty;
     Pos=Po;
     HalfSize=HS;
     Data=NULL;
-    TesseractWidget::w.BlockTypes[Type]->Create(TesseractWidget::w,TesseractWidget::p,*this);
+    if (created)
+        TesseractWidget::w.BlockTypes[Type]->Create(TesseractWidget::w,TesseractWidget::p,*this);
 }
 
 Bnode::~Bnode() {
     TesseractWidget::w.BlockTypes[Type]->Destroy(TesseractWidget::w,TesseractWidget::p,*this);
-    if (Data!=NULL)
-        free(Data);
 }
 
 void Block::E(World&,Player&,Bnode&) {}

@@ -9,7 +9,7 @@ World::World(Coordinate s) {
 void World::AddBlock(int Type,Coordinate Pos,Coordinate HalfSize) {
     if (Type<BlockTypes.size()) {
         HalfSize=HalfSize.Abs();
-        Bnode b(Type,Pos,HalfSize);
+        Bnode b(Type,Pos,HalfSize,1);
         Blocks.push_back(b);
     }
 }
