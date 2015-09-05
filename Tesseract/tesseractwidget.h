@@ -17,7 +17,6 @@
 #include "World.h"
 #include "GameThread.h"
 #include "BlockTypes/SpeakerBlock.h"
-#include "BlockTypes/ControllerBlock.h"
 
 class GameThread;
 class Bnode;
@@ -48,9 +47,8 @@ public:
     void wheelEvent(QWheelEvent*);
     void DrawBlock(Bnode,int);
     void SetColor(Coordinate);
-    static World w;
-    static Player p;
-    static bool keystatus[128];
+    static World TheWorld;
+    static bool KeyStatus[128];
 
 private:
     Ui::TesseractWidget *ui;

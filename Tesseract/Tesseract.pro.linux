@@ -17,16 +17,21 @@ SOURCES += main.cpp\
     World.cpp \
     Coordinate.cpp \
     Block.cpp \
-    GLFuncs.cpp \
     Player.cpp \
-    Sound.cpp
+    Sound.cpp \
+    GameThread.cpp \
+    BlockTypes/SpeakerBlock.cpp
 
 HEADERS  += tesseractwidget.h \
     World.h \
     Player.h \
     Coordinate.h \
     Block.h \
-    Sound.h
+    ALFuncs.h \
+    NetFuncs.h \
+    Sound.h \
+    GameThread.h \
+    BlockTypes/SpeakerBlock.h
 
 FORMS    += tesseractwidget.ui
 
