@@ -3,6 +3,7 @@
 
 World TesseractWidget::TheWorld(Coordinate(100,100,100));
 bool TesseractWidget::KeyStatus[128]={};
+PluginManager TesseractWidget::PM;
 
 TesseractWidget::TesseractWidget(QGLWidget *parent) :
     QGLWidget(parent),
@@ -20,7 +21,10 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     GLTimer->setInterval(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
-    TheWorld.RegisterBlock(SpeakerBlock());
+    PM.LoadFolder("./plugin");
+    for (int i=0;i<PM.Plugins.size();++i)
+        PM.Plugins[i]->clientLoad(TheWorld);
+    TheWorld.RegisterBlock(Block());
 }
 
 void TesseractWidget::initializeGL() {
@@ -117,9 +121,6 @@ void TesseractWidget::paintGL() {
 void TesseractWidget::keyPressEvent(QKeyEvent *e) {
     switch(e->key()) {
         case Qt::Key_Escape:
-            while (!TheWorld.Blocks.empty())
-                TheWorld.RemoveBlock(TheWorld.Blocks.begin());
-            BASS_Free();
             close();
             break;
         default:
@@ -179,4 +180,9 @@ void TesseractWidget::wheelEvent(QWheelEvent *event) {
 
 void TesseractWidget::DrawScene() {updateGL();}
 
-TesseractWidget::~TesseractWidget() {delete ui;}
+TesseractWidget::~TesseractWidget() {
+    while (!TheWorld.Blocks.empty())
+        TheWorld.RemoveBlock(TheWorld.Blocks.begin());
+    BASS_Free();
+    delete ui;
+}

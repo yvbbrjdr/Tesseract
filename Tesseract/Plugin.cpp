@@ -2,6 +2,11 @@
 
 Plugin::Plugin()
 {
-
+    HookBlockCreate=
+    HookBlockDestroy=
+    HookGlobal=
+    HookKeyPress=
+    HookKeyRelease=
+    HookDrawBlock=
+    OverrideDrawBlock=0;
 }
-

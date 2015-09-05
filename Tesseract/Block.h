@@ -9,11 +9,6 @@
 #include "Player.h"
 #include <cstring>
 
-
-class World;
-class Bnode;
-class TesseractWidget;
-
 class Block {
 public:
     QString Name;
@@ -30,7 +25,5 @@ public:
     void *Data;
     Bnode(int _Type,int _Belong,Coordinate _Position,Coordinate _HalfSize);
 };
-
-#include "tesseractwidget.h"
 
 #endif // BLOCK_H

@@ -11,16 +11,11 @@
 #include <QTime>
 #include <QTimer>
 #include <QWheelEvent>
-#include "Block.h"
-#include "Coordinate.h"
-#include "Player.h"
 #include "World.h"
 #include "GameThread.h"
-#include "BlockTypes/SpeakerBlock.h"
+#include "PluginManager.h"
 
 class GameThread;
-class Bnode;
-class World;
 
 namespace Ui {
     class TesseractWidget;
@@ -49,6 +44,7 @@ public:
     void SetColor(Coordinate);
     static World TheWorld;
     static bool KeyStatus[128];
+    static PluginManager PM;
 
 private:
     Ui::TesseractWidget *ui;
