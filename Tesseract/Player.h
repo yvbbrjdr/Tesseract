@@ -17,12 +17,12 @@
 class Player {
 public:
     QString Name;
-    Coordinate Position,EyeVector,LookAt,HeadVector;
+    Coordinate Position,EyeVector,LookAt,HeadVector,CanGo;
     double Theta,Phi;
     Player();
     Player(Coordinate);
-    void Go(double,double,double);
-    void Turn(double,double);
+    void Go(double Front,double Left,double Up);
+    void Turn(double Raise, double Left);
 };
 
 #endif // PLAYER_H

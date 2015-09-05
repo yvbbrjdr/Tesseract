@@ -3,46 +3,47 @@
 World::World() {}
 
 World::World(Coordinate s) {
-    size=s;
+    Size=s;
+    Players[0]=Player(s);
+    Myself=Players.begin();
 }
 
-void World::AddBlock(int Type,Coordinate Pos,Coordinate HalfSize) {
+void World::AddBlock(int Type,Coordinate Position,Coordinate HalfSize) {
     if (Type<BlockTypes.size()) {
         HalfSize=HalfSize.Abs();
-        Bnode b(Type,Pos,HalfSize);
-        Blocks.push_back(b);
-        BlockTypes[Type]->Create(*this,TesseractWidget::p,*(Blocks.end()-1));
+        Bnode b(Type,0,Position,HalfSize);
+        Blocks.insert(Blocks.size(),b);
     }
 }
 
-void World::RemoveBlock(QList<Bnode>::iterator TheBlock) {
+void World::RemoveBlock(QMap<int,Bnode>::iterator TheBlock) {
     if (TheBlock!=Blocks.end()) {
-        BlockTypes[TheBlock->Type]->Destroy(*this,TesseractWidget::p,*TheBlock);
         Blocks.erase(TheBlock);
     }
 }
 
-bool World::InBlock(QList<Bnode>::iterator TheBlock,Coordinate Pos) {
-    Coordinate a=TheBlock->Pos-TheBlock->HalfSize,b=TheBlock->Pos+TheBlock->HalfSize;
-    return (a.x<=Pos.x&&b.x>=Pos.x&&a.y<=Pos.y&&b.y>=Pos.y&&a.z<=Pos.z&&b.z>=Pos.z);
+bool World::InBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position) {
+    Coordinate a=TheBlock->Position-TheBlock->HalfSize,b=TheBlock->Position+TheBlock->HalfSize;
+    return (a.x<=Position.x&&b.x>=Position.x&&a.y<=Position.y&&b.y>=Position.y&&a.z<=Position.z&&b.z>=Position.z);
 }
 
-QList<Bnode>::iterator World::InBlock(Coordinate Pos) {
-    for (QList<Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
-        if (InBlock(it,Pos))
-            return it;
-    return Blocks.end();
+QVector<QMap<int,Bnode>::iterator> World::InBlock(Coordinate Position) {
+    QVector<QMap<int,Bnode>::iterator>ret;
+    for (QMap<int,Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
+        if (InBlock(it,Position))
+            ret.push_back(it);
+    return ret;
 }
 
-double World::ThroughBlock(QList<Bnode>::iterator TheBlock,Coordinate Pos1,Coordinate Pos2) {
-    double &x1=Pos1.x,&y1=Pos1.y,&z1=Pos1.z,
-           &x2=Pos2.x,&y2=Pos2.y,&z2=Pos2.z,
-           a=TheBlock->Pos.x-TheBlock->HalfSize.x,
-           b=TheBlock->Pos.x+TheBlock->HalfSize.x,
-           c=TheBlock->Pos.y-TheBlock->HalfSize.y,
-           d=TheBlock->Pos.y+TheBlock->HalfSize.y,
-           e=TheBlock->Pos.z-TheBlock->HalfSize.z,
-           f=TheBlock->Pos.z+TheBlock->HalfSize.z;
+double World::ThroughBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position1,Coordinate Position2) {
+    double &x1=Position1.x,&y1=Position1.y,&z1=Position1.z,
+           &x2=Position2.x,&y2=Position2.y,&z2=Position2.z,
+           a=TheBlock->Position.x-TheBlock->HalfSize.x,
+           b=TheBlock->Position.x+TheBlock->HalfSize.x,
+           c=TheBlock->Position.y-TheBlock->HalfSize.y,
+           d=TheBlock->Position.y+TheBlock->HalfSize.y,
+           e=TheBlock->Position.z-TheBlock->HalfSize.z,
+           f=TheBlock->Position.z+TheBlock->HalfSize.z;
     Coordinate point[6];
     point[0].x=a;
     point[0].y=(y1-y2)*(a-x1)/(x1-x2)+y1;
@@ -68,27 +69,28 @@ double World::ThroughBlock(QList<Bnode>::iterator TheBlock,Coordinate Pos1,Coord
             arr[n++]=i;
     if (n<2)
         return -1;
-    Coordinate Pos[4]={Pos1,Pos2,point[arr[0]],point[arr[1]]};
-    if (Pos[0].x>Pos[1].x) {
-        Coordinate t=Pos[0];
-        Pos[0]=Pos[1];
-        Pos[1]=t;
+    Coordinate Position[4]={Position1,Position2,point[arr[0]],point[arr[1]]};
+    if (Position[0].x>Position[1].x) {
+        Coordinate t=Position[0];
+        Position[0]=Position[1];
+        Position[1]=t;
     }
-    if ((Pos[2].x<Pos[0].x||Pos[2].x>Pos[1].x)&&(Pos[3].x<Pos[0].x||Pos[3].x>Pos[1].x))
+    if ((Position[2].x<Position[0].x||Position[2].x>Position[1].x)&&(Position[3].x<Position[0].x||Position[3].x>Position[1].x))
         return -1;
     for (int i=0;i<3;++i)
         for (int j=i+1;j<4;++j)
-            if (Pos[i].x>Pos[j].x) {
-                Coordinate t=Pos[i];
-                Pos[i]=Pos[j];
-                Pos[j]=t;
+            if (Position[i].x>Position[j].x) {
+                Coordinate t=Position[i];
+                Position[i]=Position[j];
+                Position[j]=t;
             }
-    return (Pos[2]-Pos[1]).Length();
+    return (Position[2]-Position[1]).Length();
 }
 
-QList<Bnode>::iterator World::ThroughBlock(Coordinate Pos1, Coordinate Pos2) {
-    for (QList<Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
-        if (ThroughBlock(it,Pos1,Pos2)>=0)
-            return it;
-    return Blocks.end();
+QVector<QMap<int,Bnode>::iterator> World::ThroughBlock(Coordinate Position1, Coordinate Position2) {
+    QVector<QMap<int,Bnode>::iterator> ret;
+    for (QMap<int,Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
+        if (ThroughBlock(it,Position1,Position2)>=0)
+            ret.push_back(it);
+    return ret;
 }

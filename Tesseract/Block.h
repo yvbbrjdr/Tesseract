@@ -27,7 +27,7 @@ public:
     int Type,Belong;
     Coordinate Position,HalfSize;
     void *Data;
-    Bnode(int,int,Coordinate,Coordinate);
+    Bnode(int _Type,int _Belong,Coordinate _Position,Coordinate _HalfSize);
 };
 
 #include "tesseractwidget.h"

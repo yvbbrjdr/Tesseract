@@ -2,52 +2,52 @@
 
 Player::Player() {}
 
-Player::Player(Coordinate _Size) {
-    size=s;
-    pos=Coordinate(0,1,0);
-    theta=0;
-    phi=PI/2;
-    turn(0,0);
+Player::Player(Coordinate _CanGo) {
+    CanGo=_CanGo;
+    Position=Coordinate(0,1,0);
+    Theta=0;
+    Phi=PI/2;
+    Turn(0,0);
 }
 
-void Player::go(double _Front,double _Left,double _Up) {
-    pos.z+=cos(theta)*front;
-    pos.x+=sin(theta)*front;
-    pos.z-=sin(theta)*left;
-    pos.x+=cos(theta)*left;
-    pos.y+=raise;
-    if (pos.z<-size.z/2)
-        pos.z=-size.z/2;
-    if (pos.z>size.z/2)
-        pos.z=size.z/2;
-    if (pos.x<-size.x/2)
-        pos.x=-size.x/2;
-    if (pos.x>size.x/2)
-        pos.x=size.x/2;
-    if (pos.y<1)
-        pos.y=1;
-    if (pos.y>size.y)
-        pos.y=size.y;
-    at=pos+face;
+void Player::Go(double Front,double Left,double HeadVector) {
+    Position.z+=cos(Theta)*Front;
+    Position.x+=sin(Theta)*Front;
+    Position.z-=sin(Theta)*Left;
+    Position.x+=cos(Theta)*Left;
+    Position.y+=HeadVector;
+    if (Position.z<-CanGo.z/2)
+        Position.z=-CanGo.z/2;
+    if (Position.z>CanGo.z/2)
+        Position.z=CanGo.z/2;
+    if (Position.x<-CanGo.x/2)
+        Position.x=-CanGo.x/2;
+    if (Position.x>CanGo.x/2)
+        Position.x=CanGo.x/2;
+    if (Position.y<1)
+        Position.y=1;
+    if (Position.y>CanGo.y)
+        Position.y=CanGo.y;
+    LookAt=Position+EyeVector;
 }
 
-void Player::turn(double _Raise,double _Left) {
-    if (phi-raise<0)
-        phi=0;
-    else if (phi-raise>PI)
-        phi=PI;
+void Player::Turn(double Raise,double Left) {
+    if (Phi-Raise<0)
+        Phi=0;
+    else if (Phi-Raise>PI)
+        Phi=PI;
     else
-        phi-=raise;
-    theta+=left;
-    while (theta<0)
-        theta+=2*PI;
-    while (theta>=2*PI)
-        theta-=2*PI;
-    face.z=cos(theta)*sin(phi)*INTERVAL;
-    face.x=sin(theta)*sin(phi)*INTERVAL;
-    face.y=cos(phi)*INTERVAL;
-    at=pos+face;
-    up.z=-cos(theta)*cos(phi);
-    up.x=-sin(theta)*cos(phi);
-    up.y=sin(phi);
+        Phi-=Raise;
+    Theta+=Left;
+    while (Theta<0)
+        Theta+=2*PI;
+    while (Theta>=2*PI)
+        Theta-=2*PI;
+    EyeVector.z=cos(Theta)*sin(Phi)*INTERVAL;
+    EyeVector.x=sin(Theta)*sin(Phi)*INTERVAL;
+    EyeVector.y=cos(Phi)*INTERVAL;
+    LookAt=Position+EyeVector;
+    HeadVector.z=-cos(Theta)*cos(Phi);
+    HeadVector.x=-sin(Theta)*cos(Phi);
+    HeadVector.y=sin(Phi);
 }

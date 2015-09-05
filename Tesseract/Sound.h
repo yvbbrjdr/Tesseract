@@ -7,11 +7,11 @@
 
 class Sound {
 public:
-    static void SetListenerValues(Coordinate,Coordinate,Coordinate);
-    static HSTREAM AddNewFileSound(Coordinate,QString);
-    static void RemoveASound(HCHANNEL);
-    static void PauseASound(HCHANNEL);
-    static void PlayASound(HCHANNEL);
+    static void SetListenerValues(Coordinate Position,Coordinate EyeVector,Coordinate HeadVector);
+    static HSTREAM AddNewFileSound(Coordinate Position,QString Filename);
+    static void RemoveASound(HCHANNEL hc);
+    static void PauseASound(HCHANNEL hc);
+    static void PlayASound(HCHANNEL hc);
 };
 
 #endif // SOUND

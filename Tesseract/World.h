@@ -3,31 +3,34 @@
 
 #include "Coordinate.h"
 #include "Block.h"
-#include <QList>
+#include <QMap>
 #include <QVector>
 #include "Player.h"
 #include "Sound.h"
 
 class World {
 public:
-    Coordinate size;
+    Coordinate Size;
     QVector<Block*>BlockTypes;
-    QList<Bnode>Blocks;
-    QList<Player>Players;
+    QMap<int,Bnode>Blocks;
+    QMap<int,Player>Players;
+    QMap<int,Player>::iterator Myself;
     World();
     World(Coordinate);
-    template<class T>int RegisterBlock(T BT) {
-        T *b=new T;
-        *b=BT;
-        BlockTypes.push_back(b);
-        return BlockTypes.size()-1;
-    }
-    void AddBlock(int,Coordinate,Coordinate);
-    void RemoveBlock(QList<Bnode>::iterator);
-    bool InBlock(QList<Bnode>::iterator,Coordinate);
-    QList<Bnode>::iterator InBlock(Coordinate);
-    double ThroughBlock(QList<Bnode>::iterator,Coordinate,Coordinate);
-    QList<Bnode>::iterator ThroughBlock(Coordinate,Coordinate);
+    template<class T>int RegisterBlock(T BT);
+    void AddBlock(int Type,Coordinate Position,Coordinate HalfSize);
+    void RemoveBlock(QMap<int,Bnode>::iterator TheBlock);
+    bool InBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position);
+    QVector<QMap<int,Bnode>::iterator> InBlock(Coordinate Position);
+    double ThroughBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position1,Coordinate Position2);
+    QVector<QMap<int,Bnode>::iterator> ThroughBlock(Coordinate Position1, Coordinate Position2);
 };
+
+template<class T>int World::RegisterBlock(T BT) {
+    T *b=new T;
+    *b=BT;
+    BlockTypes.push_back(b);
+    return BlockTypes.size()-1;
+}
 
 #endif // WORLD_H
