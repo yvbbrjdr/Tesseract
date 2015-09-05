@@ -15,7 +15,7 @@ bool PluginManager::LoadPlugin(QString Filename) {
     return 1;
 }
 
-int PluginManager::LoadFolder(QString Path){
+int PluginManager::LoadFolder(QString Path) {
     int ret=0;
     QDir qd(Path);
     if (!qd.exists())
