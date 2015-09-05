@@ -8,18 +8,26 @@ class Plugin
 {
 public:
     bool HookKeyPress,HookKeyRelease,HookBlockCreate,HookBlockDestroy,HookGlobal,HookDrawBlock,OverrideDrawBlock;
-    Plugin();
-    virtual void clientLoad(World&)=0;
-    virtual void cliendUnload(World&)=0;
-    virtual void serverLoad(World&)=0;
-    virtual void serverUnload(World&)=0;
-    virtual void drawBlockEvent(World&,Bnode&)=0;
-    virtual void keyPressEvent(World&,QKeyEvent&)=0;
-    virtual void keyReleaseEvent(World&,QKeyEvent&)=0;
-    virtual void blockCreateEvent(World&,Bnode&)=0;
-    virtual void blockDestroyEvent(World&,Bnode&)=0;
-    virtual void globalEvent(World&)=0;
-    virtual ~Plugin()=0;
+    Plugin() {
+        HookBlockCreate=
+        HookBlockDestroy=
+        HookGlobal=
+        HookKeyPress=
+        HookKeyRelease=
+        HookDrawBlock=
+        OverrideDrawBlock=0;
+    }
+    virtual void clientLoad(World&) {};
+    virtual void cliendUnload(World&) {};
+    virtual void serverLoad(World&) {};
+    virtual void serverUnload(World&) {};
+    virtual void drawBlockEvent(World&,Bnode&) {};
+    virtual void keyPressEvent(World&,QKeyEvent&) {};
+    virtual void keyReleaseEvent(World&,QKeyEvent&) {};
+    virtual void blockCreateEvent(World&,Bnode&) {};
+    virtual void blockDestroyEvent(World&,Bnode&) {};
+    virtual void globalEvent(World&) {};
+    virtual ~Plugin() {};
 };
 
 Q_DECLARE_INTERFACE(Plugin,"tk.tesser.yvbbrjdr.Tesseract.Plugin/1.0")
