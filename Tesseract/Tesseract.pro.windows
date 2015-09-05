@@ -20,7 +20,6 @@ SOURCES += main.cpp\
     Player.cpp \
     Sound.cpp \
     GameThread.cpp \
-    Plugin.cpp \
     PluginManager.cpp
 
 HEADERS  += tesseractwidget.h \
