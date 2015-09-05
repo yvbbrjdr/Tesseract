@@ -5,7 +5,7 @@ World::World() {}
 World::World(Coordinate s) {
     Size=s;
     Players[0]=Player(s);
-    Myself=Players.begin();
+    Myself=Players.begin(); //Edit After Server
 }
 
 void World::AddBlock(int Type,Coordinate Position,Coordinate HalfSize) {

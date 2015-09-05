@@ -91,7 +91,7 @@ void TesseractWidget::paintGL() {
         glVertex3f(TheWorld.Size.x/2,0,TheWorld.Size.z/2);
     glEnd();
     for (QMap<int,Bnode>::iterator it=TheWorld.Blocks.begin();it!=TheWorld.Blocks.end();++it)
-        if (TheWorld.ThroughBlock(it,TheWorld.Myself->Position,TheWorld.Myself->LookAt)<0)
+        if (it->PointedAt==0)
             DrawBlock(*it,2);
         else
             DrawBlock(*it,3);
@@ -138,7 +138,7 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
     QVector<QMap<int,Bnode>::iterator>vec;
     if (event->button()==Qt::LeftButton) {
         if (creatingblock) {
-            TheWorld.AddBlock(currentblocktype,(TheWorld.Myself->LookAt+tempc)/2,(TheWorld.Myself->LookAt-tempc)/2);
+            TheWorld.AddBlock(currentblocktype,(TheWorld.Myself->LookAt+tempc)/2,(TheWorld.Myself->LookAt-tempc)/2); //Edit After Server
             creatingblock=0;
         } else {
             tempc=TheWorld.Myself->LookAt;
@@ -149,7 +149,7 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
             creatingblock=0;
         else
             if ((vec=TheWorld.ThroughBlock(TheWorld.Myself->Position,TheWorld.Myself->LookAt)).size())
-            TheWorld.RemoveBlock(vec[0]);
+            TheWorld.RemoveBlock(vec[0]);  //Edit After Server
     }
 }
 
