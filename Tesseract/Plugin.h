@@ -4,8 +4,7 @@
 #include "World.h"
 #include <QKeyEvent>
 
-class Plugin
-{
+class Plugin {
 public:
     bool HookKeyPress,HookKeyRelease,HookBlockCreate,HookBlockDestroy,HookGlobal,HookDrawBlock,OverrideDrawBlock;
     Plugin() {
