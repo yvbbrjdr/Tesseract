@@ -18,7 +18,7 @@ public:
         OverrideDrawBlock=0;
     }
     virtual void clientLoad(World&) {};
-    virtual void cliendUnload(World&) {};
+    virtual void clientUnload(World&) {};
     virtual void serverLoad(World&) {};
     virtual void serverUnload(World&) {};
     virtual void drawBlockEvent(World&,Bnode&) {};
