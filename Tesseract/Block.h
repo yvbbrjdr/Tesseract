@@ -26,6 +26,7 @@ class Bnode {
 public:
     int Type,Belong;
     Coordinate Position,HalfSize;
+    bool PointedAt;
     void *Data;
     Bnode(int _Type,int _Belong,Coordinate _Position,Coordinate _HalfSize);
 };

@@ -5,6 +5,8 @@
 
 class GameThread : public QThread {
 public:
+    int Cycle;
+    GameThread();
     void run();
 };
 

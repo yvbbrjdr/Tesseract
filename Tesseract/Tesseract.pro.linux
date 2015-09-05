@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     Player.cpp \
     Sound.cpp \
     GameThread.cpp \
-    BlockTypes/SpeakerBlock.cpp
+    BlockTypes/SpeakerBlock.cpp \
+    Plugin.cpp \
+    PluginManager.cpp
 
 HEADERS  += tesseractwidget.h \
     World.h \
@@ -31,7 +33,9 @@ HEADERS  += tesseractwidget.h \
     NetFuncs.h \
     Sound.h \
     GameThread.h \
-    BlockTypes/SpeakerBlock.h
+    BlockTypes/SpeakerBlock.h \
+    Plugin.h \
+    PluginManager.h
 
 FORMS    += tesseractwidget.ui
 

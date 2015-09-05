@@ -1,6 +1,8 @@
 #include "Player.h"
 
-Player::Player() {}
+Player::Player() {
+    HCHANNEL=0;
+}
 
 Player::Player(Coordinate _CanGo) {
     CanGo=_CanGo;
@@ -8,6 +10,7 @@ Player::Player(Coordinate _CanGo) {
     Theta=0;
     Phi=PI/2;
     Turn(0,0);
+    HCHANNEL=0;
 }
 
 void Player::Go(double Front,double Left,double HeadVector) {
