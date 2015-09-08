@@ -1,5 +1,7 @@
 #include "Block.h"
 
+Block::Block() {}
+
 Block::Block(QString _Name,Coordinate _Color,QString _TextureName,bool _SoundCanGoOut) {
     Name=_Name;
     Color=_Color;
