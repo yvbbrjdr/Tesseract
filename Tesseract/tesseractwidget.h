@@ -11,11 +11,12 @@
 #include <QTime>
 #include <QTimer>
 #include <QWheelEvent>
-#include "World.h"
-#include "GameThread.h"
-#include "PluginManager.h"
+#include "Coordinate.h"
 
 class GameThread;
+class World;
+class PluginManager;
+class Bnode;
 
 namespace Ui {
     class TesseractWidget;
@@ -53,7 +54,10 @@ private:
     bool creatingblock;
     double aspect;
     Coordinate tempc;
-    int currentblocktype;
+    QString currentblocktype;
 };
+
+#include "GameThread.h"
+#include "PluginManager.h"
 
 #endif // TESSERACTWIDGET_H

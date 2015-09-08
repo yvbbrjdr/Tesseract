@@ -2,6 +2,7 @@
 #define GAMETHREAD_H
 
 #include "tesseractwidget.h"
+#include "Sound.h"
 
 class GameThread : public QThread {
 public:

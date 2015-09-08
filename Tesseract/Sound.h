@@ -1,9 +1,9 @@
 #ifndef SOUND
 #define SOUND
 
-#include "Block.h"
 #include <bass.h>
-#include <QList>
+#include "Coordinate.h"
+#include <QString>
 
 class Sound {
 public:

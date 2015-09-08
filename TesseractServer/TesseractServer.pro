@@ -14,22 +14,22 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    ../Tesseract/Block.cpp \
-    ../Tesseract/Coordinate.cpp \
-    ../Tesseract/Player.cpp \
     ../Tesseract/World.cpp \
+    ../Tesseract/PluginManager.cpp \
+    ../Tesseract/Plugin.cpp \
+    ../Tesseract/Player.cpp \
+    ../Tesseract/Coordinate.cpp \
+    ../Tesseract/Block.cpp \
     ../Tesseract/Sound.cpp
 
 HEADERS  += mainwindow.h \
-    ../../Tesseract/Block.h \
-    ../../Tesseract/Coordinate.h \
-    ../../Tesseract/Player.h \
-    ../../Tesseract/World.h \
     ../Tesseract/Block.h \
     ../Tesseract/Coordinate.h \
-    ../Tesseract/Player.h \
     ../Tesseract/World.h \
-    ../Tesseract/Sound.h
+    ../Tesseract/Sound.h \
+    ../Tesseract/PluginManager.h \
+    ../Tesseract/Plugin.h \
+    ../Tesseract/Player.h
 
 FORMS    += mainwindow.ui
 

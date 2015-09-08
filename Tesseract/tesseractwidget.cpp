@@ -12,7 +12,6 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     this->showFullScreen();
     memset(KeyStatus,0,sizeof(KeyStatus));
     creatingblock=0;
-    currentblocktype=0;
     this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);
     gt=new GameThread;
@@ -21,10 +20,10 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     GLTimer->setInterval(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
-    PM.LoadFolder("./plugin");
-    for (int i=0;i<PM.Plugins.size();++i)
-        PM.Plugins[i]->clientLoad(TheWorld);
-    TheWorld.RegisterBlock(Block());
+    TheWorld.RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
+    PM.LoadFolder("./plugins");
+    for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
+        it.value()->clientLoad(TheWorld);
 }
 
 void TesseractWidget::initializeGL() {
@@ -55,7 +54,7 @@ void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
     const int Line[]={0,1,1,3,3,2,2,0,0,4,1,5,3,7,2,6,6,4,4,5,5,7,7,6};
     const float normal[][3]={{1,0,0},{0,0,1},{-1,0,0},{0,0,-1},{0,1,0},{0,-1,0}};
     if (Mode&2) {
-        SetColor(TheWorld.BlockTypes[TheBlock.Type]->Color);
+        SetColor(TheWorld.BlockTypes[TheBlock.Type].Color);
         for (int i=0;i<6;++i) {
             glBegin(GL_POLYGON);
                 glNormal3f(normal[i][0],normal[i][1],normal[i][2]);
@@ -86,19 +85,28 @@ void TesseractWidget::paintGL() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(TheWorld.Myself->Position.x,TheWorld.Myself->Position.y,TheWorld.Myself->Position.z,TheWorld.Myself->LookAt.x,TheWorld.Myself->LookAt.y,TheWorld.Myself->LookAt.z,TheWorld.Myself->HeadVector.x,TheWorld.Myself->HeadVector.y,TheWorld.Myself->HeadVector.z);
-    SetColor(Coordinate(.1,1,.2));
-    glNormal3f(0,1,0);
-    glBegin(GL_QUADS);
-        glVertex3f(TheWorld.Size.x/2,0,-TheWorld.Size.z/2);
-        glVertex3f(-TheWorld.Size.x/2,0,-TheWorld.Size.z/2);
-        glVertex3f(-TheWorld.Size.x/2,0,TheWorld.Size.z/2);
-        glVertex3f(TheWorld.Size.x/2,0,TheWorld.Size.z/2);
-    glEnd();
-    for (QMap<int,Bnode>::iterator it=TheWorld.Blocks.begin();it!=TheWorld.Blocks.end();++it)
-        if (it->PointedAt==0)
-            DrawBlock(*it,2);
-        else
-            DrawBlock(*it,3);
+    for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
+        if (it.value()->HookDrawBegin)
+            it.value()->drawBeginEvent(TheWorld);
+    QVector<Plugin*>Hooked;
+    for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
+        if (it.value()->HookDrawBlock)
+            Hooked.push_back(*it);
+    for (QMap<int,Bnode>::iterator it=TheWorld.Blocks.begin();it!=TheWorld.Blocks.end();++it) {
+        bool Cancel=0,CancelTemp;
+        for (int i=0;i<Hooked.size();++i) {
+            CancelTemp=0;
+            Hooked[i]->drawBlockEvent(TheWorld,*it,CancelTemp);
+            if (CancelTemp)
+                Cancel=1;
+        }
+        if (Cancel==0) {
+            if (it->PointedAt==0)
+                DrawBlock(*it,2);
+            else
+                DrawBlock(*it,3);
+        }
+    }
     if (creatingblock)
         DrawBlock(Bnode(currentblocktype,0,(TheWorld.Myself->LookAt+tempc)/2,(TheWorld.Myself->LookAt-tempc)/2),1);
     SetColor(Coordinate(1,0,0));
@@ -108,27 +116,29 @@ void TesseractWidget::paintGL() {
     glLoadIdentity();
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
-    glBegin(GL_POINTS);
-        glVertex2f(0,0);
-    glEnd();
-    SetColor(TheWorld.BlockTypes[currentblocktype]->Color);
-    renderText(20,20,TheWorld.BlockTypes[currentblocktype]->Name,QFont());
+    for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
+        if (it.value()->HookDrawDone)
+            it.value()->drawDoneEvent(TheWorld);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
     glFlush();
 }
 
 void TesseractWidget::keyPressEvent(QKeyEvent *e) {
-    switch(e->key()) {
-        case Qt::Key_Escape:
-            close();
-            break;
-        default:
-            KeyStatus[int(e->text().toStdString()[0])]=1;
-    }
+    if (e->key()==Qt::Key_Escape)
+        close();
+    KeyStatus[int(e->text().toStdString()[0])]=1;
+    for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
+        if (it.value()->HookKeyPress)
+            it.value()->keyPressEvent(TheWorld,*e);
 }
 
-void TesseractWidget::keyReleaseEvent(QKeyEvent *e) {KeyStatus[int(e->text().toStdString()[0])]=0;}
+void TesseractWidget::keyReleaseEvent(QKeyEvent *e) {
+    KeyStatus[int(e->text().toStdString()[0])]=0;
+    for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
+        if (it.value()->HookKeyRelease)
+            it.value()->keyReleaseEvent(TheWorld,*e);
+}
 
 void TesseractWidget::mouseMoveEvent(QMouseEvent *event) {
     TheWorld.Myself->Turn(.01*(300-event->y()),.01*(400-event->x()));
@@ -139,7 +149,11 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
     QVector<QMap<int,Bnode>::iterator>vec;
     if (event->button()==Qt::LeftButton) {
         if (creatingblock) {
-            TheWorld.AddBlock(currentblocktype,(TheWorld.Myself->LookAt+tempc)/2,(TheWorld.Myself->LookAt-tempc)/2); //Edit After Server
+            Bnode b=Bnode(currentblocktype,0,(TheWorld.Myself->LookAt+tempc)/2,(TheWorld.Myself->LookAt-tempc)/2);
+            for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
+                if (it.value()->HookBlockCreate)
+                    it.value()->blockCreateEvent(TheWorld,b);
+            TheWorld.AddBlock(b); //Edit After Server
             creatingblock=0;
         } else {
             tempc=TheWorld.Myself->LookAt;
@@ -148,9 +162,14 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
     } else if (event->button()==Qt::RightButton) {
         if (creatingblock)
             creatingblock=0;
-        else
-            if ((vec=TheWorld.ThroughBlock(TheWorld.Myself->Position,TheWorld.Myself->LookAt)).size())
-            TheWorld.RemoveBlock(vec[0]);  //Edit After Server
+        else {
+            if ((vec=TheWorld.ThroughBlock(TheWorld.Myself->Position,TheWorld.Myself->LookAt)).size()) {
+                for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
+                    if (it.value()->HookBlockDestroy)
+                        it.value()->blockDestroyEvent(TheWorld,*vec[0]);
+                TheWorld.RemoveBlock(vec[0]);  //Edit After Server
+            }
+        }
     }
 }
 
@@ -167,14 +186,18 @@ void TesseractWidget::resizeGL(int width,int height) {
 }
 
 void TesseractWidget::wheelEvent(QWheelEvent *event) {
+    QMap<QString,Block>::iterator it=TheWorld.BlockTypes.find(currentblocktype);
     if (event->delta()<0) {
-        ++currentblocktype;
-        if (currentblocktype==TheWorld.BlockTypes.size())
-            currentblocktype=0;
+        it+=1;
+        if (it==TheWorld.BlockTypes.end())
+            currentblocktype=TheWorld.BlockTypes.begin().key();
+        else
+            currentblocktype=it.key();
     } else if (event->delta()>0) {
-        --currentblocktype;
-        if (currentblocktype==-1)
-            currentblocktype=TheWorld.BlockTypes.size()-1;
+        if (it==TheWorld.BlockTypes.begin())
+            currentblocktype=(TheWorld.BlockTypes.end()-1).key();
+        else
+            currentblocktype=(it-1).key();
     }
 }
 
@@ -184,5 +207,15 @@ TesseractWidget::~TesseractWidget() {
     while (!TheWorld.Blocks.empty())
         TheWorld.RemoveBlock(TheWorld.Blocks.begin());
     BASS_Free();
+    while (!PM.Plugins.empty()) {
+        PM.Plugins.begin().value()->clientUnload(TheWorld);
+        delete PM.Plugins.begin().value();
+        PM.Plugins.erase(PM.Plugins.begin());
+    }
+    while (!PM.Loaders.empty()) {
+        PM.Loaders.begin().value()->unload();
+        delete PM.Loaders.begin().value();
+        PM.Loaders.erase(PM.Loaders.begin());
+    }
     delete ui;
 }
