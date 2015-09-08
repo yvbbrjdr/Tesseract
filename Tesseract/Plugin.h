@@ -1,6 +1,7 @@
 #ifndef PLUGIN_H
 #define PLUGIN_H
 
+#include <QObject>
 #include <QKeyEvent>
 #include <QString>
 #include <QtOpenGL/QtOpenGL>
