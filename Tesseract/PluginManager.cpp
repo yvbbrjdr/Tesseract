@@ -10,8 +10,8 @@ bool PluginManager::LoadPlugin(QString Filename) {
     Plugin* ThePlugin=qobject_cast<Plugin*>(plugin);
     if (!ThePlugin)
         return 0;
-    Loaders.push_back(qpl);
-    Plugins.push_back(ThePlugin);
+    Loaders.insert(ThePlugin->Name,qpl);
+    Plugins.insert(ThePlugin->Name,ThePlugin);
     return 1;
 }
 

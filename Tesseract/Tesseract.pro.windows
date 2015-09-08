@@ -20,19 +20,18 @@ SOURCES += main.cpp\
     Player.cpp \
     Sound.cpp \
     GameThread.cpp \
-    PluginManager.cpp
+    PluginManager.cpp \
+    Plugin.cpp
 
-HEADERS  += tesseractwidget.h \
-    World.h \
-    Player.h \
-    Coordinate.h \
-    Block.h \
-    ALFuncs.h \
-    NetFuncs.h \
+HEADERS  +=     World.h \
+    tesseractwidget.h \
     Sound.h \
-    GameThread.h \
+    PluginManager.h \
     Plugin.h \
-    PluginManager.h
+    Player.h \
+    GameThread.h \
+    Coordinate.h \
+    Block.h
 
 FORMS    += tesseractwidget.ui
 

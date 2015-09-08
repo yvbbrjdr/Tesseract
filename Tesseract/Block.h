@@ -3,11 +3,6 @@
 
 #include <QString>
 #include "Coordinate.h"
-#include <bass.h>
-#include <QList>
-#include "Sound.h"
-#include "Player.h"
-#include <cstring>
 
 class Block {
 public:
@@ -15,15 +10,18 @@ public:
     Coordinate Color;
     QString TextureName;
     bool SoundCanGoOut;
+    Block();
+    Block(QString _Name,Coordinate _Color,QString _TextureName,bool _SoundCanGoOut);
 };
 
 class Bnode {
 public:
-    int Type,Belong;
+    QString Type;
+    int Belong;
     Coordinate Position,HalfSize;
     bool PointedAt;
     void *Data;
-    Bnode(int _Type,int _Belong,Coordinate _Position,Coordinate _HalfSize);
+    Bnode(QString _Type,int _Belong,Coordinate _Position,Coordinate _HalfSize);
 };
 
 #endif // BLOCK_H

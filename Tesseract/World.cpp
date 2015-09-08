@@ -2,18 +2,21 @@
 
 World::World() {}
 
-World::World(Coordinate s) {
-    Size=s;
-    Players[0]=Player(s);
+World::World(Coordinate _Size) {
+    Size=_Size;
+    Players[0]=Player(_Size);
     Myself=Players.begin(); //Edit After Server
 }
 
-void World::AddBlock(int Type,Coordinate Position,Coordinate HalfSize) {
-    if (Type<BlockTypes.size()) {
-        HalfSize=HalfSize.Abs();
-        Bnode b(Type,0,Position,HalfSize);
-        Blocks.insert(Blocks.size(),b);
-    }
+bool World::RegisterBlock(Block _BlockType) {
+    if (BlockTypes.find(_BlockType.Name)!=BlockTypes.end())
+        return 0;
+    BlockTypes.insert(_BlockType.Name,_BlockType);
+    return 1;
+}
+
+void World::AddBlock(Bnode b) {
+    Blocks.insert((Blocks.end()-1).key()+1,b);
 }
 
 void World::RemoveBlock(QMap<int,Bnode>::iterator TheBlock) {

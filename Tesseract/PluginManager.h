@@ -8,8 +8,8 @@
 
 class PluginManager {
 public:
-    QVector<Plugin*>Plugins;
-    QVector<QPluginLoader*>Loaders;
+    QMap<QString,Plugin*>Plugins;
+    QMap<QString,QPluginLoader*>Loaders;
     bool LoadPlugin(QString Filename);
     int LoadFolder(QString Path);
 };

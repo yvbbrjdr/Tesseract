@@ -3,5 +3,6 @@
 !README.md
 !/Tesseract/
 !/TesseractServer/
+!/OfficialPlugins/
 *.user
 /Tesseract/*.pro
