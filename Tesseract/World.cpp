@@ -1,4 +1,5 @@
 #include "World.h"
+#include <iostream>
 
 World::World() {}
 
@@ -9,7 +10,7 @@ World::World(Coordinate _Size) {
 }
 
 bool World::RegisterBlock(Block _BlockType) {
-    if (BlockTypes.find(_BlockType.Name)==BlockTypes.end())
+    if (BlockTypes.find(_BlockType.Name)!=BlockTypes.end())
         return 0;
     BlockTypes.insert(_BlockType.Name,_BlockType);
     return 1;
@@ -26,7 +27,7 @@ void World::RemoveBlock(QMap<int,Bnode>::iterator TheBlock) {
 }
 
 bool World::InBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position) {
-    Coordinate a=TheBlock->Position-TheBlock->HalfSize,b=TheBlock->Position+TheBlock->HalfSize;
+    Coordinate a=TheBlock.value().Position-TheBlock.value().HalfSize,b=TheBlock.value().Position+TheBlock.value().HalfSize;
     return (a.x<=Position.x&&b.x>=Position.x&&a.y<=Position.y&&b.y>=Position.y&&a.z<=Position.z&&b.z>=Position.z);
 }
 
@@ -41,12 +42,12 @@ QVector<QMap<int,Bnode>::iterator> World::InBlock(Coordinate Position) {
 double World::ThroughBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position1,Coordinate Position2) {
     double &x1=Position1.x,&y1=Position1.y,&z1=Position1.z,
            &x2=Position2.x,&y2=Position2.y,&z2=Position2.z,
-           a=TheBlock->Position.x-TheBlock->HalfSize.x,
-           b=TheBlock->Position.x+TheBlock->HalfSize.x,
-           c=TheBlock->Position.y-TheBlock->HalfSize.y,
-           d=TheBlock->Position.y+TheBlock->HalfSize.y,
-           e=TheBlock->Position.z-TheBlock->HalfSize.z,
-           f=TheBlock->Position.z+TheBlock->HalfSize.z;
+           a=TheBlock.value().Position.x-TheBlock.value().HalfSize.x,
+           b=TheBlock.value().Position.x+TheBlock.value().HalfSize.x,
+           c=TheBlock.value().Position.y-TheBlock.value().HalfSize.y,
+           d=TheBlock.value().Position.y+TheBlock.value().HalfSize.y,
+           e=TheBlock.value().Position.z-TheBlock.value().HalfSize.z,
+           f=TheBlock.value().Position.z+TheBlock.value().HalfSize.z;
     Coordinate point[6];
     point[0].x=a;
     point[0].y=(y1-y2)*(a-x1)/(x1-x2)+y1;

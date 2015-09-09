@@ -82,7 +82,7 @@ void TesseractWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(75,aspect,.1,1000);
+    gluPerspective(75,aspect,.1,100);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(TheWorld.Myself->Position.x,TheWorld.Myself->Position.y,TheWorld.Myself->Position.z,TheWorld.Myself->LookAt.x,TheWorld.Myself->LookAt.y,TheWorld.Myself->LookAt.z,TheWorld.Myself->HeadVector.x,TheWorld.Myself->HeadVector.y,TheWorld.Myself->HeadVector.z);
@@ -92,24 +92,24 @@ void TesseractWidget::paintGL() {
     QVector<Plugin*>Hooked;
     for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
         if (it.value()->HookDrawBlock)
-            Hooked.push_back(*it);
+            Hooked.push_back(it.value());
     for (QMap<int,Bnode>::iterator it=TheWorld.Blocks.begin();it!=TheWorld.Blocks.end();++it) {
         bool Cancel=0,CancelTemp;
         for (int i=0;i<Hooked.size();++i) {
             CancelTemp=0;
-            Hooked[i]->drawBlockEvent(TheWorld,*it,CancelTemp);
+            Hooked[i]->drawBlockEvent(TheWorld,it.value(),CancelTemp);
             if (CancelTemp)
                 Cancel=1;
         }
         if (Cancel==0) {
-            if (it->PointedAt==0)
-                DrawBlock(*it,2);
+            if (it.value().PointedAt==0)
+                DrawBlock(it.value(),2);
             else
-                DrawBlock(*it,3);
+                DrawBlock(it.value(),3);
         }
     }
     if (creatingblock)
-        DrawBlock(Bnode(currentblocktype,0,(TheWorld.Myself->LookAt+tempc)/2,(TheWorld.Myself->LookAt-tempc)/2),1);
+        DrawBlock(Bnode(currentblocktype,0,(TheWorld.Myself->LookAt+tempc)/2,((TheWorld.Myself->LookAt-tempc)/2).Abs()),1);
     SetColor(Coordinate(1,0,0));
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -152,7 +152,7 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
     QVector<QMap<int,Bnode>::iterator>vec;
     if (event->button()==Qt::LeftButton) {
         if (creatingblock) {
-            Bnode b=Bnode(currentblocktype,0,(TheWorld.Myself->LookAt+tempc)/2,(TheWorld.Myself->LookAt-tempc)/2);
+            Bnode b=Bnode(currentblocktype,0,(TheWorld.Myself->LookAt+tempc)/2,((TheWorld.Myself->LookAt-tempc)/2).Abs());
             for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
                 if (it.value()->HookBlockCreate)
                     it.value()->blockCreateEvent(TheWorld,b);
