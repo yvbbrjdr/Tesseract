@@ -2,8 +2,6 @@
 
 bool PluginManager::LoadPlugin(QString Filename) {
     QPluginLoader *qpl=new QPluginLoader(Filename);
-    if (!qpl->isLoaded())
-        return 0;
     QObject *plugin=qpl->instance();
     if (!plugin)
         return 0;
