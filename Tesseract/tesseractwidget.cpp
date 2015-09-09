@@ -21,6 +21,7 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
     TheWorld.RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
+    currentblocktype="Stone";
     PM.LoadFolder("./plugins");
     for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
         it.value()->clientLoad(TheWorld);
@@ -119,6 +120,8 @@ void TesseractWidget::paintGL() {
     for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
         if (it.value()->HookDrawDone)
             it.value()->drawDoneEvent(TheWorld);
+    SetColor(TheWorld.BlockTypes[currentblocktype].Color);
+    renderText(20,20,currentblocktype);
     glEnable(GL_LIGHTING);
     glEnable(GL_DEPTH_TEST);
     glFlush();
