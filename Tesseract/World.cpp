@@ -9,7 +9,7 @@ World::World(Coordinate _Size) {
 }
 
 bool World::RegisterBlock(Block _BlockType) {
-    if (BlockTypes.find(_BlockType.Name)!=BlockTypes.end())
+    if (BlockTypes.find(_BlockType.Name)==BlockTypes.end())
         return 0;
     BlockTypes.insert(_BlockType.Name,_BlockType);
     return 1;
