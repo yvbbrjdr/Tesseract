@@ -16,7 +16,10 @@ SOURCES += MusicPlayer.cpp \
     ../../Tesseract/Plugin.cpp \
     ../../Tesseract/Player.cpp \
     ../../Tesseract/Coordinate.cpp \
-    ../../Tesseract/Block.cpp
+    ../../Tesseract/Block.cpp \
+    ControllerStatus.cpp \
+    SpinnerStatus.cpp \
+    SpeakerStatus.cpp
 
 HEADERS += MusicPlayer.h \
     ../../Tesseract/World.h \
@@ -24,4 +27,7 @@ HEADERS += MusicPlayer.h \
     ../../Tesseract/Plugin.h \
     ../../Tesseract/Player.h \
     ../../Tesseract/Coordinate.h \
-    ../../Tesseract/Block.h
+    ../../Tesseract/Block.h \
+    ControllerStatus.h \
+    SpinnerStatus.h \
+    SpeakerStatus.h

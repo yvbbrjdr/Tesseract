@@ -22,7 +22,9 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     GLTimer->start();
     TheWorld.RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
     currentblocktype="Stone";
-    PM.LoadFolder("./plugins");
+    QDir qdt(qApp->applicationDirPath());
+    qdt.cd("plugins");
+    PM.LoadFolder(qdt.absolutePath());
     for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
         it.value()->clientLoad(TheWorld);
 }
