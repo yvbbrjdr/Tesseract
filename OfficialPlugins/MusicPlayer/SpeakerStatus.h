@@ -1,7 +1,12 @@
 #ifndef SPEAKERSTATUS_H
 #define SPEAKERSTATUS_H
 
-enum PlayStatus{Unload,Stop,Play,Pause};
+enum PlayStatus{UNLOAD,STOP,PLAY,PAUSE};
+
+#include <bass.h>
+#include "../../Tesseract/Coordinate.h"
+#include <QString>
+#include "../../Tesseract/Sound.h"
 
 class SpeakerStatus {
 private:

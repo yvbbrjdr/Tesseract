@@ -12,6 +12,7 @@ public:
     static void RemoveASound(HCHANNEL hc);
     static void PauseASound(HCHANNEL hc);
     static void PlayASound(HCHANNEL hc);
+    static void StopASound(HCHANNEL hc);
     static void MoveASound(HCHANNEL hc,Coordinate Position);
 };
 

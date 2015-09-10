@@ -1,54 +1,54 @@
 #include "SpeakerStatus.h"
 
 SpeakerStatus::SpeakerStatus() {
-	Status=PlayStatus::Unload;
+    Status=UNLOAD;
 	hc=0;
 }
 
 bool SpeakerStatus::LoadFile(Coordinate Position,QString Filename) {
-	if (Status!=PlayStatus::Unload)
+    if (Status!=UNLOAD)
 		return 0;
 	hc=Sound::AddNewFileSound(Position,Filename);
 	if (hc==0)
 		return 0;
-	Status=PlayStatus::Stop;
+    Status=STOP;
 	return 1;
 }
 
 bool SpeakerStatus::UnloadFile() {
-	if (Status==PlayStatus::Unload)
+    if (Status==UNLOAD)
 		return 0;
 	Sound::RemoveASound(hc);
-	Status=PlayStatus::Unload;
+    Status=UNLOAD;
 	return 1;
 }
 
 bool SpeakerStatus::Play() {
-	if (Status==PlayStatus::Unload||Status==PlayStatus::Play)
+    if (Status==UNLOAD||Status==PLAY)
 		return 0;
 	Sound::PlayASound(hc);
-	Status=PlayStatus::Play;
+    Status=PLAY;
 	return 1;
 }
 
 bool SpeakerStatus::Pause() {
-	if (Status==PlayStatus::Unload||Status==PlayStatus::Stop||Status==PlayStatus::Pause)
+    if (Status==UNLOAD||Status==STOP||Status==PAUSE)
 		return 0;
 	Sound::PauseASound(hc);
-	Status=PlayStatus::Pause;
+    Status=PAUSE;
 	return 1;
 }
 
 bool SpeakerStatus::Stop() {
-	if (Status==PlayStatus::Unload||Status==PlayStatus::Stop)
+    if (Status==UNLOAD||Status==STOP)
 		return 0;
 	Sound::StopASound(hc);
-	Status=PlayStatus::Stop;
+    Status=STOP;
 	return 1;
 }
 
-bool Move(Coordinate Position) {
-	if (Status==PlayStatus::Unload)
+bool SpeakerStatus::Move(Coordinate Position) {
+    if (Status==UNLOAD)
 		return 0;
 	Sound::MoveASound(hc,Position);
 	return 1;
