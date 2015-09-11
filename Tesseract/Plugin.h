@@ -6,6 +6,7 @@
 #include <QString>
 #include <QtOpenGL/QtOpenGL>
 #include <GL/glu.h>
+#include "Sound.h"
 
 class World;
 class Bnode;
