@@ -15,10 +15,8 @@ HSTREAM Sound::AddNewFileSound(Coordinate Position,QString Filename) {
 }
 
 void Sound::RemoveASound(HCHANNEL hc) {
-    if (hc!=0) {
-        BASS_ChannelStop(hc);
-        BASS_StreamFree(hc);
-    }
+    BASS_ChannelStop(hc);
+    BASS_StreamFree(hc);
 }
 
 void Sound::PauseASound(HCHANNEL hc) {
@@ -27,4 +25,10 @@ void Sound::PauseASound(HCHANNEL hc) {
 
 void Sound::PlayASound(HCHANNEL hc) {
     BASS_ChannelPlay(hc,FALSE);
+}
+
+void Sound::MoveASound(HCHANNEL hc,Coordinate Position) {
+    BASS_3DVECTOR v(Position.x,Position.y,Position.z);
+    BASS_ChannelSet3DPosition(hc,&v,NULL,NULL);
+    BASS_Apply3D();
 }
