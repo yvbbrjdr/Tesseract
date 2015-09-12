@@ -15,8 +15,9 @@ bool World::RegisterBlock(Block _BlockType) {
     return 1;
 }
 
-void World::AddBlock(Bnode b) {
+QMap<int,Bnode>::iterator World::AddBlock(Bnode b) {
     Blocks.insert((Blocks.end()-1).key()+1,b);
+	return Blocks.end()-1;
 }
 
 void World::RemoveBlock(QMap<int,Bnode>::iterator TheBlock) {
