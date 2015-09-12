@@ -155,10 +155,10 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
     if (event->button()==Qt::LeftButton) {
         if (creatingblock) {
             Bnode b=Bnode(currentblocktype,0,(TheWorld.Myself->LookAt+tempc)/2,((TheWorld.Myself->LookAt-tempc)/2).Abs());
-            for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
+            QMap<int,Bnode>::iterator it=TheWorld.AddBlock(b); //Edit After Server
+			for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
                 if (it.value()->HookBlockCreate)
-                    it.value()->blockCreateEvent(TheWorld,b);
-            TheWorld.AddBlock(b); //Edit After Server
+                    it.value()->blockCreateEvent(TheWorld,it.value());
             creatingblock=0;
         } else {
             tempc=TheWorld.Myself->LookAt;

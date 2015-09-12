@@ -16,7 +16,7 @@ public:
     World();
     World(Coordinate _Size);
     bool RegisterBlock(Block _BlockType);
-    void AddBlock(Bnode b);
+    QMap<int,Bnode>::iterator AddBlock(Bnode b);
     void RemoveBlock(QMap<int,Bnode>::iterator TheBlock);
     bool InBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position);
     QVector<QMap<int,Bnode>::iterator> InBlock(Coordinate Position);
