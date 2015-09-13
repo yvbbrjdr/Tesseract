@@ -29,6 +29,7 @@ void Sound::PlayASound(HCHANNEL hc) {
 
 void Sound::StopASound(HCHANNEL hc) {
     BASS_ChannelStop(hc);
+    BASS_ChannelSetPosition(hc,0,0);
 }
 
 void Sound::MoveASound(HCHANNEL hc,Coordinate Position) {

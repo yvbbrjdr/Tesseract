@@ -1,2 +1,2 @@
 #Tesseract
-Before editing Tesseract source code, please copy "Tesseract.pro.linux" or "Tesseract.pro.windows" to "Tesseract.pro" according to your OS. 
+The project file is for Linux and edit it yourself to adjust to Windows. 

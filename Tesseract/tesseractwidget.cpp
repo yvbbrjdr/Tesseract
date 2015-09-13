@@ -84,7 +84,7 @@ void TesseractWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(75,aspect,.1,100);
+    gluPerspective(75,aspect,.1,1000);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(TheWorld.Myself->Position.x,TheWorld.Myself->Position.y,TheWorld.Myself->Position.z,TheWorld.Myself->LookAt.x,TheWorld.Myself->LookAt.y,TheWorld.Myself->LookAt.z,TheWorld.Myself->HeadVector.x,TheWorld.Myself->HeadVector.y,TheWorld.Myself->HeadVector.z);
@@ -156,9 +156,9 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
         if (creatingblock) {
             Bnode b=Bnode(currentblocktype,0,(TheWorld.Myself->LookAt+tempc)/2,((TheWorld.Myself->LookAt-tempc)/2).Abs());
             QMap<int,Bnode>::iterator it=TheWorld.AddBlock(b); //Edit After Server
-			for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
-                if (it.value()->HookBlockCreate)
-                    it.value()->blockCreateEvent(TheWorld,it.value());
+            for (QMap<QString,Plugin*>::iterator pit=PM.Plugins.begin();pit!=PM.Plugins.end();++pit)
+                if (pit.value()->HookBlockCreate)
+                    pit.value()->blockCreateEvent(TheWorld,it.value());
             creatingblock=0;
         } else {
             tempc=TheWorld.Myself->LookAt;

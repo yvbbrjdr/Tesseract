@@ -10,6 +10,7 @@
 
 class MusicPlayer:public QObject,public Plugin {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "MusicPlayer")
     Q_INTERFACES(Plugin)
 private:
 	Bnode* SelectingObject;

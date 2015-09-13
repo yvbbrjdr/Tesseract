@@ -27,13 +27,15 @@ void MusicPlayer::keyPressEvent(World &w,QKeyEvent &e) {
 				QFileDialog qfd;
                 ss->LoadFile(b.Position,qfd.getOpenFileName(0,"","","MP3 Files(*.mp3);;Wave Files(*.wav)"));
 			}
-		} else if (e.key()==Qt::Key_L) {
+        } else if (e.key()==Qt::Key_F) {
+            ss->UnloadFile();
+        } else if (e.key()==Qt::Key_L) {
 			if (SelectingObject!=NULL) {
 				if (SelectingObject->Type=="Controller") {
-					ControllerStatus *cs=SelectingObject->Data;
+                    ControllerStatus *cs=(ControllerStatus*)SelectingObject->Data;
 					cs->AddLink(b);
 				} else {
-					SpinnerStatus *ss=SelectingObject->Data;
+                    SpinnerStatus *ss=(SpinnerStatus*)SelectingObject->Data;
 					ss->AddLink(b);
 				}
 				SelectingObject=NULL;
@@ -65,31 +67,31 @@ void MusicPlayer::keyPressEvent(World &w,QKeyEvent &e) {
 	}
 }
 
-void MusicPlayer::blockCreateEvent(World &w,Bnode &b) {
+void MusicPlayer::blockCreateEvent(World &,Bnode &b) {
 	if (b.Type=="Speaker")
 		b.Data=new SpeakerStatus;
 	else if (b.Type=="Controller") {
 		b.Data=new ControllerStatus;
-		Controllers.push_back(*b);
+        Controllers.push_back(&b);
 	}
 	else if (b.Type=="Spinner") {
 		b.Data=new SpinnerStatus;
-		Spinners.push_back(*b);
+        Spinners.push_back(&b);
 	}
 }
 
-void MusicPlayer::blockDestroyEvent(World &w,Bnode &b) {
+void MusicPlayer::blockDestroyEvent(World &,Bnode &b) {
 	if (b.Type=="Speaker") {
         SpeakerStatus *ss=(SpeakerStatus*)b.Data;
 		ss->UnloadFile();
 		delete ss;
 	} else if (b.Type=="Controller") {
-		ControllerStatus *cs=(ControllerStatus*)b.Data;
-		Controllers.erase(Controllers.find(&b));
+        ControllerStatus *cs=(ControllerStatus*)b.Data;
+        Controllers.remove(Controllers.indexOf(&b));
 		delete cs;
 	} else if (b.Type=="Spinner") {
-		SpinnerStatus *ss=(SpinnerStatus*)b.Data;
-		Spinner.erase(Spinners.find(&b));
+        SpinnerStatus *ss=(SpinnerStatus*)b.Data;
+        Spinners.remove(Spinners.indexOf(&b));
 		delete ss;
 	}
 	for (int i=0;i<Controllers.size();++i) {
@@ -102,20 +104,21 @@ void MusicPlayer::blockDestroyEvent(World &w,Bnode &b) {
 	}
 }
 
-void MusicPlayer:: globalEvent(World &w,QVector<QMap<int,Bnode>::iterator>) {
+void MusicPlayer::globalEvent(World &,QVector<QMap<int,Bnode>::iterator>) {
 	for (int i=0;i<Spinners.size();++i) {
 		Bnode &TheSpinner=*Spinners[i];
 		SpinnerStatus *ss=(SpinnerStatus*)TheSpinner.Data;
-		if (ss->Spinning)
-			for (int j=0;j<TheSpinner.Linked.size();++j) {
-				Bnode &b=*TheSpinner.Linked[i];
+        if (ss->Spinning) {
+            for (int j=0;j<ss->Linked.size();++j) {
+                Bnode &b=*ss->Linked[j];
 				SpeakerStatus *spst=(SpeakerStatus*)b.Data;
-				double Radius=(b.Position-TheSpinner.Position).Length();
-				b.Position=Coordinate(TheSpinner.Position.x+Radius*cos(Theta),b.Position.y,TheSpinner.Position.z+Radius*sin(Theta));
+                Coordinate r=b.Position-TheSpinner.Position;
+                r.y=0;
+                double Radius=r.Length();
+                b.Position=Coordinate(TheSpinner.Position.x+Radius*cos(ss->Theta),b.Position.y,TheSpinner.Position.z+Radius*sin(ss->Theta));
 				spst->Move(b.Position);
 			}
+            ss->Theta+=ss->Speed;
+        }
 	}
-	Theta+=Speed;
 }
-
-Q_EXPORT_PLUGIN2(MusicPlayer,MusicPlayer)
