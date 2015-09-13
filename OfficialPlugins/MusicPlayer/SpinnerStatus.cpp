@@ -6,16 +6,16 @@ SpinnerStatus::SpinnerStatus() {
 }
 
 bool SpinnerStatus::AddLink(Bnode &b) {
-	if (b.Type!="Speaker"||Linked.find(&b)!=Linked.end())
+    if (b.Type!="Speaker"||Linked.indexOf(&b)!=-1)
 		return 0;
 	Linked.push_back(&b);
 	return 1;
 }
 
 bool SpinnerStatus::RemoveLink(Bnode &b) {
-	if (Linked.find(&b)==Linked.end())
+    if (Linked.indexOf(&b)==-1)
 		return 0;
-	Linked.erase(Linked.find(&b));
+    Linked.remove(Linked.indexOf(&b));
 	return 1;
 }
 
@@ -24,7 +24,7 @@ bool SpinnerStatus::Start() {
 		return 0;
 	Speed=0.167;
 	Spinning=1;
-	
+    return 1;
 }
 
 bool SpinnerStatus::Stop() {

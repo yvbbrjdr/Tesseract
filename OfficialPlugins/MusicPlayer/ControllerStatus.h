@@ -3,6 +3,7 @@
 
 #include <QVector>
 #include "SpeakerStatus.h"
+#include "../../Tesseract/Block.h"
 
 class ControllerStatus {
 private:

@@ -1,36 +1,36 @@
 #include "ControllerStatus.h"
 
 bool ControllerStatus::AddLink(Bnode &b) {
-	if (Bnode.Type!="Speaker"||Linked.find(&b)!=Linked.end())
+    if (b.Type!="Speaker"||Linked.indexOf(&b)!=-1)
 		return 0;
 	Linked.push_back(&b);
 	return 1;
 }
 
-bool ControllerStatus::RemoveLink(Bnode&) {
-	if (Linked.find(&b)==Linked.end())
+bool ControllerStatus::RemoveLink(Bnode &b) {
+    if (Linked.indexOf(&b)==-1)
 		return 0;
-	Linked.erase(Linked.find(&b));
+    Linked.remove(Linked.indexOf(&b));
 	return 1;
 }
 
 void ControllerStatus::Play() {
 	for (int i=0;i<Linked.size();++i) {
-		SpeakerStatus *ss=Linked[i]->Data;
+        SpeakerStatus *ss=(SpeakerStatus*)Linked[i]->Data;
 		ss->Play();
 	}
 }
 
 void ControllerStatus::Pause() {
 	for (int i=0;i<Linked.size();++i) {
-		SpeakerStatus *ss=Linked[i]->Data;
+        SpeakerStatus *ss=(SpeakerStatus*)Linked[i]->Data;
 		ss->Pause();
 	}
 }
 
 void ControllerStatus::Stop() {
 	for (int i=0;i<Linked.size();++i) {
-		SpeakerStatus *ss=Linked[i]->Data;
+        SpeakerStatus *ss=(SpeakerStatus*)Linked[i]->Data;
 		ss->Stop();
 	}
 }

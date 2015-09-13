@@ -16,7 +16,10 @@ bool World::RegisterBlock(Block _BlockType) {
 }
 
 QMap<int,Bnode>::iterator World::AddBlock(Bnode b) {
-    Blocks.insert((Blocks.end()-1).key()+1,b);
+    if (Blocks.empty())
+        Blocks.insert(0,b);
+    else
+        Blocks.insert((Blocks.end()-1).key()+1,b);
 	return Blocks.end()-1;
 }
 

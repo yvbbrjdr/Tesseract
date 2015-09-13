@@ -23,5 +23,3 @@ void BasicDrawingElements::drawDoneEvent(World&) {
         glVertex2f(0,0);
     glEnd();
 }
-
-Q_EXPORT_PLUGIN2(BasicDrawingElements,BasicDrawingElements)
