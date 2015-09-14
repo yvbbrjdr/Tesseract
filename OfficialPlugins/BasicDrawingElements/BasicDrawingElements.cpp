@@ -10,10 +10,10 @@ void BasicDrawingElements::drawBeginEvent(World &TheWorld) {
     GLfloat c[4]={0,.8,0,1};
     glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,c);
     glBegin(GL_POLYGON);
-        glVertex3f(TheWorld.Size.x,0,TheWorld.Size.z);
-        glVertex3f(TheWorld.Size.x,0,-TheWorld.Size.z);
-        glVertex3f(-TheWorld.Size.x,0,-TheWorld.Size.z);
-        glVertex3f(-TheWorld.Size.x,0,TheWorld.Size.z);
+        glVertex3f(TheWorld.Size.x/2,0,TheWorld.Size.z/2);
+        glVertex3f(TheWorld.Size.x/2,0,-TheWorld.Size.z/2);
+        glVertex3f(-TheWorld.Size.x/2,0,-TheWorld.Size.z/2);
+        glVertex3f(-TheWorld.Size.x/2,0,TheWorld.Size.z/2);
     glEnd();
 }
 
