@@ -2,6 +2,7 @@
 #define BASICDRAWINGELEMENTS_H
 
 #include "../../Tesseract/Plugin.h"
+#include <QString>
 
 
 class BasicDrawingElements:public QObject,public Plugin {

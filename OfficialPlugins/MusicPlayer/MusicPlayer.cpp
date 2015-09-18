@@ -10,8 +10,8 @@ void MusicPlayer::clientLoad(World &w) {
 	HookBlockCreate=
 	HookBlockDestroy=
 	HookGlobal=1;
-	w.RegisterBlock(Block("Speaker",Coordinate(.8,0,0),"",1));
-	w.RegisterBlock(Block("Controller",Coordinate(0,0,.8),"",1));
+	w.RegisterBlock(Block("Speaker",Coordinate(.8,.1,.1),"",1));
+	w.RegisterBlock(Block("Controller",Coordinate(.1,.1,.8),"",1));
 	w.RegisterBlock(Block("Spinner",Coordinate(.5,.5,0),"",1));
 }
 
