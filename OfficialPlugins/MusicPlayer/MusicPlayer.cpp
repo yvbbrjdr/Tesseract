@@ -29,7 +29,7 @@ void MusicPlayer::keyPressEvent(World &w,QKeyEvent &e) {
 			}
         } else if (e.key()==Qt::Key_F) {
             ss->UnloadFile();
-        } else if (e.key()==Qt::Key_L) {
+        } else if (e.key()==Qt::Key_C) {
 			if (SelectingObject!=NULL) {
 				if (SelectingObject->Type=="Controller") {
                     ControllerStatus *cs=(ControllerStatus*)SelectingObject->Data;
@@ -49,7 +49,7 @@ void MusicPlayer::keyPressEvent(World &w,QKeyEvent &e) {
 			cs->Pause();
 		} else if (e.key()==Qt::Key_G) {
 			cs->Stop();
-		} else if (e.key()==Qt::Key_L) {
+		} else if (e.key()==Qt::Key_C) {
 			SelectingObject=&b;
 		}
     } else if (b.Type=="Spinner") {
@@ -61,7 +61,7 @@ void MusicPlayer::keyPressEvent(World &w,QKeyEvent &e) {
 				ss->Start();
 		} else if (e.key()==Qt::Key_F) {
 			ss->Stop();
-		} else if (e.key()==Qt::Key_L) {
+		} else if (e.key()==Qt::Key_C) {
 			SelectingObject=&b;
 		}
 	}
