@@ -22,7 +22,4 @@ void BasicDrawingElements::drawDoneEvent(World &w) {
     glBegin(GL_POINTS);
         glVertex2f(0,0);
     glEnd();
-    glColor3f(0,0,0);
-    Coordinate &p=w.Myself->Position;
-    renderText(20,40,QString("(%1,%2,%3)").arg(p.x).arg(p.y).arg(p.z));
 }
