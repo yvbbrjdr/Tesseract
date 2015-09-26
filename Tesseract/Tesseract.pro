@@ -13,7 +13,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        tesseractwidget.cpp \
+    tesseractwidget.cpp \
     World.cpp \
     Coordinate.cpp \
     Block.cpp \

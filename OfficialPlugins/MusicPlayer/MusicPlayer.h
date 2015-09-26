@@ -13,9 +13,9 @@ class MusicPlayer:public QObject,public Plugin {
     Q_PLUGIN_METADATA(IID "MusicPlayer")
     Q_INTERFACES(Plugin)
 private:
-	Bnode* SelectingObject;
-	QVector<Bnode*>Spinners;
-	QVector<Bnode*>Controllers;
+    Bnode* SelectingObject;
+    QVector<Bnode*>Spinners;
+    QVector<Bnode*>Controllers;
     QTimer *timer;
 public:
     MusicPlayer();

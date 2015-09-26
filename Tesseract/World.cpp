@@ -20,7 +20,7 @@ QMap<int,Bnode>::iterator World::AddBlock(Bnode b) {
         Blocks.insert(0,b);
     else
         Blocks.insert((Blocks.end()-1).key()+1,b);
-	return Blocks.end()-1;
+    return Blocks.end()-1;
 }
 
 void World::RemoveBlock(QMap<int,Bnode>::iterator TheBlock) {

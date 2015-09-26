@@ -1,7 +1,7 @@
 #include "Coordinate.h"
 
 Coordinate::Coordinate() {
-	x=y=z=0;
+    x=y=z=0;
 }
 
 Coordinate::Coordinate(double a,double b,double c) {
@@ -38,7 +38,7 @@ double* Coordinate::ToArray(double res[3]) {
 }
 
 double Coordinate::Length() {
-	return sqrt(x*x+y*y+z*z);
+    return sqrt(x*x+y*y+z*z);
 }
 
 Coordinate Coordinate::ToDirection() {

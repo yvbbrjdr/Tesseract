@@ -10,16 +10,16 @@ enum PlayStatus{UNLOAD,STOP,PLAY,PAUSE};
 
 class SpeakerStatus {
 private:
-	HCHANNEL hc;
+    HCHANNEL hc;
 public:
-	SpeakerStatus();
-	bool LoadFile(Coordinate Position,QString Filename);
-	bool UnloadFile();
-	bool Play();
-	bool Pause();
-	bool Stop();
-	bool Move(Coordinate Position);
-	int Status;
+    SpeakerStatus();
+    bool LoadFile(Coordinate Position,QString Filename);
+    bool UnloadFile();
+    bool Play();
+    bool Pause();
+    bool Stop();
+    bool Move(Coordinate Position);
+    int Status;
 };
 
 #endif // SPEAKERSTATUS_H
