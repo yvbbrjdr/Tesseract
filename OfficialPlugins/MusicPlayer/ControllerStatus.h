@@ -7,13 +7,13 @@
 
 class ControllerStatus {
 private:
-	QVector<Bnode*>Linked;
+    QVector<Bnode*>Linked;
 public:
-	bool AddLink(Bnode&);
-	bool RemoveLink(Bnode&);
-	void Play();
-	void Pause();
-	void Stop();
+    bool AddLink(Bnode&);
+    bool RemoveLink(Bnode&);
+    void Play();
+    void Pause();
+    void Stop();
 };
 
 #endif // CONTROLLERSTATUS_H
