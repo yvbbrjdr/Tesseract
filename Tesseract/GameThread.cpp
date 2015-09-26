@@ -25,9 +25,6 @@ void GameThread::run() {
                 it->PointedAt=0;
             for (int i=0;i<v.size();++i)
                 v[i]->PointedAt=1;
-            for (QMap<QString,Plugin*>::iterator it=TesseractWidget::PM.Plugins.begin();it!=TesseractWidget::PM.Plugins.end();++it)
-                if (it.value()->HookGlobal)
-                    it.value()->globalEvent(TesseractWidget::TheWorld,v);
         }
         QTime dieTime=QTime::currentTime().addMSecs(10);
         while (QTime::currentTime()<dieTime)

@@ -6,13 +6,15 @@ MusicPlayer::MusicPlayer() {
 }
 
 void MusicPlayer::clientLoad(World &w) {
-	HookKeyPress=
-	HookBlockCreate=
-	HookBlockDestroy=
-	HookGlobal=1;
 	w.RegisterBlock(Block("Speaker",Coordinate(.8,.1,.1),"",1));
 	w.RegisterBlock(Block("Controller",Coordinate(.1,.1,.8),"",1));
 	w.RegisterBlock(Block("Spinner",Coordinate(.5,.5,0),"",1));
+    connect(&w,SIGNAL(keyPressSignal(World&,QKeyEvent&)),this,SLOT(keyPressEvent(World&,QKeyEvent&)));
+    connect(&w,SIGNAL(blockCreateSignal(World&,Bnode&)),this,SLOT(blockCreateEvent(World&,Bnode&)));
+    connect(&w,SIGNAL(blockDestroySignal(World&,Bnode&)),this,SLOT(blockDestroyEvent(World&,Bnode&)));
+    timer=new QTimer;
+    connect(timer,SIGNAL(timeout()),this,SLOT(Spinning()));
+    timer->start(10);
 }
 
 void MusicPlayer::keyPressEvent(World &w,QKeyEvent &e) {
@@ -104,7 +106,7 @@ void MusicPlayer::blockDestroyEvent(World &,Bnode &b) {
 	}
 }
 
-void MusicPlayer::globalEvent(World &,QVector<QMap<int,Bnode>::iterator>) {
+void MusicPlayer::Spinning() {
 	for (int i=0;i<Spinners.size();++i) {
 		Bnode &TheSpinner=*Spinners[i];
 		SpinnerStatus *ss=(SpinnerStatus*)TheSpinner.Data;

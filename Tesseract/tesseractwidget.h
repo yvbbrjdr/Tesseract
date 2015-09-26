@@ -55,6 +55,15 @@ private:
     double aspect;
     Coordinate tempc;
     QString currentblocktype;
+
+signals:
+    void drawBlockSignal(World&,Bnode&,bool&);
+    void drawBeginSignal(World&);
+    void drawDoneSignal(World&);
+    void keyPressSignal(World&,QKeyEvent&);
+    void keyReleaseSignal(World&,QKeyEvent&);
+    void blockCreateSignal(World&,Bnode&);
+    void blockDestroySignal(World&,Bnode&);
 };
 
 #include "GameThread.h"

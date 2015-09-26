@@ -11,8 +11,10 @@ class BasicDrawingElements:public QObject,public Plugin {
     Q_INTERFACES(Plugin)
 public:
     BasicDrawingElements();
-    virtual void drawBeginEvent(World&);
-    virtual void drawDoneEvent(World&);
+    void clientLoad(World &);
+public slots:
+    void drawBeginEvent(World&);
+    void drawDoneEvent(World&);
 };
 
 #endif // BASICDRAWINGELEMENTS_H

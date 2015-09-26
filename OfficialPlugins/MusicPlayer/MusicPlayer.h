@@ -16,13 +16,15 @@ private:
 	Bnode* SelectingObject;
 	QVector<Bnode*>Spinners;
 	QVector<Bnode*>Controllers;
+    QTimer *timer;
 public:
     MusicPlayer();
-    virtual void clientLoad(World&);
-    virtual void keyPressEvent(World&,QKeyEvent&);
-    virtual void blockCreateEvent(World&,Bnode&);
-    virtual void blockDestroyEvent(World&,Bnode&);
-    virtual void globalEvent(World&,QVector<QMap<int,Bnode>::iterator>);
+    void clientLoad(World&);
+public slots:
+    void keyPressEvent(World&,QKeyEvent&);
+    void blockCreateEvent(World&,Bnode&);
+    void blockDestroyEvent(World&,Bnode&);
+    void Spinning();
 };
 
 #endif // MUSICPLAYER_H

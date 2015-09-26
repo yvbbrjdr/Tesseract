@@ -2,8 +2,11 @@
 
 BasicDrawingElements::BasicDrawingElements() {
     Name="BasicDrawingElements";
-    HookDrawBegin=
-    HookDrawDone=1;
+}
+
+void BasicDrawingElements::clientLoad(World &w) {
+    connect(&w,SIGNAL(drawBeginSignal(World&)),this,SLOT(drawBeginEvent(World&)));
+    connect(&w,SIGNAL(drawDoneSignal(World&)),this,SLOT(drawDoneEvent(World&)));
 }
 
 void BasicDrawingElements::drawBeginEvent(World &TheWorld) {
@@ -17,7 +20,7 @@ void BasicDrawingElements::drawBeginEvent(World &TheWorld) {
     glEnd();
 }
 
-void BasicDrawingElements::drawDoneEvent(World &w) {
+void BasicDrawingElements::drawDoneEvent(World&) {
     glColor3f(1,0,0);
     glBegin(GL_POINTS);
         glVertex2f(0,0);

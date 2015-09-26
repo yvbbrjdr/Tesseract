@@ -4,9 +4,12 @@
 #include "Block.h"
 #include <QMap>
 #include <QVector>
+#include <QObject>
+#include <QKeyEvent>
 #include "Player.h"
 
-class World {
+class World : public QObject {
+    Q_OBJECT
 public:
     Coordinate Size;
     QMap<QString,Block>BlockTypes;
@@ -22,6 +25,15 @@ public:
     QVector<QMap<int,Bnode>::iterator> InBlock(Coordinate Position);
     double ThroughBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position1,Coordinate Position2);
     QVector<QMap<int,Bnode>::iterator> ThroughBlock(Coordinate Position1, Coordinate Position2);
+
+signals:
+    void drawBlockSignal(World&,Bnode&,bool&);
+    void drawBeginSignal(World&);
+    void drawDoneSignal(World&);
+    void keyPressSignal(World&,QKeyEvent&);
+    void keyReleaseSignal(World&,QKeyEvent&);
+    void blockCreateSignal(World&,Bnode&);
+    void blockDestroySignal(World&,Bnode&);
 };
 
 #endif // WORLD_H
