@@ -1,5 +1,9 @@
 #include "Plugin.h"
 
+Plugin::Plugin() {
+    Essential=0;
+}
+
 void Plugin::clientLoad(World&) {}
 
 void Plugin::clientUnload(World&) {}

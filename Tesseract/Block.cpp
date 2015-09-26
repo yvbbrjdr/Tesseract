@@ -2,14 +2,14 @@
 
 Block::Block() {}
 
-Block::Block(QString _Name,Coordinate _Color,QString _TextureName,bool _SoundCanGoOut) {
+Block::Block(const QString &_Name, const Coordinate &_Color, const QString &_TextureName, const bool &_SoundCanGoOut) {
     Name=_Name;
     Color=_Color;
     TextureName=_TextureName;
     SoundCanGoOut=_SoundCanGoOut;
 }
 
-Bnode::Bnode(QString _Type,int _Belong,Coordinate _Position,Coordinate _HalfSize) {
+Bnode::Bnode(const QString &_Type, const int &_Belong, const Coordinate &_Position, const Coordinate &_HalfSize) {
     Type=_Type;
     Belong=_Belong;
     Position=_Position;

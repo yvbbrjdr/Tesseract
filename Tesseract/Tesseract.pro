@@ -19,7 +19,6 @@ SOURCES += main.cpp\
     Block.cpp \
     Player.cpp \
     Sound.cpp \
-    GameThread.cpp \
     PluginManager.cpp \
     Plugin.cpp
 
@@ -29,7 +28,6 @@ HEADERS  +=     World.h \
     PluginManager.h \
     Plugin.h \
     Player.h \
-    GameThread.h \
     Coordinate.h \
     Block.h
 

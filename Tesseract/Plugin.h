@@ -14,6 +14,8 @@ class Bnode;
 class Plugin {
 public:
     QString Name;
+    bool Essential;
+    Plugin();
     virtual void clientLoad(World&);
     virtual void clientUnload(World&);
     virtual void serverLoad(World&);
