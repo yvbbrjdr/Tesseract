@@ -1,6 +1,6 @@
 #include "PluginManager.h"
 
-bool PluginManager::LoadPlugin(QString Filename) {
+bool PluginManager::LoadPlugin(const QString &Filename) {
     QPluginLoader *qpl=new QPluginLoader(Filename);
     QObject *plugin=qpl->instance();
     if (!plugin)
@@ -13,7 +13,7 @@ bool PluginManager::LoadPlugin(QString Filename) {
     return 1;
 }
 
-int PluginManager::LoadFolder(QString Path) {
+int PluginManager::LoadFolder(const QString &Path) {
     int ret=0;
     QDir qd(Path);
     if (!qd.exists())

@@ -11,7 +11,7 @@ public:
     QString TextureName;
     bool SoundCanGoOut;
     Block();
-    Block(QString _Name,Coordinate _Color,QString _TextureName,bool _SoundCanGoOut);
+    Block(const QString &_Name,const Coordinate &_Color,const QString &_TextureName,const bool &_SoundCanGoOut);
 };
 
 class Bnode {
@@ -21,7 +21,7 @@ public:
     Coordinate Position,HalfSize;
     bool PointedAt;
     void *Data;
-    Bnode(QString _Type,int _Belong,Coordinate _Position,Coordinate _HalfSize);
+    Bnode(const QString &_Type,const int &_Belong,const Coordinate &_Position,const Coordinate &_HalfSize);
 };
 
 #endif // BLOCK_H

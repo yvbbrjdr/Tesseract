@@ -10,8 +10,8 @@ class PluginManager {
 public:
     QMap<QString,Plugin*>Plugins;
     QMap<QString,QPluginLoader*>Loaders;
-    bool LoadPlugin(QString Filename);
-    int LoadFolder(QString Path);
+    bool LoadPlugin(const QString &Filename);
+    int LoadFolder(const QString &Path);
 };
 
 #endif // PLUGINMANAGER_H

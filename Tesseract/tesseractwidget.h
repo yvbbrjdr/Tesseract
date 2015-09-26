@@ -13,7 +13,6 @@
 #include <QWheelEvent>
 #include "Coordinate.h"
 
-class GameThread;
 class World;
 class PluginManager;
 class Bnode;
@@ -31,6 +30,7 @@ public:
 
 public slots:
     void DrawScene();
+    void GameLoop();
 
 public:
     void initializeGL();
@@ -49,10 +49,10 @@ public:
 
 private:
     Ui::TesseractWidget *ui;
-    GameThread *gt;
-    QTimer *GLTimer;
+    QTimer *GLTimer,*LoopTimer;
     bool creatingblock;
     double aspect;
+    int GameLoopCycle;
     Coordinate tempc;
     QString currentblocktype;
 
@@ -66,7 +66,6 @@ signals:
     void blockDestroySignal(World&,Bnode&);
 };
 
-#include "GameThread.h"
 #include "PluginManager.h"
 
 #endif // TESSERACTWIDGET_H

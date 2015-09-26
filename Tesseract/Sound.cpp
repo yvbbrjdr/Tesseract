@@ -6,7 +6,7 @@ void Sound::SetListenerValues(Coordinate Position,Coordinate EyeVector,Coordinat
     BASS_Apply3D();
 }
 
-HSTREAM Sound::AddNewFileSound(Coordinate Position,QString Filename) {
+HSTREAM Sound::AddNewFileSound(Coordinate Position, const QString &Filename) {
     HSTREAM hs=BASS_StreamCreateFile(FALSE,Filename.toStdString().c_str(),0,0,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_SAMPLE_LOOP);
     BASS_3DVECTOR v(Position.x,Position.y,Position.z);
     BASS_ChannelSet3DPosition(hs,&v,NULL,NULL);
