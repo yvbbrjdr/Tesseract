@@ -14,15 +14,12 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     creatingblock=0;
     this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);
+    gt=new GameThread;
+    gt->start();
     GLTimer=new QTimer;
     GLTimer->setInterval(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     GLTimer->start();
-    GameLoopCycle=0;
-    LoopTimer=new QTimer;
-    LoopTimer->setInterval(10);
-    connect(LoopTimer,SIGNAL(timeout()),this,SLOT(GameLoop()));
-    LoopTimer->start();
     TheWorld.RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
     currentblocktype="Stone";
     connect(this,SIGNAL(drawBlockSignal(World&,Bnode&,bool&)),&TheWorld,SIGNAL(drawBlockSignal(World&,Bnode&,bool&)));
@@ -37,30 +34,6 @@ TesseractWidget::TesseractWidget(QGLWidget *parent) :
     PM.LoadFolder(qdt.absolutePath());
     for (QMap<QString,Plugin*>::iterator it=PM.Plugins.begin();it!=PM.Plugins.end();++it)
         it.value()->clientLoad(TheWorld);
-}
-
-void TesseractWidget::GameLoop() {
-    if (KeyStatus['w'])
-        TheWorld.Myself->Go(.1,0,0);
-    if (KeyStatus['a'])
-        TheWorld.Myself->Go(0,.1,0);
-    if (KeyStatus['s'])
-        TheWorld.Myself->Go(-.1,0,0);
-    if (KeyStatus['d'])
-        TheWorld.Myself->Go(0,-.1,0);
-    if (KeyStatus['x'])
-        TheWorld.Myself->Go(0,0,.1);
-    if (KeyStatus['z'])
-        TheWorld.Myself->Go(0,0,-.1);
-    Sound::SetListenerValues(TheWorld.Myself->Position,TheWorld.Myself->EyeVector,TheWorld.Myself->HeadVector);
-    if (GameLoopCycle%10==0){
-        QVector<QMap<int,Bnode>::iterator> v=TheWorld.ThroughBlock(TheWorld.Myself->Position,TheWorld.Myself->LookAt);
-        for (QMap<int,Bnode>::iterator it=TheWorld.Blocks.begin();it!=TheWorld.Blocks.end();++it)
-            it->PointedAt=0;
-        for (int i=0;i<v.size();++i)
-            v[i]->PointedAt=1;
-    }
-    ++GameLoopCycle;
 }
 
 void TesseractWidget::initializeGL() {

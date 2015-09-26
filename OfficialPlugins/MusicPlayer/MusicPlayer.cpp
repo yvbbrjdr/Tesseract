@@ -2,6 +2,7 @@
 
 MusicPlayer::MusicPlayer() {
     Name="MusicPlayer";
+    Essential=1;
     SelectingObject=NULL;
 }
 

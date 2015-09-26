@@ -2,6 +2,7 @@
 
 BasicDrawingElements::BasicDrawingElements() {
     Name="BasicDrawingElements";
+    Essential=0;
 }
 
 void BasicDrawingElements::clientLoad(World &w) {
