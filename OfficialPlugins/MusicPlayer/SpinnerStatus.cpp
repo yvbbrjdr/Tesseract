@@ -22,7 +22,7 @@ bool SpinnerStatus::RemoveLink(Bnode &b) {
 bool SpinnerStatus::Start() {
 	if (Spinning)
 		return 0;
-	Speed=0.167;
+    Speed=0.0167;
 	Spinning=1;
     return 1;
 }
