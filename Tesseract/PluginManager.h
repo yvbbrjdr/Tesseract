@@ -7,11 +7,16 @@
 #include <QDir>
 
 class PluginManager {
-public:
-    QMap<QString,Plugin*>Plugins;
+private:
     QMap<QString,QPluginLoader*>Loaders;
+    QMap<QString,Plugin*>Plugins;
+
+public:
     bool LoadPlugin(const QString &Filename);
-    int LoadFolder(const QString &Path);
+    int ClientLoadFolder(const QString &Path,World &TheWorld);
+    int ServerLoadFolder(const QString &Path,World &TheWorld);
+    void ClientUnloadAll(World &TheWorld);
+    void ServerUnloadAll(World &TheWorld);
 };
 
 #endif // PLUGINMANAGER_H

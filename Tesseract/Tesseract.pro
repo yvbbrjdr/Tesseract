@@ -21,7 +21,11 @@ SOURCES += main.cpp\
     Sound.cpp \
     PluginManager.cpp \
     Plugin.cpp \
-    GameThread.cpp
+    GameThread.cpp \
+    Server.cpp \
+    Socket.cpp \
+    loginwidget.cpp \
+    serverwidget.cpp
 
 HEADERS  +=     World.h \
     tesseractwidget.h \
@@ -31,9 +35,15 @@ HEADERS  +=     World.h \
     Player.h \
     Coordinate.h \
     Block.h \
-    GameThread.h
+    GameThread.h \
+    Server.h \
+    Socket.h \
+    loginwidget.h \
+    serverwidget.h
 
-FORMS    += tesseractwidget.ui
+FORMS    += tesseractwidget.ui \
+    loginwidget.ui \
+    serverwidget.ui
 
 #-------------------------------------------------
 #
