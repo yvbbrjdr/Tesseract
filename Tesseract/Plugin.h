@@ -9,7 +9,6 @@
 #include "Sound.h"
 
 class World;
-class Bnode;
 
 class Plugin {
 public:

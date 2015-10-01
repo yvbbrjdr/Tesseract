@@ -2,6 +2,5 @@
 !.gitignore
 !README.md
 !/Tesseract/
-!/TesseractServer/
 !/OfficialPlugins/
 *.user

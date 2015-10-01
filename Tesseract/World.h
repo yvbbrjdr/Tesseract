@@ -34,6 +34,7 @@ signals:
     void keyReleaseSignal(World&,QKeyEvent&);
     void blockCreateSignal(World&,Bnode&);
     void blockDestroySignal(World&,Bnode&);
+    void logSignal(QString);
 };
 
 #endif // WORLD_H
