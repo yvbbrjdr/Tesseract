@@ -24,7 +24,7 @@ public slots:
     void Log(QString s);
     void newClient(int socket,QString ip,quint16 port);
     void Process(QVector<QString> &v);
-    void receiveData(int socket,QString ip,quint16 port,QByteArray qba);
+    void recvVariantMap(const int,const QString&,const quint16,const QVariantMap&);
 
 private:
     Ui::ServerWidget *ui;

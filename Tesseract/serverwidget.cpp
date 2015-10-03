@@ -7,7 +7,7 @@ ServerWidget::ServerWidget(quint16 port,QWidget *parent) : QMainWindow(parent),u
     Log("Welcome to Tesseract Server");
     TheServer=new Server;
     connect(TheServer,SIGNAL(connectClient(int,QString,quint16)),this,SLOT(newClient(int,QString,quint16)));
-    connect(TheServer,SIGNAL(readData(int,QString,quint16,QByteArray)),this,SLOT(receiveData(int,QString,quint16,QByteArray)));
+    connect(TheServer,SIGNAL(readVariantMap(int,QString,quint16,QVariantMap)),this,SLOT(recvVariantMap(int,QString,quint16,QVariantMap)));
     if (TheServer->listen(QHostAddress::Any,port))
         Log("Server listening at port "+QString::number(port));
     else
@@ -66,7 +66,7 @@ void ServerWidget::newClient(int socket,QString ip,quint16 port) {
     Log("New connection: "+ip+':'+QString::number(port)+" as player "+QString::number(socket));
 }
 
-void ServerWidget::receiveData(int socket,QString,quint16,QByteArray qba) {
-    QString t(qba);
-    Log("Player "+QString::number(socket)+" set the name: "+t);
+void ServerWidget::recvVariantMap(const int id, const QString &, const quint16, const QVariantMap &qvm) {
+    if (qvm["type"].toString()=="login")
+        Log(QString("Player %1 logged in with the name %2").arg(id).arg(qvm["name"].toString()));
 }

@@ -5,6 +5,7 @@
 #include "tesseractwidget.h"
 #include "serverwidget.h"
 #include <QFile>
+#include <QJsonDocument>
 
 namespace Ui {
 class LoginWidget;
@@ -17,6 +18,10 @@ class LoginWidget : public QMainWindow
 public:
     explicit LoginWidget(QWidget *parent = 0);
     ~LoginWidget();
+    QString LoadFile(QString Filename);
+    bool SaveFile(QString Filename,QString Content);
+    bool LoadConfigFile();
+    bool SaveConfigFile();
 
 private slots:
     void on_pushButton_2_clicked();

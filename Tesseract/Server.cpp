@@ -7,9 +7,9 @@ Server::Server(QObject*) {
 void Server::incomingConnection(qintptr handle) {
     Socket *tempSock=new Socket(handle);
     QThread *tt=new QThread(tempSock);
-    connect(tempSock,SIGNAL(readData(int,QString,quint16,QByteArray)),this,SIGNAL(readData(int,QString,quint16,QByteArray)));
+    connect(tempSock,SIGNAL(readVariantMap(int,QString,quint16,const QVariantMap&)),this,SIGNAL(readVariantMap(int,QString,quint16,const QVariantMap&)));
     connect(tempSock,SIGNAL(sockDisconnect(int,QString,quint16)),this,SLOT(sockDisconnectSlot(int,QString,quint16)));
-    connect(this,SIGNAL(sendData(QByteArray,int)),tempSock,SLOT(sendData(QByteArray,int)));
+    connect(this,SIGNAL(sendVariantMap(const QVariantMap&,int)),tempSock,SIGNAL(sendVariantMap(const QVariantMap&,int)));
     connect(tempSock,SIGNAL(disconnected()),tt,SLOT(quit()));
     tempSock->moveToThread(tt);
     tt->start();
@@ -17,8 +17,8 @@ void Server::incomingConnection(qintptr handle) {
     emit connectClient(tempSock->socketDescriptor(),tempSock->peerAddress().toString(),tempSock->peerPort());
 }
 
-void Server::setData(const QByteArray &data, const int handle) {
-    emit sendData(data,handle);
+void Server::setVariantMap(const QVariantMap &data, const int handle) {
+    emit sendVariantMap(data,handle);
 }
 
 void Server::sockDisconnectSlot(int handle, QString ip, quint16 port) {

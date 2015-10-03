@@ -13,12 +13,12 @@ public:
 
 signals:
     void connectClient(const int,const QString&,const quint16);
-    void readData(const int,const QString&,const quint16,const QByteArray&);
+    void readVariantMap(const int,const QString&,const quint16,const QVariantMap&);
     void sockDisconnect(const int,const QString&,const quint16);
-    void sendData(const QByteArray&,const int);
+    void sendVariantMap(const QVariantMap&,const int);
 
 public slots:
-    void setData(const QByteArray &data,const int handle);
+    void setVariantMap(const QVariantMap &data,const int handle);
     void sockDisconnectSlot(int handle,QString ip,quint16 port);
 
 protected:
