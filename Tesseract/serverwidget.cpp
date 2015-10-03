@@ -15,6 +15,9 @@ ServerWidget::ServerWidget(quint16 port,QWidget *parent) : QMainWindow(parent),u
     TheWorld=new World;
     connect(TheWorld,SIGNAL(logSignal(QString)),this,SLOT(Log(QString)));
     Log("World initialized");
+    PM=new PluginManager;
+    int p=PM->ServerLoadFolder("plugins",*TheWorld);
+    Log(QString("Plugin Manager initialized and loaded %1 plugin(s)").arg(p));
 }
 
 ServerWidget::~ServerWidget() {

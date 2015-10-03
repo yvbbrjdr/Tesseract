@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "Server.h"
 #include "World.h"
+#include "PluginManager.h"
 
 namespace Ui {
 class ServerWidget;
@@ -18,6 +19,7 @@ public:
     ~ServerWidget();
     Server *TheServer;
     World *TheWorld;
+    PluginManager *PM;
 
 public slots:
     void on_lineEdit_returnPressed();
