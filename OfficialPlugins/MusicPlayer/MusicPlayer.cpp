@@ -6,20 +6,21 @@ MusicPlayer::MusicPlayer() {
     SelectingObject=NULL;
 }
 
-void MusicPlayer::clientLoad(World &w) {
-    w.RegisterBlock(Block("Speaker",Coordinate(.8,.1,.1),"",1));
-    w.RegisterBlock(Block("Controller",Coordinate(.1,.1,.8),"",1));
-    w.RegisterBlock(Block("Spinner",Coordinate(.5,.5,0),"",1));
-    connect(&w,SIGNAL(keyPressSignal(World&,QKeyEvent&)),this,SLOT(keyPressEvent(World&,QKeyEvent&)));
-    connect(&w,SIGNAL(blockCreateSignal(World&,Bnode&)),this,SLOT(blockCreateEvent(World&,Bnode&)));
-    connect(&w,SIGNAL(blockDestroySignal(World&,Bnode&)),this,SLOT(blockDestroyEvent(World&,Bnode&)));
+void MusicPlayer::clientLoad(World *w,Socket*) {
+    TheWorld=w;
+    w->RegisterBlock(Block("Speaker",Coordinate(.8,.1,.1),"",1));
+    w->RegisterBlock(Block("Controller",Coordinate(.1,.1,.8),"",1));
+    w->RegisterBlock(Block("Spinner",Coordinate(.5,.5,0),"",1));
+    connect(w,SIGNAL(keyPressSignal(QKeyEvent&)),this,SLOT(keyPressEvent(QKeyEvent&)));
+    connect(w,SIGNAL(blockCreateSignal(Bnode&)),this,SLOT(blockCreateEvent(Bnode&)));
+    connect(w,SIGNAL(blockDestroySignal(Bnode&)),this,SLOT(blockDestroyEvent(Bnode&)));
     timer=new QTimer;
     connect(timer,SIGNAL(timeout()),this,SLOT(Spinning()));
     timer->start(10);
 }
 
-void MusicPlayer::keyPressEvent(World &w,QKeyEvent &e) {
-    QVector<QMap<int,Bnode>::iterator>v=w.ThroughBlock(w.Myself->Position,w.Myself->LookAt);
+void MusicPlayer::keyPressEvent(QKeyEvent &e) {
+    QVector<QMap<int,Bnode>::iterator>v=TheWorld->ThroughBlock(TheWorld->Myself->Position,TheWorld->Myself->LookAt);
     if (!v.size())
         return;
     Bnode &b=v[0].value();
@@ -70,7 +71,7 @@ void MusicPlayer::keyPressEvent(World &w,QKeyEvent &e) {
     }
 }
 
-void MusicPlayer::blockCreateEvent(World &,Bnode &b) {
+void MusicPlayer::blockCreateEvent(Bnode &b) {
     if (b.Type=="Speaker")
         b.Data=new SpeakerStatus;
     else if (b.Type=="Controller") {
@@ -83,7 +84,7 @@ void MusicPlayer::blockCreateEvent(World &,Bnode &b) {
     }
 }
 
-void MusicPlayer::blockDestroyEvent(World &,Bnode &b) {
+void MusicPlayer::blockDestroyEvent(Bnode &b) {
     if (b.Type=="Speaker") {
         SpeakerStatus *ss=(SpeakerStatus*)b.Data;
         ss->UnloadFile();

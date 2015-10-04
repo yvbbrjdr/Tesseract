@@ -7,6 +7,8 @@
 #include <QtOpenGL/QtOpenGL>
 #include <GL/glu.h>
 #include "Sound.h"
+#include "Socket.h"
+#include "Server.h"
 
 class World;
 
@@ -15,10 +17,10 @@ public:
     QString Name;
     bool Essential;
     Plugin();
-    virtual void clientLoad(World&);
-    virtual void clientUnload(World&);
-    virtual void serverLoad(World&);
-    virtual void serverUnload(World&);
+    virtual void clientLoad(World*,Socket*);
+    virtual void clientUnload();
+    virtual void serverLoad(World*,Server*);
+    virtual void serverUnload();
     virtual ~Plugin();
 };
 

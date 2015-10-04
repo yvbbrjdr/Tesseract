@@ -4,6 +4,8 @@
 #
 #-------------------------------------------------
 
+QT += network
+
 TARGET += MusicPlayer
 
 TEMPLATE = lib

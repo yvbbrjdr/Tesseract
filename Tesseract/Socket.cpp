@@ -7,6 +7,7 @@ Socket::Socket(qintptr socketDescriptor,QObject *parent) : QTcpSocket(parent) {
     }
     connect(this,SIGNAL(readyRead()),this,SLOT(thisReadData()));
     connect(this,SIGNAL(sendVariantMap(QVariantMap,int)),this,SLOT(setVariantMap(QVariantMap,int)));
+    connect(this,SIGNAL(disconnected()),this,SLOT(emitDisconnect()));
 }
 
 void Socket::setVariantMap(const QVariantMap &data, const int id) {
@@ -23,4 +24,8 @@ void Socket::thisReadData() {
         buffer=buffer.mid(pos+1,buffer.size()-pos);
         emit readVariantMap(socketID,peerAddress().toString(),peerPort(),QJsonDocument::fromJson(t.toUtf8()).toVariant().toMap());
     }
+}
+
+void Socket::emitDisconnect() {
+    emit sockDisconnect(socketID,peerAddress().toString(),peerPort());
 }

@@ -8,13 +8,11 @@
 #include <QJsonDocument>
 
 namespace Ui {
-class LoginWidget;
+    class LoginWidget;
 }
 
-class LoginWidget : public QMainWindow
-{
+class LoginWidget : public QMainWindow {
     Q_OBJECT
-
 public:
     explicit LoginWidget(QWidget *parent = 0);
     ~LoginWidget();
@@ -25,9 +23,7 @@ public:
 
 private slots:
     void on_pushButton_2_clicked();
-
     void on_pushButton_clicked();
-
     void on_pushButton_3_clicked();
 
 private:

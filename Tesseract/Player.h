@@ -18,11 +18,10 @@
 class Player {
 public:
     QString Name;
-    Coordinate Position,EyeVector,LookAt,HeadVector,CanGo;
+    Coordinate Position,EyeVector,LookAt,HeadVector;
+    static Coordinate CanGo;
     double Theta,Phi;
-    HCHANNEL hc;
     Player();
-    Player(Coordinate);
     void Go(double Front,double Left,double Up);
     void Turn(double Raise, double Left);
 };

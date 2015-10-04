@@ -9,12 +9,14 @@ class BasicDrawingElements:public QObject,public Plugin {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "BasicDrawingElements")
     Q_INTERFACES(Plugin)
+private:
+    World *TheWorld;
 public:
     BasicDrawingElements();
-    void clientLoad(World &);
+    void clientLoad(World*,Socket*);
 public slots:
-    void drawBeginEvent(World&);
-    void drawDoneEvent(World&);
+    void drawBeginEvent();
+    void drawDoneEvent();
 };
 
 #endif // BASICDRAWINGELEMENTS_H
