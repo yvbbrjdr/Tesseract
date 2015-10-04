@@ -12,10 +12,11 @@ class GameThread : public QThread {
 private:
     World *TheWorld;
     bool *KeyStatus;
+    Socket *TheSocket;
 
 public:
     int Cycle;
-    GameThread(World *_TheWorld,bool *_KeyStatus);
+    GameThread(World *_TheWorld,bool *_KeyStatus,Socket *_TheSocket);
     void run();
 };
 

@@ -17,7 +17,7 @@ TesseractWidget::TesseractWidget(Socket *_TheSocket,int PlayerNum,QString Player
     PM=new PluginManager;
     PM->ClientLoadFolder("plugins",TheWorld,TheSocket);
     QApplication::setOverrideCursor(Qt::BlankCursor);
-    gt=new GameThread(TheWorld,KeyStatus);
+    gt=new GameThread(TheWorld,KeyStatus,TheSocket);
     gt->start();
     GLTimer=new QTimer;
     GLTimer->start(16);
@@ -243,7 +243,8 @@ void TesseractWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
         p.Name=qvm["name"].toString();
         TheWorld->Players.insert(qvm["num"].toInt(),p);
     } else if (qvm["type"].toString()=="mvuser") {
-        TheWorld->Players[qvm["num"].toInt()].Position=Coordinate(qvm["x"].toInt(),qvm["y"].toInt(),qvm["z"].toInt());
+        if (qvm["num"]!=TheWorld->Myself.key())
+            TheWorld->Players[qvm["num"].toInt()].Position=Coordinate(qvm["x"].toInt(),qvm["y"].toInt(),qvm["z"].toInt());
     } else if (qvm["type"].toString()=="essentialplugin") {
         if (PM->Plugins.find(qvm["name"].toString())==PM->Plugins.end()) {
             QMessageBox::warning(0,"Exiting","Missing Plugin: "+qvm["name"].toString());

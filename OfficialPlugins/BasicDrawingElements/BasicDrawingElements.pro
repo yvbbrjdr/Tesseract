@@ -3,9 +3,10 @@
 # Project created by QtCreator 2015-09-09T07:12:03
 #
 #-------------------------------------------------
+
 QT += network
 
-TARGET += BasicDrawingElements
+TARGET = BasicDrawingElements
 
 TEMPLATE = lib
 

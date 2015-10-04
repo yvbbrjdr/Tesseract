@@ -1,8 +1,9 @@
 #include "GameThread.h"
 
-GameThread::GameThread(World *_TheWorld,bool *_KeyStatus) {
+GameThread::GameThread(World *_TheWorld,bool *_KeyStatus,Socket *_TheSocket) {
     TheWorld=_TheWorld;
     KeyStatus=_KeyStatus;
+    TheSocket=_TheSocket;
     Cycle=0;
 }
 
@@ -27,6 +28,13 @@ void GameThread::run() {
                 it->PointedAt=0;
             for (int i=0;i<v.size();++i)
                 v[i]->PointedAt=1;
+            QVariantMap qvm;
+            qvm.insert("type","mvuser");
+            qvm.insert("num",TheWorld->Myself.key());
+            qvm.insert("x",TheWorld->Myself->Position.x);
+            qvm.insert("y",TheWorld->Myself->Position.y);
+            qvm.insert("z",TheWorld->Myself->Position.z);
+            emit TheSocket->sendVariantMap(qvm,-1);
         }
         QTime dieTime=QTime::currentTime().addMSecs(10);
         while (QTime::currentTime()<dieTime)
