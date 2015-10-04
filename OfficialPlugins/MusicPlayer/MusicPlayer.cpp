@@ -19,6 +19,16 @@ void MusicPlayer::clientLoad(World *w,Socket*) {
     timer->start(10);
 }
 
+void MusicPlayer::serverLoad(World *w,Server*) {
+    TheWorld=w;
+    w->RegisterBlock(Block("Speaker",Coordinate(.8,.1,.1),"",1));
+    w->RegisterBlock(Block("Controller",Coordinate(.1,.1,.8),"",1));
+    w->RegisterBlock(Block("Spinner",Coordinate(.5,.5,0),"",1));
+    timer=new QTimer;
+    connect(timer,SIGNAL(timeout()),this,SLOT(Spinning()));
+    timer->start(10);
+}
+
 void MusicPlayer::keyPressEvent(QKeyEvent &e) {
     QVector<QMap<int,Bnode>::iterator>v=TheWorld->ThroughBlock(TheWorld->Myself->Position,TheWorld->Myself->LookAt);
     if (!v.size())
@@ -29,7 +39,9 @@ void MusicPlayer::keyPressEvent(QKeyEvent &e) {
         if (e.key()==Qt::Key_E) {
             if (ss->Status==UNLOAD) {
                 QFileDialog qfd;
+                emit TheWorld->releaseMouse();
                 ss->LoadFile(b.Position,qfd.getOpenFileName(0,"","","MP3 Files(*.mp3);;Wave Files(*.wav)"));
+                emit TheWorld->trackMouse();
             }
         } else if (e.key()==Qt::Key_F) {
             ss->UnloadFile();

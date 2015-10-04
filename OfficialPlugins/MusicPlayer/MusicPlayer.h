@@ -21,6 +21,7 @@ private:
 public:
     MusicPlayer();
     void clientLoad(World*,Socket*);
+    void serverLoad(World*,Server*);
 public slots:
     void keyPressEvent(QKeyEvent&);
     void blockCreateEvent(Bnode&);
