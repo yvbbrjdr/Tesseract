@@ -1,16 +1,21 @@
 #include "tesseractwidget.h"
 #include "ui_tesseractwidget.h"
 
-TesseractWidget::TesseractWidget(QString Host,uint Port,QString Name,QGLWidget *parent) : QGLWidget(parent), ui(new Ui::TesseractWidget) {
+TesseractWidget::TesseractWidget(Socket *_TheSocket,int PlayerNum,QString PlayerName,QGLWidget *parent) : QGLWidget(parent), ui(new Ui::TesseractWidget) {
     ui->setupUi(this);
+    TheSocket=_TheSocket;
+    connect(TheSocket,SIGNAL(readVariantMap(int,QString,quint16,QVariantMap)),this,SLOT(recvVariantMap(int,QString,quint16,QVariantMap)));
+    connect(TheSocket,SIGNAL(sockDisconnect(int,QString,quint16)),this,SLOT(sockDisconnect(int,QString,quint16)));
     memset(KeyStatus,0,sizeof(KeyStatus));
     creatingblock=0;
     mousetracked=1;
     TheWorld=new World;
-    Player t;
-    TheWorld->Players.insert(0,t);
-    TheWorld->Myself=TheWorld->Players.begin();
+    Player tp;
+    tp.Name=PlayerName;
+    TheWorld->Players.insert(PlayerNum,tp);
+    TheWorld->Myself=TheWorld->Players.find(PlayerNum);
     PM=new PluginManager;
+    PM->ClientLoadFolder("plugins",TheWorld,TheSocket);
     QApplication::setOverrideCursor(Qt::BlankCursor);
     gt=new GameThread(TheWorld,KeyStatus);
     gt->start();
@@ -22,6 +27,9 @@ TesseractWidget::TesseractWidget(QString Host,uint Port,QString Name,QGLWidget *
     connect(TheWorld,SIGNAL(logSignal(QString)),this,SLOT(Log(QString)));
     connect(TheWorld,SIGNAL(releaseMouse()),this,SLOT(releaseMouse()));
     connect(TheWorld,SIGNAL(trackMouse()),this,SLOT(trackMouse()));
+    QVariantMap qvm;
+    qvm.insert("type","getbasic");
+    emit TheSocket->sendVariantMap(qvm,-1);
 }
 
 void TesseractWidget::initializeGL() {
@@ -155,7 +163,10 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
             creatingblock=0;
         else {
             if ((vec=TheWorld->ThroughBlock(TheWorld->Myself->Position,TheWorld->Myself->LookAt)).size()) {
-                //Edit After Server
+                QVariantMap qvm;
+                qvm.insert("type","rmblock");
+                qvm.insert("num",vec[0].key());
+                emit TheSocket->sendVariantMap(qvm,-1);
             }
         }
     }
@@ -215,7 +226,26 @@ void TesseractWidget::trackMouse() {
 }
 
 void TesseractWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
-
+    if (qvm["type"].toString()=="wsize") {
+        TheWorld->Size=Coordinate(qvm["x"].toDouble(),qvm["y"].toDouble(),qvm["z"].toDouble());
+        Player::CanGo=TheWorld->Size;
+    } else if (qvm["type"].toString()=="addblock") {
+        Bnode b=Bnode(qvm["bt"].toString(),Coordinate(qvm["posx"].toDouble(),qvm["posy"].toDouble(),qvm["posz"].toDouble()),Coordinate(qvm["hsx"].toDouble(),qvm["hsy"].toDouble(),qvm["hsz"].toDouble()));
+        TheWorld->Blocks.insert(qvm["num"].toInt(),b);
+        QMap<int,Bnode>::iterator it=TheWorld->Blocks.find(qvm["num"].toInt());
+        emit TheWorld->blockCreateSignal(it.value());
+    } else if (qvm["type"].toString()=="rmblock") {
+        emit TheWorld->blockDestroySignal(TheWorld->Blocks.find(qvm["num"].toInt()).value());
+        TheWorld->Blocks.remove(qvm["num"].toInt());
+    } else if (qvm["type"].toString()=="rmuser") {
+        TheWorld->Players.remove(qvm["num"].toInt());
+    } else if (qvm["type"].toString()=="adduser") {
+        Player p;
+        p.Name=qvm["name"].toString();
+        TheWorld->Players.insert(qvm["num"].toInt(),p);
+    } else if (qvm["type"].toString()=="mvuser") {
+        TheWorld->Players[qvm["num"].toInt()].Position=Coordinate(qvm["x"].toInt(),qvm["y"].toInt(),qvm["z"].toInt());
+    }
 }
 
 void TesseractWidget::sockDisconnect(int,QString,quint16) {

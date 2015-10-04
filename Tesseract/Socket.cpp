@@ -13,13 +13,14 @@ Socket::Socket(qintptr socketDescriptor,QObject *parent) : QTcpSocket(parent) {
 void Socket::setVariantMap(const QVariantMap &data, const int id) {
     if (id==socketID||id==-1) {
         write(QJsonDocument::fromVariant(data).toJson());
+        waitForBytesWritten();
     }
 }
 
 void Socket::thisReadData() {
     buffer+=readAll();
     int pos=buffer.indexOf('}');
-    if (pos>=0) {
+    for (;pos>=0;pos=buffer.indexOf('}')) {
         QString t=buffer.mid(0,pos+1);
         buffer=buffer.mid(pos+1,buffer.size()-pos);
         emit readVariantMap(socketID,peerAddress().toString(),peerPort(),QJsonDocument::fromJson(t.toUtf8()).toVariant().toMap());

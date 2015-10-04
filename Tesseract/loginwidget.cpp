@@ -56,9 +56,20 @@ void LoginWidget::on_pushButton_2_clicked() {
 
 void LoginWidget::on_pushButton_clicked() {
     SaveConfigFile();
-    TesseractWidget *w=new TesseractWidget(ui->lineEdit->text(),ui->lineEdit_2->text().toUInt(),ui->lineEdit_3->text());
-    w->showFullScreen();
-    hide();
+    TheSocket=new Socket(-1);
+    TheSocket->connectToHost(ui->lineEdit->text(),ui->lineEdit_2->text().toUShort());
+    ui->label->setText("Connecting. . . ");
+    if (!TheSocket->waitForConnected()) {
+        delete TheSocket;
+        QMessageBox::warning(0,"Failed","Unable to connect to the server");
+        ui->label->setText("Retry!");
+        return;
+    }
+    connect(TheSocket,SIGNAL(readVariantMap(int,QString,quint16,QVariantMap)),this,SLOT(recvVariantMap(int,QString,quint16,QVariantMap)));
+    QVariantMap qvm;
+    qvm.insert("type","login");
+    qvm.insert("name",ui->lineEdit_3->text());
+    emit TheSocket->sendVariantMap(qvm,-1);
 }
 
 void LoginWidget::on_pushButton_3_clicked() {
@@ -66,4 +77,20 @@ void LoginWidget::on_pushButton_3_clicked() {
     ServerWidget *w=new ServerWidget(ui->lineEdit_2->text().toUInt());
     w->show();
     hide();
+}
+
+void LoginWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
+    if (qvm["type"].toString()=="login") {
+        disconnect(TheSocket,SIGNAL(readVariantMap(int,QString,quint16,QVariantMap)),this,SLOT(recvVariantMap(int,QString,quint16,QVariantMap)));
+        if (qvm["num"].toInt()) {
+            TesseractWidget *w=new TesseractWidget(TheSocket,qvm["num"].toInt(),ui->lineEdit_3->text());
+            w->showFullScreen();
+            hide();
+        } else {
+            TheSocket->close();
+            delete TheSocket;
+            QMessageBox::warning(0,"Failed","Name existed. Please change to another one.");
+            ui->label->setText("Retry!");
+        }
+    }
 }
