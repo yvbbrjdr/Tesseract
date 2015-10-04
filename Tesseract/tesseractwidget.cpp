@@ -158,34 +158,36 @@ void TesseractWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void TesseractWidget::mousePressEvent(QMouseEvent *event) {
-    QVector<QMap<int,Bnode>::iterator>vec;
-    if (event->button()==Qt::LeftButton) {
-        if (creatingblock) {
-            Bnode b=Bnode(currentblocktype,(TheWorld->Myself->LookAt+tempc)/2,((TheWorld->Myself->LookAt-tempc)/2).Abs());
-            QVariantMap qvm;
-            qvm.insert("type","addblock");
-            qvm.insert("bt",b.Type);
-            qvm.insert("posx",b.Position.x);
-            qvm.insert("posy",b.Position.y);
-            qvm.insert("posz",b.Position.z);
-            qvm.insert("hsx",b.HalfSize.x);
-            qvm.insert("hsy",b.HalfSize.y);
-            qvm.insert("hsz",b.HalfSize.z);
-            emit TheSocket->sendVariantMap(qvm,-1);
-            creatingblock=0;
-        } else {
-            tempc=TheWorld->Myself->LookAt;
-            creatingblock=1;
-        }
-    } else if (event->button()==Qt::RightButton) {
-        if (creatingblock)
-            creatingblock=0;
-        else {
-            if ((vec=TheWorld->ThroughBlock(TheWorld->Myself->Position,TheWorld->Myself->LookAt)).size()) {
+    if (mousetracked) {
+        QVector<QMap<int,Bnode>::iterator>vec;
+        if (event->button()==Qt::LeftButton) {
+            if (creatingblock) {
+                Bnode b=Bnode(currentblocktype,(TheWorld->Myself->LookAt+tempc)/2,((TheWorld->Myself->LookAt-tempc)/2).Abs());
                 QVariantMap qvm;
-                qvm.insert("type","rmblock");
-                qvm.insert("num",vec[0].key());
+                qvm.insert("type","addblock");
+                qvm.insert("bt",b.Type);
+                qvm.insert("posx",b.Position.x);
+                qvm.insert("posy",b.Position.y);
+                qvm.insert("posz",b.Position.z);
+                qvm.insert("hsx",b.HalfSize.x);
+                qvm.insert("hsy",b.HalfSize.y);
+                qvm.insert("hsz",b.HalfSize.z);
                 emit TheSocket->sendVariantMap(qvm,-1);
+                creatingblock=0;
+            } else {
+                tempc=TheWorld->Myself->LookAt;
+                creatingblock=1;
+            }
+        } else if (event->button()==Qt::RightButton) {
+            if (creatingblock)
+                creatingblock=0;
+            else {
+                if ((vec=TheWorld->ThroughBlock(TheWorld->Myself->Position,TheWorld->Myself->LookAt)).size()) {
+                    QVariantMap qvm;
+                    qvm.insert("type","rmblock");
+                    qvm.insert("num",vec[0].key());
+                    emit TheSocket->sendVariantMap(qvm,-1);
+                }
             }
         }
     }
@@ -204,18 +206,20 @@ void TesseractWidget::resizeGL(int width,int height) {
 }
 
 void TesseractWidget::wheelEvent(QWheelEvent *event) {
-    QMap<QString,Block>::iterator it=TheWorld->BlockTypes.find(currentblocktype);
-    if (event->delta()<0) {
-        it+=1;
-        if (it==TheWorld->BlockTypes.end())
-            currentblocktype=TheWorld->BlockTypes.begin().key();
-        else
-            currentblocktype=it.key();
-    } else if (event->delta()>0) {
-        if (it==TheWorld->BlockTypes.begin())
-            currentblocktype=(TheWorld->BlockTypes.end()-1).key();
-        else
-            currentblocktype=(it-1).key();
+    if (mousetracked) {
+        QMap<QString,Block>::iterator it=TheWorld->BlockTypes.find(currentblocktype);
+        if (event->delta()<0) {
+            it+=1;
+            if (it==TheWorld->BlockTypes.end())
+                currentblocktype=TheWorld->BlockTypes.begin().key();
+            else
+                currentblocktype=it.key();
+        } else if (event->delta()>0) {
+            if (it==TheWorld->BlockTypes.begin())
+                currentblocktype=(TheWorld->BlockTypes.end()-1).key();
+            else
+                currentblocktype=(it-1).key();
+        }
     }
 }
 
