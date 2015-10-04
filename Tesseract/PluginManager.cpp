@@ -13,7 +13,7 @@ bool PluginManager::LoadPlugin(const QString &Filename) {
     return 1;
 }
 
-int PluginManager::ClientLoadFolder(const QString &Path,World &TheWorld) {
+int PluginManager::ClientLoadFolder(const QString &Path,World *TheWorld,Socket *TheSocket) {
     int ret=0;
     QDir qd(Path);
     if (!qd.exists())
@@ -26,12 +26,12 @@ int PluginManager::ClientLoadFolder(const QString &Path,World &TheWorld) {
     for (QFileInfoList::iterator it=list.begin();it!=list.end();++it)
         if (LoadPlugin(it->absoluteFilePath())) {
             ++ret;
-            (Plugins.end()-1).value()->clientLoad(TheWorld);
+            (Plugins.end()-1).value()->clientLoad(TheWorld,TheSocket);
         }
     return ret;
 }
 
-int PluginManager::ServerLoadFolder(const QString &Path,World &TheWorld) {
+int PluginManager::ServerLoadFolder(const QString &Path,World *TheWorld,Server *TheServer) {
     int ret=0;
     QDir qd(Path);
     if (!qd.exists())
@@ -44,14 +44,14 @@ int PluginManager::ServerLoadFolder(const QString &Path,World &TheWorld) {
     for (QFileInfoList::iterator it=list.begin();it!=list.end();++it)
         if (LoadPlugin(it->absoluteFilePath())) {
             ++ret;
-            (Plugins.end()-1).value()->serverLoad(TheWorld);
+            (Plugins.end()-1).value()->serverLoad(TheWorld,TheServer);
         }
     return ret;
 }
 
-void PluginManager::ClientUnloadAll(World &TheWorld) {
+void PluginManager::ClientUnloadAll() {
     while (!Plugins.empty()) {
-        Plugins.begin().value()->clientUnload(TheWorld);
+        Plugins.begin().value()->clientUnload();
         delete Plugins.begin().value();
         Plugins.erase(Plugins.begin());
     }
@@ -62,9 +62,9 @@ void PluginManager::ClientUnloadAll(World &TheWorld) {
     }
 }
 
-void PluginManager::ServerUnloadAll(World &TheWorld) {
+void PluginManager::ServerUnloadAll() {
     while (!Plugins.empty()) {
-        Plugins.begin().value()->serverUnload(TheWorld);
+        Plugins.begin().value()->serverUnload();
         delete Plugins.begin().value();
         Plugins.erase(Plugins.begin());
     }

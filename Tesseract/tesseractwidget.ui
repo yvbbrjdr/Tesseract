@@ -10,6 +10,9 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="mouseTracking">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>Tesseract Inspired By Minecraft</string>
   </property>

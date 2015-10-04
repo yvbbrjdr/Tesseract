@@ -1,16 +1,12 @@
 #include "Player.h"
 
-Player::Player() {
-    hc=0;
-}
+Coordinate Player::CanGo;
 
-Player::Player(Coordinate _CanGo) {
-    CanGo=_CanGo;
+Player::Player() {
     Position=Coordinate(0,1,0);
     Theta=0;
     Phi=PI/2;
     Turn(0,0);
-    hc=0;
 }
 
 void Player::Go(double Front,double Left,double HeadVector) {

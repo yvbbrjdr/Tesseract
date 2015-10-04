@@ -22,7 +22,7 @@ bool LoginWidget::SaveFile(QString Filename,QString Content) {
 }
 
 bool LoginWidget::LoadConfigFile() {
-    QString Config=LoadFile("TesseractServer.conf");
+    QString Config=LoadFile("Tesseract.conf");
     if (Config=="")
         return 0;
     QVariantMap qvm=QJsonDocument::fromJson(Config.toUtf8()).toVariant().toMap();
@@ -37,7 +37,7 @@ bool LoginWidget::SaveConfigFile() {
     qvm.insert("server",ui->lineEdit->text());
     qvm.insert("port",ui->lineEdit_2->text());
     qvm.insert("name",ui->lineEdit_3->text());
-    return SaveFile("TesseractServer.conf",QJsonDocument::fromVariant(qvm).toJson().data());
+    return SaveFile("Tesseract.conf",QJsonDocument::fromVariant(qvm).toJson().data());
 }
 
 LoginWidget::LoginWidget(QWidget *parent) : QMainWindow(parent),ui(new Ui::LoginWidget) {
@@ -56,20 +56,7 @@ void LoginWidget::on_pushButton_2_clicked() {
 
 void LoginWidget::on_pushButton_clicked() {
     SaveConfigFile();
-    Socket *TheSocket=new Socket(-1);
-    TheSocket->connectToHost(ui->lineEdit->text(),ui->lineEdit_2->text().toUInt());
-    ui->label->setText("Connecting. . . ");
-    if (!TheSocket->waitForConnected()) {
-        QMessageBox::warning(0,"Failed","Unable to connect to server");
-        ui->label->setText("Welcome to Tesseract! ");
-        return;
-    }
-    ui->label->setText("Logging in. . . ");
-    TesseractWidget *w=new TesseractWidget(TheSocket);
-    QVariantMap qvm;
-    qvm.insert("type","login");
-    qvm.insert("name",ui->lineEdit_3->text());
-    emit TheSocket->sendVariantMap(qvm,-1);
+    TesseractWidget *w=new TesseractWidget(ui->lineEdit->text(),ui->lineEdit_2->text().toUInt(),ui->lineEdit_3->text());
     w->showFullScreen();
     hide();
 }

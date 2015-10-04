@@ -22,12 +22,16 @@ class TesseractWidget : public QGLWidget {
     Q_OBJECT
 
 public:
-    explicit TesseractWidget(Socket *_TheSocket,QGLWidget *parent = 0);
+    explicit TesseractWidget(QString,uint,QString,QGLWidget *parent = 0);
     ~TesseractWidget();
 
 public slots:
     void DrawScene();
     void Log(QString s);
+    void releaseMouse();
+    void trackMouse();
+    void recvVariantMap(int,QString,quint16,QVariantMap);
+    void sockDisconnect(int,QString,quint16);
 
 public:
     void initializeGL();
@@ -41,7 +45,7 @@ public:
     void DrawBlock(Bnode,int);
     void SetColor(Coordinate);
     World *TheWorld;
-    bool KeyStatus[128];
+    bool KeyStatus[128],mousetracked;
     PluginManager *PM;
     Socket *TheSocket;
 
@@ -53,15 +57,6 @@ private:
     double aspect;
     Coordinate tempc;
     QString currentblocktype;
-
-signals:
-    void drawBlockSignal(World&,Bnode&,bool&);
-    void drawBeginSignal(World&);
-    void drawDoneSignal(World&);
-    void keyPressSignal(World&,QKeyEvent&);
-    void keyReleaseSignal(World&,QKeyEvent&);
-    void blockCreateSignal(World&,Bnode&);
-    void blockDestroySignal(World&,Bnode&);
 };
 
 #include "PluginManager.h"

@@ -8,7 +8,7 @@ void Server::incomingConnection(qintptr handle) {
     Socket *tempSock=new Socket(handle);
     QThread *tt=new QThread(tempSock);
     connect(tempSock,SIGNAL(readVariantMap(int,QString,quint16,const QVariantMap&)),this,SIGNAL(readVariantMap(int,QString,quint16,const QVariantMap&)));
-    connect(tempSock,SIGNAL(sockDisconnect(int,QString,quint16)),this,SLOT(sockDisconnectSlot(int,QString,quint16)));
+    connect(tempSock,SIGNAL(sockDisconnect(const int,QString,quint16)),this,SLOT(sockDisconnectSlot(const int,QString,quint16)));
     connect(this,SIGNAL(sendVariantMap(const QVariantMap&,int)),tempSock,SIGNAL(sendVariantMap(const QVariantMap&,int)));
     connect(tempSock,SIGNAL(disconnected()),tt,SLOT(quit()));
     tempSock->moveToThread(tt);

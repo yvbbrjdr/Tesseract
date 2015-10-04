@@ -27,6 +27,7 @@ public slots:
     void newClient(int socket,QString ip,quint16 port);
     void Process(QVector<QString> &v);
     void recvVariantMap(const int,const QString&,const quint16,const QVariantMap&);
+    void userLogOff(int,QString,quint16);
 
 private:
     Ui::ServerWidget *ui;

@@ -9,9 +9,8 @@ Block::Block(const QString &_Name, const Coordinate &_Color, const QString &_Tex
     SoundCanGoOut=_SoundCanGoOut;
 }
 
-Bnode::Bnode(const QString &_Type, const int &_Belong, const Coordinate &_Position, const Coordinate &_HalfSize) {
+Bnode::Bnode(const QString &_Type, const Coordinate &_Position, const Coordinate &_HalfSize) {
     Type=_Type;
-    Belong=_Belong;
     Position=_Position;
     HalfSize=_HalfSize;
     Data=NULL;

@@ -17,11 +17,10 @@ public:
 class Bnode {
 public:
     QString Type;
-    int Belong;
     Coordinate Position,HalfSize;
     bool PointedAt;
     void *Data;
-    Bnode(const QString &_Type,const int &_Belong,const Coordinate &_Position,const Coordinate &_HalfSize);
+    Bnode(const QString &_Type,const Coordinate &_Position,const Coordinate &_HalfSize);
 };
 
 #endif // BLOCK_H

@@ -4,12 +4,12 @@ Plugin::Plugin() {
     Essential=0;
 }
 
-void Plugin::clientLoad(World&) {}
+void Plugin::clientLoad(World*,Socket*) {}
 
-void Plugin::clientUnload(World&) {}
+void Plugin::clientUnload() {}
 
-void Plugin::serverLoad(World&) {}
+void Plugin::serverLoad(World*,Server*) {}
 
-void Plugin::serverUnload(World&) {}
+void Plugin::serverUnload() {}
 
 Plugin::~Plugin() {}

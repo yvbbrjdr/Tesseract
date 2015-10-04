@@ -17,13 +17,14 @@ private:
     QVector<Bnode*>Spinners;
     QVector<Bnode*>Controllers;
     QTimer *timer;
+    World *TheWorld;
 public:
     MusicPlayer();
-    void clientLoad(World&);
+    void clientLoad(World*,Socket*);
 public slots:
-    void keyPressEvent(World&,QKeyEvent&);
-    void blockCreateEvent(World&,Bnode&);
-    void blockDestroyEvent(World&,Bnode&);
+    void keyPressEvent(QKeyEvent&);
+    void blockCreateEvent(Bnode&);
+    void blockDestroyEvent(Bnode&);
     void Spinning();
 };
 

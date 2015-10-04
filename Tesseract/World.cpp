@@ -1,32 +1,10 @@
 #include "World.h"
 
-World::World() {}
-
-World::World(Coordinate _Size) {
-    Size=_Size;
-    Players[0]=Player(_Size);
-    Myself=Players.begin(); //Edit After Server
-}
-
 bool World::RegisterBlock(Block _BlockType) {
     if (BlockTypes.find(_BlockType.Name)!=BlockTypes.end())
         return 0;
     BlockTypes.insert(_BlockType.Name,_BlockType);
     return 1;
-}
-
-QMap<int,Bnode>::iterator World::AddBlock(Bnode b) {
-    if (Blocks.empty())
-        Blocks.insert(0,b);
-    else
-        Blocks.insert((Blocks.end()-1).key()+1,b);
-    return Blocks.end()-1;
-}
-
-void World::RemoveBlock(QMap<int,Bnode>::iterator TheBlock) {
-    if (TheBlock!=Blocks.end()) {
-        Blocks.erase(TheBlock);
-    }
 }
 
 bool World::InBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position) {

@@ -17,7 +17,7 @@ signals:
     void sockDisconnect(const int,const QString&,const quint16);
     void sendVariantMap(const QVariantMap&,const int);
 
-public slots:
+private slots:
     void setVariantMap(const QVariantMap &data,const int handle);
     void sockDisconnectSlot(int handle,QString ip,quint16 port);
 

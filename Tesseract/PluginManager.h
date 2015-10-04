@@ -12,10 +12,10 @@ public:
     QMap<QString,QPluginLoader*>Loaders;
     QMap<QString,Plugin*>Plugins;
     bool LoadPlugin(const QString &Filename);
-    int ClientLoadFolder(const QString &Path,World &TheWorld);
-    int ServerLoadFolder(const QString &Path,World &TheWorld);
-    void ClientUnloadAll(World &TheWorld);
-    void ServerUnloadAll(World &TheWorld);
+    int ClientLoadFolder(const QString &Path,World *TheWorld,Socket *TheSocket);
+    int ServerLoadFolder(const QString &Path,World *TheWorld,Server *TheServer);
+    void ClientUnloadAll();
+    void ServerUnloadAll();
 };
 
 #endif // PLUGINMANAGER_H

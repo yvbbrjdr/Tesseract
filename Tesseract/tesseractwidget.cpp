@@ -1,35 +1,27 @@
 #include "tesseractwidget.h"
 #include "ui_tesseractwidget.h"
 
-TesseractWidget::TesseractWidget(Socket *_TheSocket,QGLWidget *parent) : QGLWidget(parent), ui(new Ui::TesseractWidget) {
+TesseractWidget::TesseractWidget(QString Host,uint Port,QString Name,QGLWidget *parent) : QGLWidget(parent), ui(new Ui::TesseractWidget) {
     ui->setupUi(this);
-    TheSocket=_TheSocket;
-    this->showFullScreen();
     memset(KeyStatus,0,sizeof(KeyStatus));
     creatingblock=0;
-    TheWorld=new World(Coordinate(100,100,100));
+    mousetracked=1;
+    TheWorld=new World;
+    Player t;
+    TheWorld->Players.insert(0,t);
+    TheWorld->Myself=TheWorld->Players.begin();
     PM=new PluginManager;
-    this->setMouseTracking(true);
     QApplication::setOverrideCursor(Qt::BlankCursor);
     gt=new GameThread(TheWorld,KeyStatus);
     gt->start();
     GLTimer=new QTimer;
-    GLTimer->setInterval(16);
+    GLTimer->start(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
-    GLTimer->start();
     TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
     currentblocktype="Stone";
-    connect(this,SIGNAL(drawBlockSignal(World&,Bnode&,bool&)),TheWorld,SIGNAL(drawBlockSignal(World&,Bnode&,bool&)));
-    connect(this,SIGNAL(drawBeginSignal(World&)),TheWorld,SIGNAL(drawBeginSignal(World&)));
-    connect(this,SIGNAL(drawDoneSignal(World&)),TheWorld,SIGNAL(drawDoneSignal(World&)));
-    connect(this,SIGNAL(keyPressSignal(World&,QKeyEvent&)),TheWorld,SIGNAL(keyPressSignal(World&,QKeyEvent&)));
-    connect(this,SIGNAL(keyReleaseSignal(World&,QKeyEvent&)),TheWorld,SIGNAL(keyReleaseSignal(World&,QKeyEvent&)));
-    connect(this,SIGNAL(blockCreateSignal(World&,Bnode&)),TheWorld,SIGNAL(blockCreateSignal(World&,Bnode&)));
-    connect(this,SIGNAL(blockDestroySignal(World&,Bnode&)),TheWorld,SIGNAL(blockDestroySignal(World&,Bnode&)));
     connect(TheWorld,SIGNAL(logSignal(QString)),this,SLOT(Log(QString)));
-    QDir qdt(qApp->applicationDirPath());
-    qdt.cd("plugins");
-    PM->ClientLoadFolder(qdt.absolutePath(),*TheWorld);
+    connect(TheWorld,SIGNAL(releaseMouse()),this,SLOT(releaseMouse()));
+    connect(TheWorld,SIGNAL(trackMouse()),this,SLOT(trackMouse()));
 }
 
 void TesseractWidget::initializeGL() {
@@ -91,10 +83,10 @@ void TesseractWidget::paintGL() {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(TheWorld->Myself->Position.x,TheWorld->Myself->Position.y,TheWorld->Myself->Position.z,TheWorld->Myself->LookAt.x,TheWorld->Myself->LookAt.y,TheWorld->Myself->LookAt.z,TheWorld->Myself->HeadVector.x,TheWorld->Myself->HeadVector.y,TheWorld->Myself->HeadVector.z);
-    emit drawBeginSignal(*TheWorld);
+    emit TheWorld->drawBeginSignal();
     for (QMap<int,Bnode>::iterator it=TheWorld->Blocks.begin();it!=TheWorld->Blocks.end();++it) {
         bool Cancel=0;
-        emit drawBlockSignal(*TheWorld,it.value(),Cancel);
+        emit TheWorld->drawBlockSignal(it.value(),Cancel);
         if (Cancel==0) {
             if (it.value().PointedAt==0)
                 DrawBlock(it.value(),2);
@@ -103,7 +95,7 @@ void TesseractWidget::paintGL() {
         }
     }
     if (creatingblock)
-        DrawBlock(Bnode(currentblocktype,0,(TheWorld->Myself->LookAt+tempc)/2,((TheWorld->Myself->LookAt-tempc)/2).Abs()),1);
+        DrawBlock(Bnode(currentblocktype,(TheWorld->Myself->LookAt+tempc)/2,((TheWorld->Myself->LookAt-tempc)/2).Abs()),1);
     SetColor(Coordinate(1,0,0));
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -111,7 +103,7 @@ void TesseractWidget::paintGL() {
     glLoadIdentity();
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
-    emit drawDoneSignal(*TheWorld);
+    emit TheWorld->drawDoneSignal();
     SetColor(TheWorld->BlockTypes[currentblocktype].Color);
     renderText(20,20,currentblocktype);
     glEnable(GL_LIGHTING);
@@ -123,26 +115,36 @@ void TesseractWidget::keyPressEvent(QKeyEvent *e) {
     if (e->key()==Qt::Key_Escape)
         close();
     KeyStatus[int(e->text().toStdString()[0])]=1;
-    emit keyPressSignal(*TheWorld,*e);
+    emit TheWorld->keyPressSignal(*e);
 }
 
 void TesseractWidget::keyReleaseEvent(QKeyEvent *e) {
     KeyStatus[int(e->text().toStdString()[0])]=0;
-    emit keyReleaseSignal(*TheWorld,*e);
+    emit TheWorld->keyReleaseSignal(*e);
 }
 
 void TesseractWidget::mouseMoveEvent(QMouseEvent *event) {
-    TheWorld->Myself->Turn(.01*(300-event->y()),.01*(400-event->x()));
-    QCursor::setPos(this->mapToGlobal(QPoint(400,300)));
+    if (mousetracked) {
+        TheWorld->Myself->Turn(.01*(300-event->y()),.01*(400-event->x()));
+        QCursor::setPos(this->mapToGlobal(QPoint(400,300)));
+    }
 }
 
 void TesseractWidget::mousePressEvent(QMouseEvent *event) {
     QVector<QMap<int,Bnode>::iterator>vec;
     if (event->button()==Qt::LeftButton) {
         if (creatingblock) {
-            Bnode b=Bnode(currentblocktype,0,(TheWorld->Myself->LookAt+tempc)/2,((TheWorld->Myself->LookAt-tempc)/2).Abs());
-            QMap<int,Bnode>::iterator it=TheWorld->AddBlock(b); //Edit After Server
-            emit blockCreateSignal(*TheWorld,it.value());
+            Bnode b=Bnode(currentblocktype,(TheWorld->Myself->LookAt+tempc)/2,((TheWorld->Myself->LookAt-tempc)/2).Abs());
+            QVariantMap qvm;
+            qvm.insert("type","addblock");
+            qvm.insert("bt",b.Type);
+            qvm.insert("posx",b.Position.x);
+            qvm.insert("posy",b.Position.y);
+            qvm.insert("posz",b.Position.z);
+            qvm.insert("hsx",b.HalfSize.x);
+            qvm.insert("hsy",b.HalfSize.y);
+            qvm.insert("hsz",b.HalfSize.z);
+            emit TheSocket->sendVariantMap(qvm,-1);
             creatingblock=0;
         } else {
             tempc=TheWorld->Myself->LookAt;
@@ -153,8 +155,7 @@ void TesseractWidget::mousePressEvent(QMouseEvent *event) {
             creatingblock=0;
         else {
             if ((vec=TheWorld->ThroughBlock(TheWorld->Myself->Position,TheWorld->Myself->LookAt)).size()) {
-                emit blockDestroySignal(*TheWorld,*vec[0]);
-                TheWorld->RemoveBlock(vec[0]);  //Edit After Server
+                //Edit After Server
             }
         }
     }
@@ -191,13 +192,33 @@ void TesseractWidget::wheelEvent(QWheelEvent *event) {
 void TesseractWidget::DrawScene() {updateGL();}
 
 TesseractWidget::~TesseractWidget() {
-    while (!TheWorld->Blocks.empty())
-        TheWorld->RemoveBlock(TheWorld->Blocks.begin());
-    BASS_Free();
-    PM->ClientUnloadAll(*TheWorld);
+    TheSocket->close();
+    PM->ClientUnloadAll();
     delete ui;
 }
 
 void TesseractWidget::Log(QString s) {
-    printf("%s\n",s.toLocal8Bit().data());
+    printf("%s\n",s.toUtf8().data());
+}
+
+void TesseractWidget::releaseMouse() {
+    this->setMouseTracking(0);
+    mousetracked=0;
+    QApplication::setOverrideCursor(Qt::ArrowCursor);
+}
+
+void TesseractWidget::trackMouse() {
+    QApplication::setOverrideCursor(Qt::BlankCursor);
+    QCursor::setPos(this->mapToGlobal(QPoint(400,300)));
+    this->setMouseTracking(1);
+    mousetracked=1;
+}
+
+void TesseractWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
+
+}
+
+void TesseractWidget::sockDisconnect(int,QString,quint16) {
+    QMessageBox::warning(0,"Exiting","Server is closed");
+    close();
 }
