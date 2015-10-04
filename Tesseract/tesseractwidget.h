@@ -22,7 +22,7 @@ class TesseractWidget : public QGLWidget {
     Q_OBJECT
 
 public:
-    explicit TesseractWidget(QString,uint,QString,QGLWidget *parent = 0);
+    explicit TesseractWidget(Socket*,int,QString,QGLWidget *parent = 0);
     ~TesseractWidget();
 
 public slots:
