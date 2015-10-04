@@ -14,7 +14,8 @@ ServerWidget::ServerWidget(quint16 port,QWidget *parent) : QMainWindow(parent),u
     else
         Log("Server error: cannot listen at port "+QString::number(port));
     TheWorld=new World;
-    TheWorld->Size=Coordinate(100,100,100);
+    TheWorld->Size=Coordinate(1000,1000,1000);
+    TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
     connect(TheWorld,SIGNAL(logSignal(QString)),this,SLOT(Log(QString)));
     connect(TheWorld,SIGNAL(sendCommandSignal(QVector<QString>&)),this,SLOT(Process(QVector<QString>&)));
     Log("World initialized");
@@ -79,11 +80,13 @@ void ServerWidget::recvVariantMap(const int id, const QString &, const quint16, 
         for (QMap<int,Player>::iterator it=TheWorld->Players.begin();it!=TheWorld->Players.end();++it)
             if (it.value().Name==name)
                 verify=0;
+        if (qvm["ver"].toString()!="1.0")
+            verify=-1;
         QVariantMap q;
         q.insert("type","login");
         q.insert("num",QString::number(verify));
         emit TheServer->sendVariantMap(q,id);
-        if (verify) {
+        if (verify>0) {
             Log(QString("Player %1 logged in with the name %2").arg(id).arg(qvm["name"].toString()));
             Player ThePlayer;
             ThePlayer.Name=name;
@@ -95,6 +98,8 @@ void ServerWidget::recvVariantMap(const int id, const QString &, const quint16, 
             emit TheServer->sendVariantMap(q,id);
         }
     } else if (qvm["type"].toString()=="addblock") {
+        if (TheWorld->BlockTypes.find(qvm["bt"].toString())==TheWorld->BlockTypes.end())
+            return;
         int n;
         if (TheWorld->Blocks.empty())
             n=0;
