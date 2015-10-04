@@ -16,6 +16,7 @@ ServerWidget::ServerWidget(quint16 port,QWidget *parent) : QMainWindow(parent),u
     TheWorld=new World;
     TheWorld->Size=Coordinate(100,100,100);
     connect(TheWorld,SIGNAL(logSignal(QString)),this,SLOT(Log(QString)));
+    connect(TheWorld,SIGNAL(sendCommandSignal(QVector<QString>&)),this,SLOT(Process(QVector<QString>&)));
     Log("World initialized");
     PM=new PluginManager;
     int p=PM->ServerLoadFolder("plugins",TheWorld,TheServer);
@@ -38,9 +39,9 @@ void ServerWidget::Process(QVector<QString> &v) {
         close();
     } else if (v[0]=="help") {
         Log("help: \nexit: exit the server\nhelp: show this help");
-    } else {
-        Log("Unknown command. Try to type 'help'.");
+        emit TheWorld->helpSignal();
     }
+    emit TheWorld->processSignal(v);
 }
 
 void ServerWidget::on_lineEdit_returnPressed() {

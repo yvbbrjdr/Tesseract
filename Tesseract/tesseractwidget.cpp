@@ -9,6 +9,7 @@ TesseractWidget::TesseractWidget(Socket *_TheSocket,int PlayerNum,QString Player
     memset(KeyStatus,0,sizeof(KeyStatus));
     creatingblock=0;
     mousetracked=1;
+    uquadric=gluNewQuadric();
     TheWorld=new World;
     Player tp;
     tp.Name=PlayerName;
@@ -105,6 +106,7 @@ void TesseractWidget::paintGL() {
     if (creatingblock)
         DrawBlock(Bnode(currentblocktype,(TheWorld->Myself->LookAt+tempc)/2,((TheWorld->Myself->LookAt-tempc)/2).Abs()),1);
     SetColor(Coordinate(1,0,0));
+    gluSphere(uquadric,0.5,100,100);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);

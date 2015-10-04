@@ -57,6 +57,7 @@ private:
     double aspect;
     Coordinate tempc;
     QString currentblocktype;
+    GLUquadricObj *uquadric;
 };
 
 #include "PluginManager.h"

@@ -34,6 +34,9 @@ signals:
     void logSignal(QString);
     void releaseMouse();
     void trackMouse();
+    void helpSignal();
+    void processSignal(QVector<QString>&);
+    void sendCommandSignal(QVector<QString>&);
 };
 
 #endif // WORLD_H
