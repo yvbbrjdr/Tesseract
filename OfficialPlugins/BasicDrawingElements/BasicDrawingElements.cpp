@@ -1,7 +1,7 @@
 #include "BasicDrawingElements.h"
 
 BasicDrawingElements::BasicDrawingElements() {
-    Name="BasicDrawingElements";
+    Name="BasicDrawingElements1.0";
     Essential=0;
 }
 

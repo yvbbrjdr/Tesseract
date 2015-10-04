@@ -1,7 +1,7 @@
 #include "MusicPlayer.h"
 
 MusicPlayer::MusicPlayer() {
-    Name="MusicPlayer";
+    Name="MusicPlayer1.0";
     Essential=1;
     SelectingObject=NULL;
 }
