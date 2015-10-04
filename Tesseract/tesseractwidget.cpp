@@ -83,6 +83,22 @@ void TesseractWidget::DrawBlock(Bnode TheBlock,int Mode) {
     }
 }
 
+void TesseractWidget::DrawPlayer(Player ThePlayer) {
+    const Coordinate Points[8]={Coordinate(1,1,1),Coordinate(1,1,-1),Coordinate(1,-1,1),Coordinate(1,-1,-1),Coordinate(-1,1,1),Coordinate(-1,1,-1),Coordinate(-1,-1,1),Coordinate(-1,-1,-1)};
+    const int Sur[][4]={{0,2,3,1},{0,4,6,2},{4,5,7,6},{5,1,3,7},{0,1,5,4},{2,6,7,3}};
+    const float normal[][3]={{1,0,0},{0,0,1},{-1,0,0},{0,0,-1},{0,1,0},{0,-1,0}};
+    for (int i=0;i<6;++i) {
+        glBegin(GL_POLYGON);
+            glNormal3f(normal[i][0],normal[i][1],normal[i][2]);
+            for (int j=0;j<4;++j) {
+                glVertex3f(ThePlayer.Position.x+Points[Sur[i][j]].x/2,
+                           ThePlayer.Position.y+Points[Sur[i][j]].y/2,
+                           ThePlayer.Position.z+Points[Sur[i][j]].z/2);
+            }
+        glEnd();
+    }
+}
+
 void TesseractWidget::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_PROJECTION);
@@ -104,6 +120,10 @@ void TesseractWidget::paintGL() {
     }
     if (creatingblock)
         DrawBlock(Bnode(currentblocktype,(TheWorld->Myself->LookAt+tempc)/2,((TheWorld->Myself->LookAt-tempc)/2).Abs()),1);
+    SetColor(Coordinate(.8,.8,.8));
+    for (QMap<int,Player>::iterator it=TheWorld->Players.begin();it!=TheWorld->Players.end();++it)
+        if (it!=TheWorld->Myself)
+            DrawPlayer(it.value());
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glMatrixMode(GL_MODELVIEW);

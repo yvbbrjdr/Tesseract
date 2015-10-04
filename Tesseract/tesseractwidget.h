@@ -44,6 +44,7 @@ public:
     void wheelEvent(QWheelEvent*);
     void DrawBlock(Bnode,int);
     void SetColor(Coordinate);
+    void DrawPlayer(Player);
     World *TheWorld;
     bool KeyStatus[128],mousetracked;
     PluginManager *PM;
