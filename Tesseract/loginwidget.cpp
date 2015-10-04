@@ -69,6 +69,7 @@ void LoginWidget::on_pushButton_clicked() {
     QVariantMap qvm;
     qvm.insert("type","login");
     qvm.insert("name",ui->lineEdit_3->text());
+    qvm.insert("ver","1.0");
     emit TheSocket->sendVariantMap(qvm,-1);
 }
 
@@ -82,14 +83,19 @@ void LoginWidget::on_pushButton_3_clicked() {
 void LoginWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
     if (qvm["type"].toString()=="login") {
         disconnect(TheSocket,SIGNAL(readVariantMap(int,QString,quint16,QVariantMap)),this,SLOT(recvVariantMap(int,QString,quint16,QVariantMap)));
-        if (qvm["num"].toInt()) {
+        if (qvm["num"].toInt()>0) {
             TesseractWidget *w=new TesseractWidget(TheSocket,qvm["num"].toInt(),ui->lineEdit_3->text());
             w->showFullScreen();
             hide();
+        } else if (qvm["num"].toInt()==0) {
+            TheSocket->close();
+            //delete TheSocket;
+            QMessageBox::warning(0,"Failed","Name existed. Please change to another one.");
+            ui->label->setText("Retry!");
         } else {
             TheSocket->close();
-            delete TheSocket;
-            QMessageBox::warning(0,"Failed","Name existed. Please change to another one.");
+            //delete TheSocket;
+            QMessageBox::warning(0,"Failed","Version is not correct.");
             ui->label->setText("Retry!");
         }
     }
