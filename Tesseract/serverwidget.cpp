@@ -151,6 +151,9 @@ void ServerWidget::recvVariantMap(const int id, const QString &, const quint16, 
             q.insert("hsz",it.value().HalfSize.z);
             emit TheServer->sendVariantMap(q,id);
         }
+    } else if (qvm["type"]=="mvuser") {
+        TheWorld->Players[qvm["num"].toInt()].Position=Coordinate(qvm["x"].toInt(),qvm["y"].toInt(),qvm["z"].toInt());
+        emit TheServer->sendVariantMap(qvm,-1);
     }
 }
 

@@ -6,7 +6,7 @@
 
 QT += network
 
-TARGET += MusicPlayer
+TARGET = MusicPlayer
 
 TEMPLATE = lib
 
