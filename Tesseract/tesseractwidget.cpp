@@ -226,7 +226,7 @@ void TesseractWidget::wheelEvent(QWheelEvent *event) {
 void TesseractWidget::DrawScene() {updateGL();}
 
 TesseractWidget::~TesseractWidget() {
-    TheSocket->close();
+    TheSocket->disconnectFromHost();
     PM->ClientUnloadAll();
     delete ui;
 }
