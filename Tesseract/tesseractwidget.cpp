@@ -268,7 +268,7 @@ void TesseractWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
         TheWorld->Players.insert(qvm["num"].toInt(),p);
     } else if (qvm["type"].toString()=="mvuser") {
         if (qvm["num"]!=TheWorld->Myself.key())
-            TheWorld->Players[qvm["num"].toInt()].Position=Coordinate(qvm["x"].toInt(),qvm["y"].toInt(),qvm["z"].toInt());
+            TheWorld->Players[qvm["num"].toInt()].Position=Coordinate(qvm["x"].toDouble(),qvm["y"].toDouble(),qvm["z"].toDouble());
     } else if (qvm["type"].toString()=="essentialplugin") {
         if (PM->Plugins.find(qvm["name"].toString())==PM->Plugins.end()) {
             QMessageBox::warning(0,"Exiting","Missing Plugin: "+qvm["name"].toString());

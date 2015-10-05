@@ -30,7 +30,6 @@ void GameThread::run() {
                 v[i]->PointedAt=1;
             QVariantMap qvm;
             qvm.insert("type","mvuser");
-            qvm.insert("num",TheWorld->Myself.key());
             qvm.insert("x",TheWorld->Myself->Position.x);
             qvm.insert("y",TheWorld->Myself->Position.y);
             qvm.insert("z",TheWorld->Myself->Position.z);
