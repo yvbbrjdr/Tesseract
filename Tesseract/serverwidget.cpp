@@ -152,8 +152,10 @@ void ServerWidget::recvVariantMap(const int id, const QString &, const quint16, 
             emit TheServer->sendVariantMap(q,id);
         }
     } else if (qvm["type"]=="mvuser") {
-        TheWorld->Players[qvm["num"].toInt()].Position=Coordinate(qvm["x"].toInt(),qvm["y"].toInt(),qvm["z"].toInt());
-        emit TheServer->sendVariantMap(qvm,-1);
+        TheWorld->Players[id].Position=Coordinate(qvm["x"].toDouble(),qvm["y"].toDouble(),qvm["z"].toDouble());
+        QVariantMap q=qvm;
+        q.insert("num",id);
+        emit TheServer->sendVariantMap(q,-1);
     }
 }
 

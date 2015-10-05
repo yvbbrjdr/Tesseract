@@ -13,7 +13,11 @@ TEMPLATE = lib
 CONFIG += plugin
 
 SOURCES += UserControl.cpp \
-    ../../Tesseract/Plugin.cpp
+    ../../Tesseract/Plugin.cpp \
+    ../../Tesseract/Coordinate.cpp \
+    ../../Tesseract/Player.cpp
 
 HEADERS += UserControl.h \
-    ../../Tesseract/Plugin.h
+    ../../Tesseract/Plugin.h \
+    ../../Tesseract/Coordinate.h \
+    ../../Tesseract/Player.h

@@ -9,12 +9,12 @@ Player::Player() {
     Turn(0,0);
 }
 
-void Player::Go(double Front,double Left,double HeadVector) {
+void Player::Go(double Front,double Left,double Up) {
     Position.z+=cos(Theta)*Front;
     Position.x+=sin(Theta)*Front;
     Position.z-=sin(Theta)*Left;
     Position.x+=cos(Theta)*Left;
-    Position.y+=HeadVector;
+    Position.y+=Up;
     if (Position.z<-CanGo.z/2)
         Position.z=-CanGo.z/2;
     if (Position.z>CanGo.z/2)
