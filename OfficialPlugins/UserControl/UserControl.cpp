@@ -19,14 +19,14 @@ void UserControl::serverLoad(World *_TheWorld,Server *_TheServer) {
 }
 
 void UserControl::showhelp() {
-    emit TheWorld->logSignal("list: list all the players\nban [num1] <num2> ...: ban specified players\ntp [num] [x] [y] [z]: teleport a player");
+    emit TheWorld->log("list: list all the players\nban [num1] <num2> ...: ban specified players\ntp [num] [x] [y] [z]: teleport a player");
 }
 
 void UserControl::process(QVector<QString>&v) {
     if (v.size()) {
         if (v[0]=="list") {
             for (QMap<int,Player>::iterator it=TheWorld->Players.begin();it!=TheWorld->Players.end();++it)
-                emit TheWorld->logSignal(QString::number(it.key())+' '+it.value().Name+QString(" (%1,%2,%3)").arg(it.value().Position.x).arg(it.value().Position.y).arg(it.value().Position.z));
+                emit TheWorld->log(QString::number(it.key())+' '+it.value().Name+QString(" (%1,%2,%3)").arg(it.value().Position.x).arg(it.value().Position.y).arg(it.value().Position.z));
         } else if (v[0]=="ban"&&v.size()>=2) {
             for (QVector<QString>::iterator it=v.begin()+1;it!=v.end();++it) {
                 QVariantMap qvm;
@@ -41,9 +41,9 @@ void UserControl::process(QVector<QString>&v) {
                 qvm.insert("y",v[3].toDouble());
                 qvm.insert("z",v[4].toDouble());
                 emit TheServer->sendVariantMap(qvm,v[1].toInt());
-                emit TheWorld->logSignal(QString("Player %1 (%2) has been teleported to (%3,%4,%5)").arg(v[1].toInt()).arg(TheWorld->Players.find(v[1].toInt()).value().Name).arg(v[2].toDouble()).arg(v[3].toDouble()).arg(v[4].toDouble()));
+                emit TheWorld->log(QString("Player %1 (%2) has been teleported to (%3,%4,%5)").arg(v[1].toInt()).arg(TheWorld->Players.find(v[1].toInt()).value().Name).arg(v[2].toDouble()).arg(v[3].toDouble()).arg(v[4].toDouble()));
             } else {
-                emit TheWorld->logSignal(QString("Unknown player %1").arg(v[1].toInt()));
+                emit TheWorld->log(QString("Unknown player %1").arg(v[1].toInt()));
             }
         }
     }

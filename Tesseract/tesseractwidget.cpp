@@ -4,12 +4,17 @@
 TesseractWidget::TesseractWidget(Socket *_TheSocket,int PlayerNum,QString PlayerName,QGLWidget *parent) : QGLWidget(parent), ui(new Ui::TesseractWidget) {
     ui->setupUi(this);
     TheSocket=_TheSocket;
-    connect(TheSocket,SIGNAL(readVariantMap(int,QString,quint16,QVariantMap)),this,SLOT(recvVariantMap(int,QString,quint16,QVariantMap)));
+    connect(TheSocket,SIGNAL(readVariantMap(int,QString,quint16,const QVariantMap&)),this,SLOT(recvVariantMap(int,QString,quint16,const QVariantMap&)));
     connect(TheSocket,SIGNAL(sockDisconnect(int,QString,quint16)),this,SLOT(sockDisconnect(int,QString,quint16)));
     memset(KeyStatus,0,sizeof(KeyStatus));
     creatingblock=0;
     mousetracked=1;
     TheWorld=new World;
+    connect(TheWorld,SIGNAL(log(QString)),this,SLOT(Log(QString)));
+    connect(TheWorld,SIGNAL(releaseMouse()),this,SLOT(releaseMouse()));
+    connect(TheWorld,SIGNAL(trackMouse()),this,SLOT(trackMouse()));
+    connect(TheWorld,SIGNAL(renderText2D(Coordinate,const QString&)),this,SLOT(renderText2D(Coordinate,const QString&)));
+    connect(TheWorld,SIGNAL(renderText3D(Coordinate,const QString&,int)),this,SLOT(renderText3D(Coordinate,const QString&,int)));
     Player tp;
     tp.Name=PlayerName;
     TheWorld->Players.insert(PlayerNum,tp);
@@ -24,9 +29,6 @@ TesseractWidget::TesseractWidget(Socket *_TheSocket,int PlayerNum,QString Player
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
     TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
     currentblocktype="Stone";
-    connect(TheWorld,SIGNAL(logSignal(QString)),this,SLOT(Log(QString)));
-    connect(TheWorld,SIGNAL(releaseMouse()),this,SLOT(releaseMouse()));
-    connect(TheWorld,SIGNAL(trackMouse()),this,SLOT(trackMouse()));
     QVariantMap qvm;
     qvm.insert("type","getbasic");
     emit TheSocket->sendVariantMap(qvm,-1);
@@ -97,6 +99,10 @@ void TesseractWidget::DrawPlayer(Player ThePlayer) {
             }
         glEnd();
     }
+    SetColor(Coordinate(0,0,0));
+    glDisable(GL_DEPTH_TEST);
+    renderText3D(ThePlayer.Position,ThePlayer.Name,12);
+    glEnable(GL_DEPTH_TEST);
 }
 
 void TesseractWidget::paintGL() {
@@ -248,7 +254,7 @@ void TesseractWidget::trackMouse() {
     mousetracked=1;
 }
 
-void TesseractWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
+void TesseractWidget::recvVariantMap(int,QString,quint16,const QVariantMap &qvm) {
     if (qvm["type"].toString()=="wsize") {
         TheWorld->Size=Coordinate(qvm["x"].toDouble(),qvm["y"].toDouble(),qvm["z"].toDouble());
         Player::CanGo=TheWorld->Size;
@@ -280,4 +286,14 @@ void TesseractWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
 void TesseractWidget::sockDisconnect(int,QString,quint16) {
     QMessageBox::warning(0,"Exiting","You are disconnected from the server");
     close();
+}
+
+void TesseractWidget::renderText2D(Coordinate Position,const QString &Text) {
+    renderText(Position.x+0.5,Position.y+0.5,Text);
+}
+
+void TesseractWidget::renderText3D(Coordinate Position,const QString &Text,int Size) {
+    QFont myFont("Verdana",Size);
+    myFont.setStyleStrategy(QFont::OpenGLCompatible);
+    renderText(Position.x,Position.y,Position.z,Text,myFont);
 }
