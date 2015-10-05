@@ -88,13 +88,13 @@ void LoginWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
             w->showFullScreen();
             hide();
         } else if (qvm["num"].toInt()==0) {
-            TheSocket->close();
-            //delete TheSocket;
+            TheSocket->disconnectFromHost();
+            delete TheSocket;
             QMessageBox::warning(0,"Failed","Name existed. Please change to another one.");
             ui->label->setText("Retry!");
         } else {
-            TheSocket->close();
-            //delete TheSocket;
+            TheSocket->disconnectFromHost();
+            delete TheSocket;
             QMessageBox::warning(0,"Failed","Version is not correct.");
             ui->label->setText("Retry!");
         }

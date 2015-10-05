@@ -1,19 +1,19 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2015-09-09T07:12:03
+# Project created by QtCreator 2015-10-04T17:47:54
 #
 #-------------------------------------------------
 
 QT += network
 
-TARGET = BasicDrawingElements
+TARGET = UserControl
 
 TEMPLATE = lib
 
 CONFIG += plugin
 
-SOURCES += BasicDrawingElements.cpp \
+SOURCES += UserControl.cpp \
     ../../Tesseract/Plugin.cpp
 
-HEADERS += BasicDrawingElements.h \
+HEADERS += UserControl.h \
     ../../Tesseract/Plugin.h
