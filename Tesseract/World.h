@@ -31,12 +31,14 @@ signals:
     void keyReleaseSignal(QKeyEvent&);
     void blockCreateSignal(Bnode&);
     void blockDestroySignal(Bnode&);
-    void logSignal(QString);
+    void log(QString);
     void releaseMouse();
     void trackMouse();
     void helpSignal();
     void processSignal(QVector<QString>&);
-    void sendCommandSignal(QVector<QString>&);
+    void sendCommand(QVector<QString>&);
+    void renderText2D(Coordinate,const QString&);
+    void renderText3D(Coordinate,const QString&,int);
 };
 
 #endif // WORLD_H

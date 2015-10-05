@@ -16,8 +16,8 @@ ServerWidget::ServerWidget(quint16 port,QWidget *parent) : QMainWindow(parent),u
     TheWorld=new World;
     TheWorld->Size=Coordinate(1000,1000,1000);
     TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
-    connect(TheWorld,SIGNAL(logSignal(QString)),this,SLOT(Log(QString)));
-    connect(TheWorld,SIGNAL(sendCommandSignal(QVector<QString>&)),this,SLOT(Process(QVector<QString>&)));
+    connect(TheWorld,SIGNAL(log(QString)),this,SLOT(Log(QString)));
+    connect(TheWorld,SIGNAL(sendCommand(QVector<QString>&)),this,SLOT(Process(QVector<QString>&)));
     Log("World initialized");
     PM=new PluginManager;
     int p=PM->ServerLoadFolder("plugins",TheWorld,TheServer);

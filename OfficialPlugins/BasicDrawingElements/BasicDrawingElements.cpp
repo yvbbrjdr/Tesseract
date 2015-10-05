@@ -27,4 +27,6 @@ void BasicDrawingElements::drawDoneEvent() {
     glBegin(GL_POINTS);
         glVertex2f(0,0);
     glEnd();
+    glColor3f(0,0,0);
+    emit TheWorld->renderText2D(Coordinate(20,40,0),QString("(%1,%2,%3)").arg(TheWorld->Myself->Position.x).arg(TheWorld->Myself->Position.y).arg(TheWorld->Myself->Position.z));
 }

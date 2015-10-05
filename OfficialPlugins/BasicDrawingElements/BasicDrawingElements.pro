@@ -13,7 +13,9 @@ TEMPLATE = lib
 CONFIG += plugin
 
 SOURCES += BasicDrawingElements.cpp \
-    ../../Tesseract/Plugin.cpp
+    ../../Tesseract/Plugin.cpp \
+    ../../Tesseract/Coordinate.cpp
 
 HEADERS += BasicDrawingElements.h \
-    ../../Tesseract/Plugin.h
+    ../../Tesseract/Plugin.h \
+    ../../Tesseract/Coordinate.h

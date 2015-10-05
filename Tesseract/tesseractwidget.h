@@ -30,8 +30,10 @@ public slots:
     void Log(QString s);
     void releaseMouse();
     void trackMouse();
-    void recvVariantMap(int,QString,quint16,QVariantMap);
+    void recvVariantMap(int,QString,quint16,const QVariantMap&);
     void sockDisconnect(int,QString,quint16);
+    void renderText2D(Coordinate,const QString&);
+    void renderText3D(Coordinate,const QString&,int);
 
 public:
     void initializeGL();
