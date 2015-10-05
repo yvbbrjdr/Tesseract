@@ -13,7 +13,6 @@ Socket::Socket(qintptr socketDescriptor,QObject *parent) : QTcpSocket(parent) {
 void Socket::setVariantMap(const QVariantMap &data, const int id) {
     if (id==socketID||id==-1) {
         write(QJsonDocument::fromVariant(data).toJson());
-        waitForBytesWritten();
     }
 }
 
