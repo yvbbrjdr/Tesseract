@@ -278,6 +278,6 @@ void TesseractWidget::recvVariantMap(int,QString,quint16,QVariantMap qvm) {
 }
 
 void TesseractWidget::sockDisconnect(int,QString,quint16) {
-    QMessageBox::warning(0,"Exiting","Server is closed");
+    QMessageBox::warning(0,"Exiting","You are disconnected from the server");
     close();
 }
