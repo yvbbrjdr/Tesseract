@@ -39,6 +39,7 @@ ServerWidget::ServerWidget(quint16 port,QWidget *parent) : QMainWindow(parent),u
     TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
     connect(TheWorld,SIGNAL(log(QString)),this,SLOT(Log(QString)));
     connect(TheWorld,SIGNAL(sendCommand(QVector<QString>&)),this,SLOT(Process(QVector<QString>&)));
+    connect(TheWorld,SIGNAL(sendCommand(const QString&)),this,SLOT(Process(const QString&)));
     Log("World initialized");
     PM=new PluginManager;
     int p=PM->ServerLoadFolder("plugins",TheWorld,TheServer);
@@ -50,7 +51,7 @@ ServerWidget::~ServerWidget() {
     delete ui;
 }
 
-void ServerWidget::Log(QString s) {
+void ServerWidget::Log(const QString &s) {
     ui->plainTextEdit->appendPlainText(s);
 }
 
@@ -66,9 +67,7 @@ void ServerWidget::Process(QVector<QString> &v) {
     emit TheWorld->processSignal(v);
 }
 
-void ServerWidget::on_lineEdit_returnPressed() {
-    QString comm=ui->lineEdit->text();
-    ui->lineEdit->setText("");
+void ServerWidget::Process(const QString &comm) {
     QVector<QString>command;
     int len=comm.length();
     QString tmp;
@@ -88,6 +87,12 @@ void ServerWidget::on_lineEdit_returnPressed() {
         Log("> "+comm);
         Process(command);
     }
+}
+
+void ServerWidget::on_lineEdit_returnPressed() {
+    QString comm=ui->lineEdit->text();
+    ui->lineEdit->setText("");
+    Process(comm);
 }
 
 void ServerWidget::newClient(int socket,QString ip,quint16 port) {
@@ -131,11 +136,11 @@ void ServerWidget::recvVariantMap(const int id, const QString &, const quint16, 
         QMap<int,Bnode>::iterator it=TheWorld->Blocks.find(n);
         QVariantMap q=qvm;
         q.insert("num",it.key());
-        emit TheWorld->blockCreateSignal(it.value());
+        emit TheWorld->blockCreateSignal(it);
         emit TheServer->sendVariantMap(q,-1);
     } else if (qvm["type"].toString()=="rmblock") {
         int n=qvm["num"].toInt();
-        emit TheWorld->blockDestroySignal(TheWorld->Blocks.find(n).value());
+        emit TheWorld->blockDestroySignal(TheWorld->Blocks.find(n));
         TheWorld->Blocks.remove(n);
         emit TheServer->sendVariantMap(qvm,-1);
     } else if (qvm["type"].toString()=="getbasic") {

@@ -24,7 +24,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "../../Tesseract/Plugin.h"
 #include <QString>
-
+#include <QtOpenGL/QtOpenGL>
+#include <GL/glu.h>
 
 class BasicDrawingElements:public QObject,public Plugin {
     Q_OBJECT

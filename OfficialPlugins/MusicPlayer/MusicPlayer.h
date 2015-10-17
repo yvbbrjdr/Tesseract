@@ -28,6 +28,8 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "SpinnerStatus.h"
 #include <cmath>
 #include <QVector>
+#include <QTimer>
+#include <QFileDialog>
 
 class MusicPlayer:public QObject,public Plugin {
     Q_OBJECT

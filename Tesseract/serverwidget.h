@@ -44,9 +44,10 @@ public:
 
 public slots:
     void on_lineEdit_returnPressed();
-    void Log(QString s);
+    void Log(const QString &s);
     void newClient(int socket,QString ip,quint16 port);
     void Process(QVector<QString> &v);
+    void Process(const QString &comm);
     void recvVariantMap(const int,const QString&,const quint16,const QVariantMap&);
     void userLogOff(int,QString,quint16);
 

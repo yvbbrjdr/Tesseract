@@ -23,11 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define PLUGIN_H
 
 #include <QObject>
-#include <QKeyEvent>
 #include <QString>
-#include <QtOpenGL/QtOpenGL>
-#include <GL/glu.h>
-#include "Sound.h"
 #include "Socket.h"
 #include "Server.h"
 

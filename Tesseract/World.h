@@ -39,25 +39,26 @@ public:
     QMap<int,Player>Players;
     QMap<int,Player>::iterator Myself;
     bool RegisterBlock(Block _BlockType);
-    bool InBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position);
-    QVector<QMap<int,Bnode>::iterator> InBlock(Coordinate Position);
-    double ThroughBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position1,Coordinate Position2);
-    QVector<QMap<int,Bnode>::iterator> ThroughBlock(Coordinate Position1, Coordinate Position2);
+    bool InBlock(QMap<int,Bnode>::iterator TheBlock,const Coordinate &Position);
+    QVector<QMap<int,Bnode>::iterator> InBlock(const Coordinate &Position);
+    double ThroughBlock(QMap<int,Bnode>::iterator TheBlock,const Coordinate &Position1,const Coordinate &Position2);
+    QVector<QMap<int,Bnode>::iterator> ThroughBlock(const Coordinate &Position1,const Coordinate &Position2);
 
 signals:
-    void drawBlockSignal(Bnode&,bool&);
+    void drawBlockSignal(QMap<int,Bnode>::iterator,bool&);
     void drawBeginSignal();
     void drawDoneSignal();
     void keyPressSignal(QKeyEvent&);
     void keyReleaseSignal(QKeyEvent&);
-    void blockCreateSignal(Bnode&);
-    void blockDestroySignal(Bnode&);
-    void log(QString);
+    void blockCreateSignal(QMap<int,Bnode>::iterator);
+    void blockDestroySignal(QMap<int,Bnode>::iterator);
+    void log(const QString&);
     void releaseMouse();
     void trackMouse();
     void helpSignal();
     void processSignal(QVector<QString>&);
     void sendCommand(QVector<QString>&);
+    void sendCommand(const QString&);
     void renderText2D(Coordinate,const QString&);
     void renderText3D(Coordinate,const QString&,int);
 };

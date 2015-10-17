@@ -48,7 +48,7 @@ public:
 
 public slots:
     void DrawScene();
-    void Log(QString s);
+    void Log(const QString &s);
     void releaseMouse();
     void trackMouse();
     void recvVariantMap(int,QString,quint16,const QVariantMap&);

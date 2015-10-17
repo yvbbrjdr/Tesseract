@@ -23,6 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define USERCONTROL_H
 
 #include "../../Tesseract/Plugin.h"
+#include <QtWidgets/QMessageBox>
 
 class UserControl:public QObject,public Plugin {
     Q_OBJECT
