@@ -28,12 +28,12 @@ bool World::RegisterBlock(Block _BlockType) {
     return 1;
 }
 
-bool World::InBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position) {
+bool World::InBlock(QMap<int,Bnode>::iterator TheBlock,const Coordinate &Position) {
     Coordinate a=TheBlock.value().Position-TheBlock.value().HalfSize,b=TheBlock.value().Position+TheBlock.value().HalfSize;
     return (a.x<=Position.x&&b.x>=Position.x&&a.y<=Position.y&&b.y>=Position.y&&a.z<=Position.z&&b.z>=Position.z);
 }
 
-QVector<QMap<int,Bnode>::iterator> World::InBlock(Coordinate Position) {
+QVector<QMap<int,Bnode>::iterator> World::InBlock(const Coordinate &Position) {
     QVector<QMap<int,Bnode>::iterator>ret;
     for (QMap<int,Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
         if (InBlock(it,Position))
@@ -41,8 +41,8 @@ QVector<QMap<int,Bnode>::iterator> World::InBlock(Coordinate Position) {
     return ret;
 }
 
-double World::ThroughBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Position1,Coordinate Position2) {
-    double &x1=Position1.x,&y1=Position1.y,&z1=Position1.z,
+double World::ThroughBlock(QMap<int,Bnode>::iterator TheBlock,const Coordinate &Position1,const Coordinate &Position2) {
+    const double &x1=Position1.x,&y1=Position1.y,&z1=Position1.z,
            &x2=Position2.x,&y2=Position2.y,&z2=Position2.z,
            a=TheBlock.value().Position.x-TheBlock.value().HalfSize.x,
            b=TheBlock.value().Position.x+TheBlock.value().HalfSize.x,
@@ -93,7 +93,7 @@ double World::ThroughBlock(QMap<int,Bnode>::iterator TheBlock,Coordinate Positio
     return (Position[2]-Position[1]).Length();
 }
 
-QVector<QMap<int,Bnode>::iterator> World::ThroughBlock(Coordinate Position1, Coordinate Position2) {
+QVector<QMap<int,Bnode>::iterator> World::ThroughBlock(const Coordinate &Position1, const Coordinate &Position2) {
     QVector<QMap<int,Bnode>::iterator> ret;
     for (QMap<int,Bnode>::iterator it=Blocks.begin();it!=Blocks.end();++it)
         if (ThroughBlock(it,Position1,Position2)>=0)

@@ -31,7 +31,7 @@ TesseractWidget::TesseractWidget(Socket *_TheSocket,int PlayerNum,QString Player
     creatingblock=0;
     mousetracked=1;
     TheWorld=new World;
-    connect(TheWorld,SIGNAL(log(QString)),this,SLOT(Log(QString)));
+    connect(TheWorld,SIGNAL(log(const QString&)),this,SLOT(Log(const QString&)));
     connect(TheWorld,SIGNAL(releaseMouse()),this,SLOT(releaseMouse()));
     connect(TheWorld,SIGNAL(trackMouse()),this,SLOT(trackMouse()));
     connect(TheWorld,SIGNAL(renderText2D(Coordinate,const QString&)),this,SLOT(renderText2D(Coordinate,const QString&)));
@@ -137,7 +137,7 @@ void TesseractWidget::paintGL() {
     emit TheWorld->drawBeginSignal();
     for (QMap<int,Bnode>::iterator it=TheWorld->Blocks.begin();it!=TheWorld->Blocks.end();++it) {
         bool Cancel=0;
-        emit TheWorld->drawBlockSignal(it.value(),Cancel);
+        emit TheWorld->drawBlockSignal(it,Cancel);
         if (Cancel==0) {
             if (it.value().PointedAt==0)
                 DrawBlock(it.value(),2);
@@ -258,7 +258,7 @@ TesseractWidget::~TesseractWidget() {
     delete ui;
 }
 
-void TesseractWidget::Log(QString s) {
+void TesseractWidget::Log(const QString &s) {
     printf("%s\n",s.toUtf8().data());
 }
 
@@ -283,9 +283,9 @@ void TesseractWidget::recvVariantMap(int,QString,quint16,const QVariantMap &qvm)
         Bnode b=Bnode(qvm["bt"].toString(),Coordinate(qvm["posx"].toDouble(),qvm["posy"].toDouble(),qvm["posz"].toDouble()),Coordinate(qvm["hsx"].toDouble(),qvm["hsy"].toDouble(),qvm["hsz"].toDouble()));
         TheWorld->Blocks.insert(qvm["num"].toInt(),b);
         QMap<int,Bnode>::iterator it=TheWorld->Blocks.find(qvm["num"].toInt());
-        emit TheWorld->blockCreateSignal(it.value());
+        emit TheWorld->blockCreateSignal(it);
     } else if (qvm["type"].toString()=="rmblock") {
-        emit TheWorld->blockDestroySignal(TheWorld->Blocks.find(qvm["num"].toInt()).value());
+        emit TheWorld->blockDestroySignal(TheWorld->Blocks.find(qvm["num"].toInt()));
         TheWorld->Blocks.remove(qvm["num"].toInt());
     } else if (qvm["type"].toString()=="rmuser") {
         TheWorld->Players.remove(qvm["num"].toInt());
