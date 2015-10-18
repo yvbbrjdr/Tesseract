@@ -21,10 +21,29 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Sound.h"
 
+void Sound::EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD length,void *user) {
+    Sound *sp=(Sound*)user;
+    emit sp->encodeSignal(handle,channel,buffer,length);
+}
+
+BOOL Sound::RecordRecv(HRECORD handle,const void *buffer,DWORD length,void *user) {
+    Sound *sp=(Sound*)user;
+    emit sp->recordSignal(handle,buffer,length);
+    return TRUE;
+}
+
 void Sound::Init() {
     BASS_Init(-1,44100,BASS_DEVICE_3D,0,0);
     BASS_Set3DFactors(1,1,0);
     BASS_SetConfig(BASS_CONFIG_3DALGORITHM,BASS_3DALG_FULL);
+    BASS_RecordInit(-1);
+#ifdef WIN32
+    BASS_PluginLoad("bassenc.dll",0);
+#elif __linux__
+    BASS_PluginLoad("libbassenc.so",0);
+#else
+    BASS_PluginLoad("libbassenc.dylib",0);
+#endif
 }
 
 void Sound::SetListenerValues(Coordinate Position,Coordinate EyeVector,Coordinate HeadVector) {
@@ -36,6 +55,7 @@ void Sound::SetListenerValues(Coordinate Position,Coordinate EyeVector,Coordinat
 Sound::Sound() {
     handle=0;
     Status=UNLOAD;
+    Encoding=0;
 }
 
 Sound::~Sound() {
@@ -84,4 +104,38 @@ void Sound::Move(Coordinate Position) {
         BASS_ChannelSet3DPosition(handle,&v,NULL,NULL);
         BASS_Apply3D();
     }
+}
+
+void Sound::StartEncode() {
+    if (!UNLOAD) {
+        BASS_Encode_Start(handle,"lame -f - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
+        Encoding=1;
+    }
+}
+
+void Sound::StopEncode() {
+    if (!UNLOAD) {
+        BASS_Encode_Stop(handle);
+        Encoding=0;
+    }
+}
+
+void Sound::StartRecord() {
+    if (!UNLOAD) {
+        Unload();
+    }
+    handle=BASS_RecordStart(44100,1,0,Sound::RecordRecv,this);
+    Status=RECORDING;
+}
+
+void Sound::StopRecord() {
+    Unload();
+}
+
+void Sound::LoadRam(void *buffer,DWORD length) {
+    if (!UNLOAD) {
+        Unload();
+    }
+    handle=BASS_StreamCreateFile(TRUE,buffer,0,length,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D);
+    Status=STOP;
 }
