@@ -26,15 +26,24 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Coordinate.h"
 #include <QString>
 
+enum PlayStatus{UNLOAD,STOP,PLAY,PAUSE,RECORDING};
+
 class Sound {
+private:
+    DWORD handle;
+
 public:
+    static void Init();
     static void SetListenerValues(Coordinate Position,Coordinate EyeVector,Coordinate HeadVector);
-    static HSTREAM AddNewFileSound(Coordinate Position,const QString &Filename);
-    static void RemoveASound(HCHANNEL hc);
-    static void PauseASound(HCHANNEL hc);
-    static void PlayASound(HCHANNEL hc);
-    static void StopASound(HCHANNEL hc);
-    static void MoveASound(HCHANNEL hc,Coordinate Position);
+    Sound();
+    ~Sound();
+    void LoadFile(const QString &Filename);
+    void Unload();
+    void Pause();
+    void Play();
+    void Stop();
+    void Move(Coordinate Position);
+    int Status;
 };
 
 #endif // SOUND

@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define MUSICPLAYER_H
 
 #include "../../Tesseract/Plugin.h"
-#include "SpeakerStatus.h"
+#include "../../Tesseract/Sound.h"
 #include "ControllerStatus.h"
 #include "SpinnerStatus.h"
 #include <cmath>
@@ -47,8 +47,8 @@ public:
     void serverLoad(World*,Server*);
 public slots:
     void keyPressEvent(QKeyEvent&);
-    void blockCreateEvent(Bnode&);
-    void blockDestroyEvent(Bnode&);
+    void blockCreateEvent(QMap<int,Bnode>::iterator);
+    void blockDestroyEvent(QMap<int,Bnode>::iterator);
     void Spinning();
 };
 

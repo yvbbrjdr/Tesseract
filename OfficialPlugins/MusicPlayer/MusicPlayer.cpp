@@ -33,8 +33,8 @@ void MusicPlayer::clientLoad(World *w,Socket*) {
     w->RegisterBlock(Block("Controller",Coordinate(.1,.1,.8),"",1));
     w->RegisterBlock(Block("Spinner",Coordinate(.5,.5,0),"",1));
     connect(w,SIGNAL(keyPressSignal(QKeyEvent&)),this,SLOT(keyPressEvent(QKeyEvent&)));
-    connect(w,SIGNAL(blockCreateSignal(Bnode&)),this,SLOT(blockCreateEvent(Bnode&)));
-    connect(w,SIGNAL(blockDestroySignal(Bnode&)),this,SLOT(blockDestroyEvent(Bnode&)));
+    connect(w,SIGNAL(blockCreateSignal(QMap<int,Bnode>::iterator)),this,SLOT(blockCreateEvent(QMap<int,Bnode>::iterator)));
+    connect(w,SIGNAL(blockDestroySignal(QMap<int,Bnode>::iterator)),this,SLOT(blockDestroyEvent(QMap<int,Bnode>::iterator)));
     timer=new QTimer;
     connect(timer,SIGNAL(timeout()),this,SLOT(Spinning()));
     timer->start(10);
@@ -56,16 +56,17 @@ void MusicPlayer::keyPressEvent(QKeyEvent &e) {
         return;
     Bnode &b=v[0].value();
     if (b.Type=="Speaker") {
-        SpeakerStatus *ss=(SpeakerStatus*)b.Data;
+        Sound *ss=(Sound*)b.Data;
         if (e.key()==Qt::Key_E) {
             if (ss->Status==UNLOAD) {
                 QFileDialog qfd;
                 emit TheWorld->releaseMouse();
-                ss->LoadFile(b.Position,qfd.getOpenFileName(0,"","","MP3 Files(*.mp3);;Wave Files(*.wav)"));
+                ss->LoadFile(qfd.getOpenFileName(0,"","","MP3 Files(*.mp3);;Wave Files(*.wav)"));
+                ss->Move(b.Position);
                 emit TheWorld->trackMouse();
             }
         } else if (e.key()==Qt::Key_F) {
-            ss->UnloadFile();
+            ss->Unload();
         } else if (e.key()==Qt::Key_C) {
             if (SelectingObject!=NULL) {
                 if (SelectingObject->Type=="Controller") {
@@ -104,40 +105,40 @@ void MusicPlayer::keyPressEvent(QKeyEvent &e) {
     }
 }
 
-void MusicPlayer::blockCreateEvent(Bnode &b) {
-    if (b.Type=="Speaker")
-        b.Data=new SpeakerStatus;
-    else if (b.Type=="Controller") {
-        b.Data=new ControllerStatus;
-        Controllers.push_back(&b);
+void MusicPlayer::blockCreateEvent(QMap<int,Bnode>::iterator b) {
+    if (b.value().Type=="Speaker")
+        b.value().Data=new Sound;
+    else if (b.value().Type=="Controller") {
+        b.value().Data=new ControllerStatus;
+        Controllers.push_back(&b.value());
     }
-    else if (b.Type=="Spinner") {
-        b.Data=new SpinnerStatus;
-        Spinners.push_back(&b);
+    else if (b.value().Type=="Spinner") {
+        b.value().Data=new SpinnerStatus;
+        Spinners.push_back(&b.value());
     }
 }
 
-void MusicPlayer::blockDestroyEvent(Bnode &b) {
-    if (b.Type=="Speaker") {
-        SpeakerStatus *ss=(SpeakerStatus*)b.Data;
-        ss->UnloadFile();
+void MusicPlayer::blockDestroyEvent(QMap<int,Bnode>::iterator b) {
+    if (b.value().Type=="Speaker") {
+        Sound *ss=(Sound*)b.value().Data;
+        ss->Unload();
         delete ss;
-    } else if (b.Type=="Controller") {
-        ControllerStatus *cs=(ControllerStatus*)b.Data;
-        Controllers.remove(Controllers.indexOf(&b));
+    } else if (b.value().Type=="Controller") {
+        ControllerStatus *cs=(ControllerStatus*)b.value().Data;
+        Controllers.remove(Controllers.indexOf(&b.value()));
         delete cs;
-    } else if (b.Type=="Spinner") {
-        SpinnerStatus *ss=(SpinnerStatus*)b.Data;
-        Spinners.remove(Spinners.indexOf(&b));
+    } else if (b.value().Type=="Spinner") {
+        SpinnerStatus *ss=(SpinnerStatus*)b.value().Data;
+        Spinners.remove(Spinners.indexOf(&b.value()));
         delete ss;
     }
     for (int i=0;i<Controllers.size();++i) {
         ControllerStatus *cs=(ControllerStatus*)Controllers[i]->Data;
-        cs->RemoveLink(b);
+        cs->RemoveLink(b.value());
     }
     for (int i=0;i<Spinners.size();++i) {
         SpinnerStatus *ss=(SpinnerStatus*)Spinners[i]->Data;
-        ss->RemoveLink(b);
+        ss->RemoveLink(b.value());
     }
 }
 
@@ -148,7 +149,7 @@ void MusicPlayer::Spinning() {
         if (ss->Spinning) {
             for (int j=0;j<ss->Linked.size();++j) {
                 Bnode &b=*ss->Linked[j];
-                SpeakerStatus *spst=(SpeakerStatus*)b.Data;
+                Sound *spst=(Sound*)b.Data;
                 Coordinate r=b.Position-TheSpinner.Position;
                 r.y=0;
                 double Radius=r.Length();
