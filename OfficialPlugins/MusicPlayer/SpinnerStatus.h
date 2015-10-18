@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define SPINNERSTATUS_H
 
 #include <QVector>
-#include "SpeakerStatus.h"
+#include "../../Tesseract/Sound.h"
 #include "../../Tesseract/Block.h"
 
 class SpinnerStatus {

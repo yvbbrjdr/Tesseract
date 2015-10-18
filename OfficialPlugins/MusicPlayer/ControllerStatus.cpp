@@ -37,21 +37,21 @@ bool ControllerStatus::RemoveLink(Bnode &b) {
 
 void ControllerStatus::Play() {
     for (int i=0;i<Linked.size();++i) {
-        SpeakerStatus *ss=(SpeakerStatus*)Linked[i]->Data;
+        Sound *ss=(Sound*)Linked[i]->Data;
         ss->Play();
     }
 }
 
 void ControllerStatus::Pause() {
     for (int i=0;i<Linked.size();++i) {
-        SpeakerStatus *ss=(SpeakerStatus*)Linked[i]->Data;
+        Sound *ss=(Sound*)Linked[i]->Data;
         ss->Pause();
     }
 }
 
 void ControllerStatus::Stop() {
     for (int i=0;i<Linked.size();++i) {
-        SpeakerStatus *ss=(SpeakerStatus*)Linked[i]->Data;
+        Sound *ss=(Sound*)Linked[i]->Data;
         ss->Stop();
     }
 }

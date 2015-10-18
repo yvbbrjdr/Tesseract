@@ -21,40 +21,67 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "Sound.h"
 
+void Sound::Init() {
+    BASS_Init(-1,44100,BASS_DEVICE_3D,0,0);
+    BASS_Set3DFactors(1,1,0);
+    BASS_SetConfig(BASS_CONFIG_3DALGORITHM,BASS_3DALG_FULL);
+}
+
 void Sound::SetListenerValues(Coordinate Position,Coordinate EyeVector,Coordinate HeadVector) {
     BASS_3DVECTOR pos(Position.x,Position.y,Position.z),front(EyeVector.x,EyeVector.y,EyeVector.z),top(HeadVector.x,HeadVector.y,HeadVector.z);
     BASS_Set3DPosition(&pos,NULL,&top,&front);
     BASS_Apply3D();
 }
 
-HSTREAM Sound::AddNewFileSound(Coordinate Position, const QString &Filename) {
-    HSTREAM hs=BASS_StreamCreateFile(FALSE,Filename.toLocal8Bit().data(),0,0,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D);
-    BASS_3DVECTOR v(Position.x,Position.y,Position.z);
-    BASS_ChannelSet3DPosition(hs,&v,NULL,NULL);
-    BASS_Apply3D();
-    return hs;
+Sound::Sound() {
+    handle=0;
+    Status=UNLOAD;
 }
 
-void Sound::RemoveASound(HCHANNEL hc) {
-    BASS_ChannelStop(hc);
-    BASS_StreamFree(hc);
+Sound::~Sound() {
+    Unload();
 }
 
-void Sound::PauseASound(HCHANNEL hc) {
-    BASS_ChannelPause(hc);
+void Sound::LoadFile(const QString &Filename) {
+    if (!UNLOAD)
+        Unload();
+    handle=BASS_StreamCreateFile(FALSE,Filename.toLocal8Bit().data(),0,0,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D);
+    Status=STOP;
 }
 
-void Sound::PlayASound(HCHANNEL hc) {
-    BASS_ChannelPlay(hc,FALSE);
+void Sound::Unload() {
+    BASS_ChannelStop(handle);
+    BASS_StreamFree(handle);
+    handle=0;
+    Status=UNLOAD;
 }
 
-void Sound::StopASound(HCHANNEL hc) {
-    BASS_ChannelStop(hc);
-    BASS_ChannelSetPosition(hc,0,0);
+void Sound::Pause() {
+    if (!UNLOAD) {
+        BASS_ChannelPause(handle);
+        Status=PAUSE;
+    }
 }
 
-void Sound::MoveASound(HCHANNEL hc,Coordinate Position) {
-    BASS_3DVECTOR v(Position.x,Position.y,Position.z);
-    BASS_ChannelSet3DPosition(hc,&v,NULL,NULL);
-    BASS_Apply3D();
+void Sound::Play() {
+    if (!UNLOAD) {
+        BASS_ChannelPlay(handle,FALSE);
+        Status=PLAY;
+    }
+}
+
+void Sound::Stop() {
+    if (!UNLOAD) {
+        BASS_ChannelStop(handle);
+        BASS_ChannelSetPosition(handle,0,0);
+        Status=STOP;
+    }
+}
+
+void Sound::Move(Coordinate Position) {
+    if (!UNLOAD) {
+        BASS_3DVECTOR v(Position.x,Position.y,Position.z);
+        BASS_ChannelSet3DPosition(handle,&v,NULL,NULL);
+        BASS_Apply3D();
+    }
 }
