@@ -121,7 +121,7 @@ void ServerWidget::recvVariantMap(const int id, const QString &, const quint16, 
             q.insert("type","adduser");
             q.insert("num",id);
             q.insert("name",name);
-            emit TheServer->sendVariantMap(q,id);
+            emit TheServer->sendVariantMap(q,-1);
         }
     } else if (qvm["type"].toString()=="addblock") {
         if (TheWorld->BlockTypes.find(qvm["bt"].toString())==TheWorld->BlockTypes.end())
