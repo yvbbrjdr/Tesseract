@@ -23,14 +23,19 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define SOUND
 
 #include <bass.h>
+#include <bassenc.h>
 #include "Coordinate.h"
 #include <QString>
+#include <QObject>
 
 enum PlayStatus{UNLOAD,STOP,PLAY,PAUSE,RECORDING};
 
-class Sound {
+class Sound : public QObject {
+    Q_OBJECT
 private:
     DWORD handle;
+    static void EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD length,void *user);
+    static BOOL RecordRecv(HRECORD handle,const void *buffer,DWORD length,void *user);
 
 public:
     static void Init();
@@ -38,12 +43,22 @@ public:
     Sound();
     ~Sound();
     void LoadFile(const QString &Filename);
+    void LoadRam(void *buffer,DWORD length);
     void Unload();
     void Pause();
     void Play();
     void Stop();
     void Move(Coordinate Position);
+    void StartEncode();
+    void StopEncode();
+    void StartRecord();
+    void StopRecord();
     int Status;
+    bool Encoding;
+
+signals:
+    void encodeSignal(HENCODE handle,DWORD channel,const void *buffer,DWORD length);
+    void recordSignal(HRECORD handle,const void *buffer,DWORD length);
 };
 
 #endif // SOUND
