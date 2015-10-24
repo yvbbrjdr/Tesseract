@@ -36,6 +36,7 @@ public:
     Coordinate operator - (Coordinate);
     Coordinate operator * (double);
     Coordinate operator / (double);
+    double Dot(Coordinate);
     double* ToArray(double*);
     double Length();
     Coordinate ToDirection();
