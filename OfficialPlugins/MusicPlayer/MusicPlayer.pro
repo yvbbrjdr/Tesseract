@@ -35,3 +35,5 @@ HEADERS += MusicPlayer.h \
     ../../Tesseract/Socket.h \
     ../../Tesseract/Sound.h \
     ../../Tesseract/World.h
+
+win32: LIBS += -lbass -lbassenc
