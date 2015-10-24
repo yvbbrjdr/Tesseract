@@ -26,6 +26,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Server.h"
 #include "World.h"
 #include "PluginManager.h"
+#include "Version.h"
 
 namespace Ui {
 class ServerWidget;

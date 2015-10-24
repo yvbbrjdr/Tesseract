@@ -63,6 +63,7 @@ bool LoginWidget::SaveConfigFile() {
 
 LoginWidget::LoginWidget(QWidget *parent) : QMainWindow(parent),ui(new Ui::LoginWidget) {
     ui->setupUi(this);
+    ui->label->setText(QString("Welcome to Tesseract %1!").arg(Version::GetVersion()));
     if (!LoadConfigFile())
         SaveConfigFile();
 }
@@ -90,7 +91,7 @@ void LoginWidget::on_pushButton_clicked() {
     QVariantMap qvm;
     qvm.insert("type","login");
     qvm.insert("name",ui->lineEdit_3->text());
-    qvm.insert("ver","1.0");
+    qvm.insert("ver",Version::GetVersion());
     emit TheSocket->sendVariantMap(qvm,-1);
 }
 

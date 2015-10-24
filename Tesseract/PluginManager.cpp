@@ -29,9 +29,12 @@ bool PluginManager::LoadPlugin(const QString &Filename) {
     Plugin* ThePlugin=qobject_cast<Plugin*>(plugin);
     if (!ThePlugin)
         return 0;
-    Loaders.insert(ThePlugin->Name,qpl);
-    Plugins.insert(ThePlugin->Name,ThePlugin);
-    return 1;
+    if (Version::Verify(ThePlugin->TesseractVersion)) {
+        Loaders.insert(ThePlugin->Name,qpl);
+        Plugins.insert(ThePlugin->Name,ThePlugin);
+        return 1;
+    }
+    return 0;
 }
 
 int PluginManager::ClientLoadFolder(const QString &Path,World *TheWorld,Socket *TheSocket) {

@@ -19,19 +19,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#include "Plugin.h"
+#ifndef VERSION_H
+#define VERSION_H
 
-Plugin::Plugin() {
-    Essential=0;
-    TesseractVersion=Version::GetVersion();
-}
+#include <QString>
 
-void Plugin::clientLoad(World*,Socket*) {}
+class Version {
+private:
+    static QString Ver;
+public:
+    static bool Verify(QString _Ver);
+    static QString GetVersion();
+};
 
-void Plugin::clientUnload() {}
-
-void Plugin::serverLoad(World*,Server*) {}
-
-void Plugin::serverUnload() {}
-
-Plugin::~Plugin() {}
+#endif // VERSION_H

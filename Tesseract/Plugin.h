@@ -26,12 +26,13 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <QString>
 #include "Socket.h"
 #include "Server.h"
+#include "Version.h"
 
 class World;
 
 class Plugin {
 public:
-    QString Name;
+    QString Name,TesseractVersion;
     bool Essential;
     Plugin();
     virtual void clientLoad(World*,Socket*);

@@ -18,7 +18,8 @@ SOURCES += UserControl.cpp \
     ../../Tesseract/Player.cpp \
     ../../Tesseract/World.cpp \
     ../../Tesseract/Socket.cpp \
-    ../../Tesseract/Server.cpp
+    ../../Tesseract/Server.cpp \
+    ../../Tesseract/Version.cpp
 
 HEADERS += UserControl.h \
     ../../Tesseract/Plugin.h \
@@ -26,4 +27,5 @@ HEADERS += UserControl.h \
     ../../Tesseract/Player.h \
     ../../Tesseract/World.h \
     ../../Tesseract/Socket.h \
-    ../../Tesseract/Server.h
+    ../../Tesseract/Server.h \
+    ../../Tesseract/Version.h

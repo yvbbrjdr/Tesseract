@@ -27,6 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "serverwidget.h"
 #include <QFile>
 #include <QJsonDocument>
+#include "Version.h"
 
 namespace Ui {
     class LoginWidget;

@@ -22,7 +22,8 @@ SOURCES += MusicPlayer.cpp \
     ../../Tesseract/Server.cpp \
     ../../Tesseract/Socket.cpp \
     ../../Tesseract/Sound.cpp \
-    ../../Tesseract/World.cpp
+    ../../Tesseract/World.cpp \
+    ../../Tesseract/Version.cpp
 
 HEADERS += MusicPlayer.h \
     ../../Tesseract/Plugin.h \
@@ -34,6 +35,7 @@ HEADERS += MusicPlayer.h \
     ../../Tesseract/Server.h \
     ../../Tesseract/Socket.h \
     ../../Tesseract/Sound.h \
-    ../../Tesseract/World.h
+    ../../Tesseract/World.h \
+    ../../Tesseract/Version.h
 
 win32: LIBS += -lbass -lbassenc
