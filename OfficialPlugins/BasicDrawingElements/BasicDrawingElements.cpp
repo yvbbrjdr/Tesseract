@@ -23,7 +23,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 BasicDrawingElements::BasicDrawingElements() {
     Name="BasicDrawingElements1.0";
-    Essential=0;
 }
 
 void BasicDrawingElements::clientLoad(World *w,Socket*) {

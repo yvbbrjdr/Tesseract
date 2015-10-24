@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     Server.cpp \
     Socket.cpp \
     loginwidget.cpp \
-    serverwidget.cpp
+    serverwidget.cpp \
+    Version.cpp
 
 HEADERS  +=     World.h \
     tesseractwidget.h \
@@ -37,7 +38,8 @@ HEADERS  +=     World.h \
     Server.h \
     Socket.h \
     loginwidget.h \
-    serverwidget.h
+    serverwidget.h \
+    Version.h
 
 FORMS    += tesseractwidget.ui \
     loginwidget.ui \

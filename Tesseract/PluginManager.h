@@ -26,6 +26,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include <QPluginLoader>
 #include "Plugin.h"
 #include <QDir>
+#include "Version.h"
 
 class PluginManager {
 

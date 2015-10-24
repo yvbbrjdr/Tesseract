@@ -106,7 +106,7 @@ void ServerWidget::recvVariantMap(const int id, const QString &, const quint16, 
         for (QMap<int,Player>::iterator it=TheWorld->Players.begin();it!=TheWorld->Players.end();++it)
             if (it.value().Name==name)
                 verify=0;
-        if (qvm["ver"].toString()!="1.0")
+        if (!Version::Verify(qvm["ver"].toString()))
             verify=-1;
         QVariantMap q;
         q.insert("type","login");

@@ -13,7 +13,9 @@ TEMPLATE = lib
 CONFIG += plugin
 
 SOURCES += PluginTemplate.cpp \
-    ../../Tesseract/Plugin.cpp
+    ../../Tesseract/Plugin.cpp \
+    ../../Tesseract/Version.cpp
 
 HEADERS += PluginTemplate.h \
-    ../../Tesseract/Plugin.h
+    ../../Tesseract/Plugin.h \
+    ../../Tesseract/Version.h
