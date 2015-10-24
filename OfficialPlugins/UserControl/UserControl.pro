@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += network
+QT += network widgets
 
 TARGET = UserControl
 
@@ -15,9 +15,15 @@ CONFIG += plugin
 SOURCES += UserControl.cpp \
     ../../Tesseract/Plugin.cpp \
     ../../Tesseract/Coordinate.cpp \
-    ../../Tesseract/Player.cpp
+    ../../Tesseract/Player.cpp \
+    ../../Tesseract/World.cpp \
+    ../../Tesseract/Socket.cpp \
+    ../../Tesseract/Server.cpp
 
 HEADERS += UserControl.h \
     ../../Tesseract/Plugin.h \
     ../../Tesseract/Coordinate.h \
-    ../../Tesseract/Player.h
+    ../../Tesseract/Player.h \
+    ../../Tesseract/World.h \
+    ../../Tesseract/Socket.h \
+    ../../Tesseract/Server.h

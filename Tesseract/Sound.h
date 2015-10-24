@@ -34,8 +34,8 @@ class Sound : public QObject {
     Q_OBJECT
 private:
     DWORD handle;
-    static void EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD length,void *user);
-    static BOOL RecordRecv(HRECORD handle,const void *buffer,DWORD length,void *user);
+    static void CALLBACK EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD length,void *user);
+    static BOOL CALLBACK RecordRecv(HRECORD handle,const void *buffer,DWORD length,void *user);
 
 public:
     static void Init();

@@ -14,8 +14,12 @@ CONFIG += plugin
 
 SOURCES += BasicDrawingElements.cpp \
     ../../Tesseract/Plugin.cpp \
-    ../../Tesseract/Coordinate.cpp
+    ../../Tesseract/Coordinate.cpp \
+    ../../Tesseract/World.cpp
 
 HEADERS += BasicDrawingElements.h \
     ../../Tesseract/Plugin.h \
-    ../../Tesseract/Coordinate.h
+    ../../Tesseract/Coordinate.h \
+    ../../Tesseract/World.h
+
+win32: LIBS += -lopengl32 -lglu32
