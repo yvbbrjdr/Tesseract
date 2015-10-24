@@ -120,10 +120,12 @@ void TesseractWidget::DrawPlayer(Player ThePlayer) {
             }
         glEnd();
     }
-    SetColor(Coordinate(0,0,0));
-    glDisable(GL_DEPTH_TEST);
-    renderText3D(ThePlayer.Position,ThePlayer.Name,12);
-    glEnable(GL_DEPTH_TEST);
+    if (TheWorld->Myself->EyeVector.Dot(ThePlayer.Position-TheWorld->Myself->Position)>0) {
+        SetColor(Coordinate(0,0,0));
+        glDisable(GL_DEPTH_TEST);
+        renderText3D(ThePlayer.Position,ThePlayer.Name,12);
+        glEnable(GL_DEPTH_TEST);
+    }
 }
 
 void TesseractWidget::paintGL() {

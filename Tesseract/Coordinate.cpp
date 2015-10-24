@@ -51,6 +51,11 @@ Coordinate Coordinate::operator / (double d) {
     return Coordinate(a.x/d,a.y/d,a.z/d);
 }
 
+double Coordinate::Dot(Coordinate b) {
+    Coordinate a=*this;
+    return a.x*b.x+a.y*b.y+a.z*b.z;
+}
+
 double* Coordinate::ToArray(double res[3]) {
     res[0]=this->x;
     res[1]=this->y;
