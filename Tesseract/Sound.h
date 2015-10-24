@@ -27,6 +27,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "Coordinate.h"
 #include <QString>
 #include <QObject>
+#include <QVector>
 
 enum PlayStatus{UNLOAD,STOP,PLAY,PAUSE,RECORDING};
 
@@ -53,6 +54,7 @@ public:
     void StopEncode();
     void StartRecord();
     void StopRecord();
+    QVector<float> GetFFTData();
     int Status;
     bool Encoding;
 
