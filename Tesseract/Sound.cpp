@@ -139,3 +139,14 @@ void Sound::LoadRam(void *buffer,DWORD length) {
     handle=BASS_StreamCreateFile(TRUE,buffer,0,length,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D);
     Status=STOP;
 }
+
+QVector<float> Sound::GetFFTData() {
+    if (!PLAY)
+        return QVector<float>();
+    QVector<float>ret(512);
+    float fft[512];
+    BASS_ChannelGetData(handle,fft,BASS_DATA_FFT1024);
+    for (int i=0;i<512;++i)
+        ret[i]=fft[i];
+    return ret;
+}
