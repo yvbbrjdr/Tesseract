@@ -143,7 +143,7 @@ void MusicPlayer::clientBlockCreateEvent(QMap<int,Bnode>::iterator TheBlock) {
     if (isMusicPlayer) {
         QVariantMap qvm;
         qvm.insert("type","binfo");
-        qvm.insert("id",TheBlock.key());
+        qvm.insert("num",TheBlock.key());
         emit TheSocket->sendVariantMap(qvm,-1);
     }
 }
@@ -202,11 +202,69 @@ void MusicPlayer::serverBlockCreateEvent(QMap<int,Bnode>::iterator TheBlock) {
 }
 
 void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,const QVariantMap &qvm) {
-
+    if (qvm["type"].toString()=="binfo") {
+        int num=qvm["num"].toInt();
+        Bnode &b=TheWorld->Blocks.find(num).value();
+        QString &type=b.Type;
+        if (type=="Speaker") {
+            SpeakerStatus *ss=(SpeakerStatus*)b.Data;
+            ss->Belong=qvm["belong"].toInt();
+        } else if (type=="Controller") {
+            ControllerStatus *cs=(ControllerStatus*)b.Data;
+            cs->AddLink(qvm["link"].toInt());
+        } else if (type=="Spinner") {
+            SpinnerStatus *ss=(SpinnerStatus*)b.Data;
+            ss->AddLink(qvm["link"].toInt());
+        } else if (type=="FFT") {
+            FFTStatus *fs=(FFTStatus*)b.Data;
+            fs->AddLink(qvm["link"].toInt());
+        }
+    } else if (qvm["type"].toString()=="mdata") {
+        int num=qvm["num"].toInt();
+        Bnode &b=TheWorld->Blocks.find(num).value();
+        SpeakerStatus *ss=(SpeakerStatus*)b.Data;
+        if (ss->Belong!=TheWorld->Myself.key()) {
+            QByteArray buffer=QByteArray::fromBase64(qvm["data"].toByteArray());
+            ss->TheSound.LoadRam(buffer.data(),buffer.size());
+            ss->TheSound.Move(b.Position);
+            ss->TheSound.Play();
+        }
+    }
 }
 
-void MusicPlayer::serverRecvVariantMap(const int,const QString&,const quint16,const QVariantMap &qvm) {
-
+void MusicPlayer::serverRecvVariantMap(const int id,const QString&,const quint16,const QVariantMap &qvm) {
+    if (qvm["type"].toString()=="binfo") {
+        int num=qvm["num"].toInt();
+        Bnode &b=TheWorld->Blocks.find(num).value();
+        QString &type=b.Type;
+        if (type=="Speaker") {
+            QVariantMap ret=qvm;
+            SpeakerStatus *ss=(SpeakerStatus*)b.Data;
+            ret.insert("belong",ss->Belong);
+            emit TheServer->sendVariantMap(ret,id);
+        } else if (type=="Controller") {
+            ControllerStatus *cs=(ControllerStatus*)b.Data;
+            for (int i=0;i<cs->Linked.size();++i) {
+                QVariantMap ret=qvm;
+                ret.insert("link",cs->Linked[i]);
+                emit TheServer->sendVariantMap(ret,id);
+            }
+        } else if (type=="Spinner") {
+            SpinnerStatus *ss=(SpinnerStatus*)b.Data;
+            for (int i=0;i<ss->Linked.size();++i) {
+                QVariantMap ret=qvm;
+                ret.insert("link",ss->Linked[i]);
+                emit TheServer->sendVariantMap(ret,id);
+            }
+        } else if (type=="FFT") {
+            FFTStatus *fs=(FFTStatus*)b.Data;
+            QVariantMap ret=qvm;
+            ret.insert("link",fs->Linked);
+            emit TheServer->sendVariantMap(ret,id);
+        }
+    } else if (qvm["type"].toString()=="mdata") {
+        emit TheServer->sendVariantMap(qvm,-1);
+    }
 }
 
 void MusicPlayer::delta() {
@@ -216,6 +274,10 @@ void MusicPlayer::delta() {
     }
 }
 
-void MusicPlayer::drawBlockEvent(QMap<int,Bnode>::iterator,bool&) {
+void MusicPlayer::drawBlockEvent(QMap<int,Bnode>::iterator TheBlock,bool&) {
+    if (TheBlock->Type=="FFT") {
+        FFTStatus *fs=(FFTStatus*)TheBlock->Data;
+        QVector<float>fftdata=fs->GetData();
 
+    }
 }
