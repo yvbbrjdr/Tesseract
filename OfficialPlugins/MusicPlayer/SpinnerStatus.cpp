@@ -21,43 +21,46 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "SpinnerStatus.h"
 
-SpinnerStatus::SpinnerStatus() {
+SpinnerStatus::SpinnerStatus(World *_TheWorld,const Coordinate &_Position) {
     Spinning=0;
     Theta=0;
+    TheWorld=_TheWorld;
+    Position=_Position;
 }
 
-bool SpinnerStatus::AddLink(Bnode &b) {
-    if (b.Type!="Speaker"||Linked.indexOf(&b)!=-1)
-        return 0;
-    Linked.push_back(&b);
-    return 1;
+void SpinnerStatus::AddLink(int n) {
+    if (TheWorld->Blocks.find(n)->Type=="Speaker"&&Linked.indexOf(n)==-1)
+        Linked.push_back(n);
 }
 
-bool SpinnerStatus::RemoveLink(Bnode &b) {
-    if (Linked.indexOf(&b)==-1)
-        return 0;
-    Linked.remove(Linked.indexOf(&b));
-    return 1;
+void SpinnerStatus::RemoveLink(int n) {
+    Linked.removeAll(n);
 }
 
-bool SpinnerStatus::Start() {
-    if (Spinning)
-        return 0;
+void SpinnerStatus::Start() {
     Speed=0.0167;
     Spinning=1;
-    return 1;
 }
 
-bool SpinnerStatus::Stop() {
-    if (!Spinning)
-        return 0;
+void SpinnerStatus::Stop() {
     Spinning=0;
-    return 1;
 }
 
-bool SpinnerStatus::Accelerate() {
-    if (!Spinning)
-        return 0;
+void SpinnerStatus::Accelerate() {
     Speed+=0.01;
-    return 1;
+}
+
+void SpinnerStatus::Delta() {
+    if (Spinning) {
+        for (int j=0;j<Linked.size();++j) {
+            Bnode &b=TheWorld->Blocks.find(Linked[j]).value();
+            SpeakerStatus *spst=(SpeakerStatus*)b.Data;
+            Coordinate r=b.Position-Position;
+            r.y=0;
+            double Radius=r.Length();
+            b.Position=Coordinate(Position.x+Radius*cos(Theta),b.Position.y,Position.z+Radius*sin(Theta));
+            spst->TheSound.Move(b.Position);
+        }
+        Theta+=Speed;
+    }
 }

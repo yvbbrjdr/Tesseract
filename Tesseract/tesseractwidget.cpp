@@ -48,7 +48,7 @@ TesseractWidget::TesseractWidget(Socket *_TheSocket,int PlayerNum,QString Player
     GLTimer=new QTimer;
     GLTimer->start(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
-    TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
+    TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),""));
     currentblocktype="Stone";
     QVariantMap qvm;
     qvm.insert("type","getbasic");

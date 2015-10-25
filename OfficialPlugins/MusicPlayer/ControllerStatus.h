@@ -23,15 +23,17 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define CONTROLLERSTATUS_H
 
 #include <QVector>
-#include "../../Tesseract/Sound.h"
-#include "../../Tesseract/Block.h"
+#include "../../Tesseract/World.h"
+#include "SpeakerStatus.h"
 
 class ControllerStatus {
 private:
-    QVector<Bnode*>Linked;
+    World *TheWorld;
 public:
-    bool AddLink(Bnode&);
-    bool RemoveLink(Bnode&);
+    ControllerStatus(World*);
+    QVector<int>Linked;
+    void AddLink(int);
+    void RemoveLink(int);
     void Play();
     void Pause();
     void Stop();

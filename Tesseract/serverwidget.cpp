@@ -36,7 +36,7 @@ ServerWidget::ServerWidget(quint16 port,QWidget *parent) : QMainWindow(parent),u
         Log("Server error: cannot listen at port "+QString::number(port));
     TheWorld=new World;
     TheWorld->Size=Coordinate(1000,1000,1000);
-    TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
+    TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),""));
     connect(TheWorld,SIGNAL(log(QString)),this,SLOT(Log(QString)));
     connect(TheWorld,SIGNAL(sendCommand(QVector<QString>&)),this,SLOT(Process(QVector<QString>&)));
     connect(TheWorld,SIGNAL(sendCommand(const QString&)),this,SLOT(Process(const QString&)));
