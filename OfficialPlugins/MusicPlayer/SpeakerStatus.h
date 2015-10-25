@@ -19,28 +19,24 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef BLOCK_H
-#define BLOCK_H
+#ifndef SPEAKERSTATUS_H
+#define SPEAKERSTATUS_H
 
-#include <QString>
-#include "Coordinate.h"
+#include "../../Tesseract/Sound.h"
+#include <QObject>
 
-class Block {
+class SpeakerStatus:public QObject {
+    Q_OBJECT
 public:
-    QString Name;
-    Coordinate Color;
-    QString TextureName;
-    Block();
-    Block(const QString &_Name,const Coordinate &_Color,const QString &_TextureName);
+    SpeakerStatus(int _Number);
+    int Belong,Number;
+    Sound TheSound;
+
+signals:
+    void encodeSignal(int,const void*,DWORD);
+
+public slots:
+    void recvEncode(HENCODE handle,DWORD channel,const void *buffer,DWORD length);
 };
 
-class Bnode {
-public:
-    QString Type;
-    Coordinate Position,HalfSize;
-    bool PointedAt;
-    void *Data;
-    Bnode(const QString &_Type,const Coordinate &_Position,const Coordinate &_HalfSize);
-};
-
-#endif // BLOCK_H
+#endif // SPEAKERSTATUS_H

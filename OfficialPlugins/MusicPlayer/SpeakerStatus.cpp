@@ -19,28 +19,14 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef BLOCK_H
-#define BLOCK_H
+#include "SpeakerStatus.h"
 
-#include <QString>
-#include "Coordinate.h"
+SpeakerStatus::SpeakerStatus(int _Number) {
+    Number=_Number;
+    Belong=0;
+    connect(&TheSound,SIGNAL(encodeSignal(HENCODE,DWORD,const void*,DWORD)),this,SLOT(recvEncode(HENCODE,DWORD,const void*,DWORD)));
+}
 
-class Block {
-public:
-    QString Name;
-    Coordinate Color;
-    QString TextureName;
-    Block();
-    Block(const QString &_Name,const Coordinate &_Color,const QString &_TextureName);
-};
-
-class Bnode {
-public:
-    QString Type;
-    Coordinate Position,HalfSize;
-    bool PointedAt;
-    void *Data;
-    Bnode(const QString &_Type,const Coordinate &_Position,const Coordinate &_HalfSize);
-};
-
-#endif // BLOCK_H
+void SpeakerStatus::recvEncode(HENCODE,DWORD,const void *buffer,DWORD length) {
+    emit encodeSignal(Number,buffer,length);
+}

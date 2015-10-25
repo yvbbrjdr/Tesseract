@@ -19,28 +19,22 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef BLOCK_H
-#define BLOCK_H
+#ifndef FFTSTATUS_H
+#define FFTSTATUS_H
 
-#include <QString>
-#include "Coordinate.h"
+#include <QVector>
+#include "../../Tesseract/World.h"
+#include "SpeakerStatus.h"
 
-class Block {
+class FFTStatus {
+private:
+    World *TheWorld;
 public:
-    QString Name;
-    Coordinate Color;
-    QString TextureName;
-    Block();
-    Block(const QString &_Name,const Coordinate &_Color,const QString &_TextureName);
+    FFTStatus(World*);
+    int Linked;
+    void AddLink(int);
+    void RemoveLink(int);
+    QVector<float> GetData();
 };
 
-class Bnode {
-public:
-    QString Type;
-    Coordinate Position,HalfSize;
-    bool PointedAt;
-    void *Data;
-    Bnode(const QString &_Type,const Coordinate &_Position,const Coordinate &_HalfSize);
-};
-
-#endif // BLOCK_H
+#endif // FFTSTATUS_H

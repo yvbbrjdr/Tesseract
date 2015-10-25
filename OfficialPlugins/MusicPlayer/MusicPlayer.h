@@ -24,32 +24,47 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "../../Tesseract/Plugin.h"
 #include "../../Tesseract/Sound.h"
-#include "ControllerStatus.h"
-#include "SpinnerStatus.h"
 #include <cmath>
 #include <QVector>
 #include <QTimer>
 #include <QFileDialog>
+#include "SpeakerStatus.h"
+#include "ControllerStatus.h"
+#include "SpinnerStatus.h"
+#include "FFTStatus.h"
+#include <QByteArray>
 
 class MusicPlayer:public QObject,public Plugin {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "MusicPlayer")
     Q_INTERFACES(Plugin)
+
 private:
-    Bnode* SelectingObject;
-    QVector<Bnode*>Spinners;
-    QVector<Bnode*>Controllers;
-    QTimer *timer;
+    int SelectedBlock;
+    QVector<int>Spinners;
+    QVector<int>Controllers;
+    QVector<int>FFTs;
+    QTimer *Timer;
     World *TheWorld;
+    Socket *TheSocket;
+    Server *TheServer;
+
 public:
     MusicPlayer();
     void clientLoad(World*,Socket*);
     void serverLoad(World*,Server*);
+
 public slots:
     void keyPressEvent(QKeyEvent&);
-    void blockCreateEvent(QMap<int,Bnode>::iterator);
+    void drawBlockEvent(QMap<int,Bnode>::iterator,bool&);
+    void clientBlockCreateEvent(QMap<int,Bnode>::iterator);
     void blockDestroyEvent(QMap<int,Bnode>::iterator);
-    void Spinning();
+    void clientRecvVariantMap(const int,const QString&,const quint16,const QVariantMap&);
+    void delta();
+    void recvEncode(int,const void*,DWORD);
+
+    void serverBlockCreateEvent(QMap<int,Bnode>::iterator);
+    void serverRecvVariantMap(const int,const QString&,const quint16,const QVariantMap&);
 };
 
 #endif // MUSICPLAYER_H

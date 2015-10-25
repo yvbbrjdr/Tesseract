@@ -14,8 +14,6 @@ CONFIG += plugin
 
 SOURCES += MusicPlayer.cpp \
     ../../Tesseract/Plugin.cpp \
-    ControllerStatus.cpp \
-    SpinnerStatus.cpp \
     ../../Tesseract/Coordinate.cpp \
     ../../Tesseract/Block.cpp \
     ../../Tesseract/Player.cpp \
@@ -23,12 +21,14 @@ SOURCES += MusicPlayer.cpp \
     ../../Tesseract/Socket.cpp \
     ../../Tesseract/Sound.cpp \
     ../../Tesseract/World.cpp \
-    ../../Tesseract/Version.cpp
+    ../../Tesseract/Version.cpp \
+    SpeakerStatus.cpp \
+    ControllerStatus.cpp \
+    SpinnerStatus.cpp \
+    FFTStatus.cpp
 
 HEADERS += MusicPlayer.h \
     ../../Tesseract/Plugin.h \
-    ControllerStatus.h \
-    SpinnerStatus.h \
     ../../Tesseract/Coordinate.h \
     ../../Tesseract/Block.h \
     ../../Tesseract/Player.h \
@@ -36,6 +36,10 @@ HEADERS += MusicPlayer.h \
     ../../Tesseract/Socket.h \
     ../../Tesseract/Sound.h \
     ../../Tesseract/World.h \
-    ../../Tesseract/Version.h
+    ../../Tesseract/Version.h \
+    SpeakerStatus.h \
+    ControllerStatus.h \
+    SpinnerStatus.h \
+    FFTStatus.h
 
 win32: LIBS += -lbass -lbassenc

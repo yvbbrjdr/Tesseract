@@ -66,7 +66,8 @@ void Sound::LoadFile(const QString &Filename) {
     if (!UNLOAD)
         Unload();
     handle=BASS_StreamCreateFile(FALSE,Filename.toLocal8Bit().data(),0,0,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D);
-    Status=STOP;
+    if (handle)
+        Status=STOP;
 }
 
 void Sound::Unload() {
@@ -107,7 +108,7 @@ void Sound::Move(Coordinate Position) {
 }
 
 void Sound::StartEncode() {
-    if (!UNLOAD) {
+    if (!UNLOAD&&!Encoding) {
         BASS_Encode_Start(handle,"lame -f - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
         Encoding=1;
     }
@@ -137,7 +138,8 @@ void Sound::LoadRam(void *buffer,DWORD length) {
         Unload();
     }
     handle=BASS_StreamCreateFile(TRUE,buffer,0,length,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D);
-    Status=STOP;
+    if (handle)
+        Status=STOP;
 }
 
 QVector<float> Sound::GetFFTData() {

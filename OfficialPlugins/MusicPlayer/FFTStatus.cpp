@@ -19,28 +19,27 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-#ifndef BLOCK_H
-#define BLOCK_H
+#include "FFTStatus.h"
 
-#include <QString>
-#include "Coordinate.h"
+FFTStatus::FFTStatus(World* _TheWorld) {
+    Linked=-1;
+    TheWorld=_TheWorld;
+}
 
-class Block {
-public:
-    QString Name;
-    Coordinate Color;
-    QString TextureName;
-    Block();
-    Block(const QString &_Name,const Coordinate &_Color,const QString &_TextureName);
-};
+void FFTStatus::AddLink(int n) {
+    if (TheWorld->Blocks.find(n)->Type=="Speaker")
+        Linked=n;
+}
 
-class Bnode {
-public:
-    QString Type;
-    Coordinate Position,HalfSize;
-    bool PointedAt;
-    void *Data;
-    Bnode(const QString &_Type,const Coordinate &_Position,const Coordinate &_HalfSize);
-};
+void FFTStatus::RemoveLink(int n) {
+    if (Linked==n)
+        Linked=-1;
+}
 
-#endif // BLOCK_H
+QVector<float> FFTStatus::GetData() {
+    if (Linked!=-1) {
+        SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(Linked)->Data;
+        return ss->TheSound.GetFFTData();
+    }
+    return QVector<float>();
+}
