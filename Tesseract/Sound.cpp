@@ -109,7 +109,7 @@ void Sound::Move(Coordinate Position) {
 
 void Sound::StartEncode() {
     if (!UNLOAD&&!Encoding) {
-        BASS_Encode_Start(handle,"lame -f - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
+        BASS_Encode_Start(handle,"lame --alt-preset standard - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
         Encoding=1;
     }
 }
