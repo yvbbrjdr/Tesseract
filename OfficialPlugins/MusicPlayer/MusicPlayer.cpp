@@ -70,10 +70,10 @@ void MusicPlayer::keyPressEvent(QKeyEvent &event) {
                 ss->TheSound.LoadFile(qfd.getOpenFileName(0,"","","All Files(*.*)"));
                 emit TheWorld->trackMouse();
                 if (ss->TheSound.Status==STOP)
-                    ss->Belong=TheWorld->Myself.key();
+                    ss->Belong=1;
             }
         } else if (event.key()==Qt::Key_F) {
-            if (ss->Belong==TheWorld->Myself.key())
+            if (ss->Belong)
                 ss->TheSound.Unload();
         } else if (event.key()==Qt::Key_C) {
             if (SelectedBlock!=-1) {
@@ -88,29 +88,44 @@ void MusicPlayer::keyPressEvent(QKeyEvent &event) {
                     FFTStatus *fs=(FFTStatus*)b.Data;
                     fs->AddLink(TheBlock.key());
                 }
+                QVariantMap qvm;
+                qvm.insert("type","pushbinfo");
+                qvm.insert("num",SelectedBlock);
+                qvm.insert("link",TheBlock.key());
+                emit TheSocket->sendVariantMap(qvm,-1);
                 SelectedBlock=-1;
             }
         }
     } else if (TheBlock->Type=="Controller") {
         ControllerStatus *cs=(ControllerStatus*)TheBlock->Data;
+        QVariantMap qvm;
+        qvm.insert("type","controller");
+        qvm.insert("num",TheBlock.key());
         if (event.key()==Qt::Key_E) {
             cs->Play();
+            qvm.insert("oper","e");
+            emit TheSocket->sendVariantMap(qvm,-1);
         } else if (event.key()==Qt::Key_F) {
             cs->Pause();
+            qvm.insert("oper","f");
+            emit TheSocket->sendVariantMap(qvm,-1);
         } else if (event.key()==Qt::Key_G) {
             cs->Stop();
+            qvm.insert("oper","g");
+            emit TheSocket->sendVariantMap(qvm,-1);
         } else if (event.key()==Qt::Key_C) {
             SelectedBlock=TheBlock.key();
         }
     } else if (TheBlock->Type=="Spinner") {
-        SpinnerStatus *ss=(SpinnerStatus*)TheBlock->Data;
+        QVariantMap qvm;
+        qvm.insert("type","spinner");
+        qvm.insert("num",TheBlock.key());
         if (event.key()==Qt::Key_E) {
-            if (!ss->Spinning)
-                ss->Start();
-            else
-                ss->Accelerate();
+            qvm.insert("oper","e");
+            emit TheSocket->sendVariantMap(qvm,-1);
         } else if (event.key()==Qt::Key_F) {
-            ss->Stop();
+            qvm.insert("oper","f");
+            emit TheSocket->sendVariantMap(qvm,-1);
         } else if (event.key()==Qt::Key_C) {
             SelectedBlock=TheBlock.key();
         }
@@ -126,7 +141,6 @@ void MusicPlayer::clientBlockCreateEvent(QMap<int,Bnode>::iterator TheBlock) {
     if (TheBlock->Type=="Speaker") {
         TheBlock->Data=new SpeakerStatus(TheBlock.key());
         connect((SpeakerStatus*)TheBlock->Data,SIGNAL(encodeSignal(int,const void*,DWORD)),this,SLOT(recvEncode(int,const void*,DWORD)));
-        isMusicPlayer=1;
     } else if (TheBlock->Type=="Controller") {
         TheBlock->Data=new ControllerStatus(TheWorld);
         Controllers.push_back(TheBlock.key());
@@ -206,15 +220,17 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
         int num=qvm["num"].toInt();
         Bnode &b=TheWorld->Blocks.find(num).value();
         QString &type=b.Type;
-        if (type=="Speaker") {
-            SpeakerStatus *ss=(SpeakerStatus*)b.Data;
-            ss->Belong=qvm["belong"].toInt();
-        } else if (type=="Controller") {
+        if (type=="Controller") {
             ControllerStatus *cs=(ControllerStatus*)b.Data;
             cs->AddLink(qvm["link"].toInt());
         } else if (type=="Spinner") {
             SpinnerStatus *ss=(SpinnerStatus*)b.Data;
-            ss->AddLink(qvm["link"].toInt());
+            if (qvm.find("link")!=qvm.end())
+                ss->AddLink(qvm["link"].toInt());
+            else {
+                ss->Spinning=qvm["spinning"].toBool();
+                ss->Speed=qvm["speed"].toDouble();
+            }
         } else if (type=="FFT") {
             FFTStatus *fs=(FFTStatus*)b.Data;
             fs->AddLink(qvm["link"].toInt());
@@ -223,9 +239,38 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
         int num=qvm["num"].toInt();
         Bnode &b=TheWorld->Blocks.find(num).value();
         SpeakerStatus *ss=(SpeakerStatus*)b.Data;
-        if (ss->Belong!=TheWorld->Myself.key()) {
+        if (!ss->Belong) {
             QByteArray buffer=QByteArray::fromBase64(qvm["data"].toByteArray());
             ss->TheSound.StreamPushData(buffer.data(),buffer.size());
+        }
+    } else if (qvm["type"].toString()=="controller") {
+        if (qvm["id"]!=TheWorld->Myself.key()) {
+            int num=qvm["num"].toInt();
+            Bnode &b=TheWorld->Blocks.find(num).value();
+            ControllerStatus *cs=(ControllerStatus*)b.Data;
+            if (qvm["oper"].toString()=="e") {
+                for (int i=0;i<cs->Linked.size();++i) {
+                    SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(cs->Linked[i])->Data;
+                    ss->Belong=0;
+                }
+                cs->Play();
+            } else if (qvm["oper"].toString()=="f") {
+                cs->Pause();
+            } else {
+                cs->Stop();
+            }
+        }
+    } else if (qvm["type"].toString()=="spinner") {
+        int num=qvm["num"].toInt();
+        Bnode &b=TheWorld->Blocks.find(num).value();
+        SpinnerStatus *ss=(SpinnerStatus*)b.Data;
+        if (qvm["oper"].toString()=="e") {
+            if (ss->Spinning)
+                ss->Accelerate();
+            else
+                ss->Start();
+        } else {
+            ss->Stop();
         }
     }
 }
@@ -235,12 +280,7 @@ void MusicPlayer::serverRecvVariantMap(const int id,const QString&,const quint16
         int num=qvm["num"].toInt();
         Bnode &b=TheWorld->Blocks.find(num).value();
         QString &type=b.Type;
-        if (type=="Speaker") {
-            QVariantMap ret=qvm;
-            SpeakerStatus *ss=(SpeakerStatus*)b.Data;
-            ret.insert("belong",ss->Belong);
-            emit TheServer->sendVariantMap(ret,id);
-        } else if (type=="Controller") {
+        if (type=="Controller") {
             ControllerStatus *cs=(ControllerStatus*)b.Data;
             for (int i=0;i<cs->Linked.size();++i) {
                 QVariantMap ret=qvm;
@@ -249,9 +289,15 @@ void MusicPlayer::serverRecvVariantMap(const int id,const QString&,const quint16
             }
         } else if (type=="Spinner") {
             SpinnerStatus *ss=(SpinnerStatus*)b.Data;
+            QVariantMap ret=qvm;
+            ret.insert("spinning",ss->Spinning);
+            ret.insert("speed",ss->Speed);
+            emit TheServer->sendVariantMap(ret,id);
             for (int i=0;i<ss->Linked.size();++i) {
                 QVariantMap ret=qvm;
                 ret.insert("link",ss->Linked[i]);
+                ret.insert("spinning",ss->Spinning);
+                ret.insert("speed",ss->Speed);
                 emit TheServer->sendVariantMap(ret,id);
             }
         } else if (type=="FFT") {
@@ -261,6 +307,40 @@ void MusicPlayer::serverRecvVariantMap(const int id,const QString&,const quint16
             emit TheServer->sendVariantMap(ret,id);
         }
     } else if (qvm["type"].toString()=="mdata") {
+        emit TheServer->sendVariantMap(qvm,-1);
+    } else if (qvm["type"].toString()=="pushbinfo") {
+        int num=qvm["num"].toInt();
+        Bnode &b=TheWorld->Blocks.find(num).value();
+        QString &type=b.Type;
+        if (type=="Controller") {
+            ControllerStatus *cs=(ControllerStatus*)b.Data;
+            cs->AddLink(qvm["link"].toInt());
+        } else if (type=="Spinner") {
+            SpinnerStatus *ss=(SpinnerStatus*)b.Data;
+            ss->AddLink(qvm["link"].toInt());
+        } else if (type=="FFT") {
+            FFTStatus *fs=(FFTStatus*)b.Data;
+            fs->AddLink(qvm["link"].toInt());
+        }
+        QVariantMap ret=qvm;
+        ret["type"]="binfo";
+        emit TheServer->sendVariantMap(ret,-1);
+    } else if (qvm["type"].toString()=="controller") {
+        QVariantMap ret=qvm;
+        ret.insert("id",id);
+        emit TheServer->sendVariantMap(ret,-1);
+    } else if (qvm["type"].toString()=="spinner") {
+        int num=qvm["num"].toInt();
+        Bnode &b=TheWorld->Blocks.find(num).value();
+        SpinnerStatus *ss=(SpinnerStatus*)b.Data;
+        if (qvm["oper"].toString()=="e") {
+            if (ss->Spinning)
+                ss->Accelerate();
+            else
+                ss->Start();
+        } else {
+            ss->Stop();
+        }
         emit TheServer->sendVariantMap(qvm,-1);
     }
 }
