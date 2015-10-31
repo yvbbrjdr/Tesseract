@@ -26,6 +26,29 @@ void Sound::EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD len
     emit sp->encodeSignal(handle,channel,buffer,length);
 }
 
+void Sound::c(void*) {}
+
+QWORD Sound::l(void*) {
+    return 0;
+}
+
+DWORD Sound::r(void *buffer,DWORD length, void *user) {
+    Sound *s=(Sound*)user;
+    if (s->buf.length()<=length) {
+        length=s->buf.length();
+        memcpy(buffer,s->buf.data(),length);
+        s->buf.clear();
+        return length;
+    }
+    memcpy(buffer,s->buf.data(),length);
+    s->buf=s->buf.right(s->buf.length()-length);
+    return length;
+}
+
+BOOL Sound::s(QWORD,void*) {
+    return FALSE;
+}
+
 void Sound::Init() {
     BASS_Init(-1,44100,BASS_DEVICE_3D,0,0);
     BASS_Set3DFactors(1,1,0);
@@ -126,14 +149,17 @@ void Sound::CreateEmptyStream() {
     if (Status!=UNLOAD) {
         Unload();
     }
-    handle=BASS_StreamCreateFileUser(STREAMFILE_BUFFERPUSH,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_STREAM_BLOCK,NULL,this);
+    BASS_FILEPROCS bfp;
+    bfp.close=Sound::c;
+    bfp.length=Sound::l;
+    bfp.read=Sound::r;
+    bfp.seek=Sound::s;
+    handle=BASS_StreamCreateFileUser(STREAMFILE_BUFFER,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_STREAM_BLOCK,&bfp,this);
     Status=STOP;
 }
 
 void Sound::StreamPushData(void *buffer,DWORD length) {
-    if (Status!=UNLOAD) {
-        BASS_StreamPutFileData(handle,buffer,length);
-    }
+    buf.append((const char*)buffer,length);
 }
 
 QVector<float> Sound::GetFFTData() {
