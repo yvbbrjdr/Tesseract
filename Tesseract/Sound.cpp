@@ -32,17 +32,8 @@ QWORD Sound::l(void*) {
     return 0;
 }
 
-DWORD Sound::r(void *buffer,DWORD length, void *user) {
-    Sound *s=(Sound*)user;
-    if (s->buf.length()<=length) {
-        length=s->buf.length();
-        memcpy(buffer,s->buf.data(),length);
-        s->buf.clear();
-        return length;
-    }
-    memcpy(buffer,s->buf.data(),length);
-    s->buf=s->buf.right(s->buf.length()-length);
-    return length;
+DWORD Sound::r(void*,DWORD,void*) {
+    return 0;
 }
 
 BOOL Sound::s(QWORD,void*) {
@@ -149,17 +140,16 @@ void Sound::CreateEmptyStream() {
     if (Status!=UNLOAD) {
         Unload();
     }
-    BASS_FILEPROCS bfp;
-    bfp.close=Sound::c;
-    bfp.length=Sound::l;
-    bfp.read=Sound::r;
-    bfp.seek=Sound::s;
-    handle=BASS_StreamCreateFileUser(STREAMFILE_BUFFER,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_STREAM_BLOCK,&bfp,this);
+    BASS_FILEPROCS bfp={Sound::c,Sound::l,Sound::r,Sound::s};
+    handle=BASS_StreamCreateFileUser(STREAMFILE_BUFFERPUSH,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D,&bfp,NULL);
     Status=STOP;
+    Play();
 }
 
 void Sound::StreamPushData(void *buffer,DWORD length) {
-    buf.append((const char*)buffer,length);
+    if (Status!=UNLOAD) {
+        BASS_StreamPutFileData(handle,buffer,length);
+    }
 }
 
 QVector<float> Sound::GetFFTData() {
