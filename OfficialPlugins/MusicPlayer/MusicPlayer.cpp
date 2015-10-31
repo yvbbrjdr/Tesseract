@@ -77,17 +77,6 @@ void MusicPlayer::keyPressEvent(QKeyEvent &event) {
                 ss->TheSound.Unload();
         } else if (event.key()==Qt::Key_C) {
             if (SelectedBlock!=-1) {
-                Bnode &b=TheWorld->Blocks.find(SelectedBlock).value();
-                if (b.Type=="Controller") {
-                    ControllerStatus *cs=(ControllerStatus*)b.Data;
-                    cs->AddLink(TheBlock.key());
-                } else if (b.Type=="Spinner") {
-                    SpinnerStatus *ss=(SpinnerStatus*)b.Data;
-                    ss->AddLink(TheBlock.key());
-                } else if (b.Type=="FFT") {
-                    FFTStatus *fs=(FFTStatus*)b.Data;
-                    fs->AddLink(TheBlock.key());
-                }
                 QVariantMap qvm;
                 qvm.insert("type","pushbinfo");
                 qvm.insert("num",SelectedBlock);
@@ -244,8 +233,6 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
                 if (ss->TheSound.Status==UNLOAD)
                     ss->TheSound.CreateEmptyStream();
                 ss->TheSound.StreamPushData(buffer.data(),buffer.size());
-                if (ss->TheSound.Status!=PLAY)
-                    ss->TheSound.Play();
             }
         }
     } else if (qvm["type"].toString()=="controller") {
@@ -257,7 +244,6 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
                 for (int i=0;i<cs->Linked.size();++i) {
                     SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(cs->Linked[i])->Data;
                     ss->Belong=0;
-                    ss->TheSound.buf.clear();
                 }
             } else if (qvm["oper"].toString()=="f") {
                 cs->Pause();
@@ -361,6 +347,8 @@ void MusicPlayer::drawBlockEvent(QMap<int,Bnode>::iterator TheBlock,bool&) {
     if (TheBlock->Type=="FFT") {
         FFTStatus *fs=(FFTStatus*)TheBlock->Data;
         QVector<float>fftdata=fs->GetData();
+        if (fftdata.size()!=0) {
 
+        }
     }
 }
