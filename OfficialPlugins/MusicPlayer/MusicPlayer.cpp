@@ -237,12 +237,16 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
         }
     } else if (qvm["type"].toString()=="mdata") {
         int num=qvm["num"].toInt();
-        Bnode &b=TheWorld->Blocks.find(num).value();
-        SpeakerStatus *ss=(SpeakerStatus*)b.Data;
-        if (!ss->Belong) {
-            QByteArray buffer=QByteArray::fromBase64(qvm["data"].toByteArray());
-            ss->TheSound.StreamPushData(buffer.data(),buffer.size());
-            ss->TheSound.Play();
+        if (TheWorld->Blocks.find(num)!=TheWorld->Blocks.end()) {
+            SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(num)->Data;
+            if (!ss->Belong) {
+                QByteArray buffer=QByteArray::fromBase64(qvm["data"].toByteArray());
+                if (ss->TheSound.Status==UNLOAD)
+                    ss->TheSound.CreateEmptyStream();
+                ss->TheSound.StreamPushData(buffer.data(),buffer.size());
+                if (ss->TheSound.Status!=PLAY)
+                    ss->TheSound.Play();
+            }
         }
     } else if (qvm["type"].toString()=="controller") {
         if (qvm["id"]!=TheWorld->Myself.key()) {
@@ -253,8 +257,8 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
                 for (int i=0;i<cs->Linked.size();++i) {
                     SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(cs->Linked[i])->Data;
                     ss->Belong=0;
+                    ss->TheSound.buf.clear();
                 }
-                cs->Play();
             } else if (qvm["oper"].toString()=="f") {
                 cs->Pause();
             } else {

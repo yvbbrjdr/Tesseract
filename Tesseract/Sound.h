@@ -36,6 +36,10 @@ class Sound : public QObject {
 private:
     DWORD handle;
     static void CALLBACK EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD length,void *user);
+    static void CALLBACK c(void *user);
+    static QWORD CALLBACK l(void *user);
+    static DWORD CALLBACK r(void *buffer, DWORD length, void *user);
+    static BOOL CALLBACK s(QWORD offset, void *user);
 
 public:
     static void Init();
@@ -57,6 +61,7 @@ public:
     QVector<float> GetFFTData();
     int Status;
     bool Encoding;
+    QByteArray buf;
 
 signals:
     void encodeSignal(HENCODE handle,DWORD channel,const void *buffer,DWORD length);
