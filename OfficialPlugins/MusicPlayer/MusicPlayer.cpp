@@ -242,6 +242,7 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
         if (!ss->Belong) {
             QByteArray buffer=QByteArray::fromBase64(qvm["data"].toByteArray());
             ss->TheSound.StreamPushData(buffer.data(),buffer.size());
+            ss->TheSound.Play();
         }
     } else if (qvm["type"].toString()=="controller") {
         if (qvm["id"]!=TheWorld->Myself.key()) {
