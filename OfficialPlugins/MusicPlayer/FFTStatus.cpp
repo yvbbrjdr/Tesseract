@@ -27,8 +27,9 @@ FFTStatus::FFTStatus(World* _TheWorld) {
 }
 
 void FFTStatus::AddLink(int n) {
-    if (TheWorld->Blocks.find(n)->Type=="Speaker")
-        Linked=n;
+    if (n!=-1)
+        if (TheWorld->Blocks.find(n)->Type=="Speaker")
+            Linked=n;
 }
 
 void FFTStatus::RemoveLink(int n) {

@@ -225,9 +225,7 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
         SpeakerStatus *ss=(SpeakerStatus*)b.Data;
         if (ss->Belong!=TheWorld->Myself.key()) {
             QByteArray buffer=QByteArray::fromBase64(qvm["data"].toByteArray());
-            ss->TheSound.LoadRam(buffer.data(),buffer.size());
-            ss->TheSound.Move(b.Position);
-            ss->TheSound.Play();
+            ss->TheSound.StreamPushData(buffer.data(),buffer.size());
         }
     }
 }

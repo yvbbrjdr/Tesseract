@@ -26,24 +26,13 @@ void Sound::EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD len
     emit sp->encodeSignal(handle,channel,buffer,length);
 }
 
-BOOL Sound::RecordRecv(HRECORD handle,const void *buffer,DWORD length,void *user) {
-    Sound *sp=(Sound*)user;
-    emit sp->recordSignal(handle,buffer,length);
-    return TRUE;
-}
-
 void Sound::Init() {
     BASS_Init(-1,44100,BASS_DEVICE_3D,0,0);
     BASS_Set3DFactors(1,1,0);
     BASS_SetConfig(BASS_CONFIG_3DALGORITHM,BASS_3DALG_FULL);
     BASS_RecordInit(-1);
-#ifdef WIN32
-    BASS_PluginLoad("bassenc.dll",0);
-#elif __linux__
-    BASS_PluginLoad("libbassenc.so",0);
-#else
-    BASS_PluginLoad("libbassenc.dylib",0);
-#endif
+    qRegisterMetaType<HENCODE>("HENCODE");
+    qRegisterMetaType<DWORD>("DWORD");
 }
 
 void Sound::SetListenerValues(Coordinate Position,Coordinate EyeVector,Coordinate HeadVector) {
@@ -63,7 +52,7 @@ Sound::~Sound() {
 }
 
 void Sound::LoadFile(const QString &Filename) {
-    if (!UNLOAD)
+    if (Status!=UNLOAD)
         Unload();
     handle=BASS_StreamCreateFile(FALSE,Filename.toLocal8Bit().data(),0,0,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D);
     if (handle)
@@ -78,21 +67,21 @@ void Sound::Unload() {
 }
 
 void Sound::Pause() {
-    if (!UNLOAD) {
+    if (Status!=UNLOAD) {
         BASS_ChannelPause(handle);
         Status=PAUSE;
     }
 }
 
 void Sound::Play() {
-    if (!UNLOAD) {
+    if (Status!=UNLOAD) {
         BASS_ChannelPlay(handle,FALSE);
         Status=PLAY;
     }
 }
 
 void Sound::Stop() {
-    if (!UNLOAD) {
+    if (Status!=UNLOAD) {
         BASS_ChannelStop(handle);
         BASS_ChannelSetPosition(handle,0,0);
         Status=STOP;
@@ -100,7 +89,7 @@ void Sound::Stop() {
 }
 
 void Sound::Move(Coordinate Position) {
-    if (!UNLOAD) {
+    if (Status!=UNLOAD) {
         BASS_3DVECTOR v(Position.x,Position.y,Position.z);
         BASS_ChannelSet3DPosition(handle,&v,NULL,NULL);
         BASS_Apply3D();
@@ -108,24 +97,24 @@ void Sound::Move(Coordinate Position) {
 }
 
 void Sound::StartEncode() {
-    if (!UNLOAD&&!Encoding) {
-        BASS_Encode_Start(handle,"lame --alt-preset cbr 128 - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
+    if ((Status!=UNLOAD)&&(!Encoding)) {
+        BASS_Encode_Start(handle,"lame -f - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
         Encoding=1;
     }
 }
 
 void Sound::StopEncode() {
-    if (!UNLOAD) {
+    if (Status!=UNLOAD) {
         BASS_Encode_Stop(handle);
         Encoding=0;
     }
 }
 
 void Sound::StartRecord() {
-    if (!UNLOAD) {
+    if (Status!=UNLOAD) {
         Unload();
     }
-    handle=BASS_RecordStart(44100,1,0,Sound::RecordRecv,this);
+    handle=BASS_RecordStart(44100,1,0,NULL,this);
     Status=RECORDING;
 }
 
@@ -133,17 +122,22 @@ void Sound::StopRecord() {
     Unload();
 }
 
-void Sound::LoadRam(void *buffer,DWORD length) {
-    if (!UNLOAD) {
+void Sound::CreateEmptyStream() {
+    if (Status!=UNLOAD) {
         Unload();
     }
-    handle=BASS_StreamCreateFile(TRUE,buffer,0,length,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D);
-    if (handle)
-        Status=STOP;
+    handle=BASS_StreamCreateFileUser(STREAMFILE_BUFFERPUSH,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_STREAM_BLOCK,NULL,this);
+    Status=STOP;
+}
+
+void Sound::StreamPushData(void *buffer,DWORD length) {
+    if (Status!=UNLOAD) {
+        BASS_StreamPutFileData(handle,buffer,length);
+    }
 }
 
 QVector<float> Sound::GetFFTData() {
-    if (!PLAY)
+    if (Status!=PLAY)
         return QVector<float>();
     QVector<float>ret(512);
     float fft[512];
