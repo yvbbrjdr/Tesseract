@@ -29,7 +29,8 @@ class SpeakerStatus:public QObject {
     Q_OBJECT
 public:
     SpeakerStatus(int _Number);
-    int Belong,Number;
+    bool Belong;
+    int Number;
     Sound TheSound;
 
 signals:

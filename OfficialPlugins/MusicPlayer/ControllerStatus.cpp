@@ -37,10 +37,14 @@ void ControllerStatus::RemoveLink(int n) {
 void ControllerStatus::Play() {
 	for (int i=0;i<Linked.size();++i) {
         SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(Linked[i])->Data;
-        if (ss->Belong==TheWorld->Myself.key()) {
+        if (ss->Belong) {
             ss->TheSound.Move(TheWorld->Blocks.find(Linked[i])->Position);
             ss->TheSound.Play();
             ss->TheSound.StartEncode();
+        } else {
+            ss->TheSound.CreateEmptyStream();
+            ss->TheSound.Move(TheWorld->Blocks.find(Linked[i])->Position);
+            ss->TheSound.Play();
         }
     }
 }
@@ -49,7 +53,7 @@ void ControllerStatus::Pause() {
 	for (int i=0;i<Linked.size();++i) {
         SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(Linked[i])->Data;
         ss->TheSound.Pause();
-        if (ss->Belong==TheWorld->Myself.key())
+        if (ss->Belong)
             ss->TheSound.StopEncode();
     }
 }
@@ -58,7 +62,7 @@ void ControllerStatus::Stop() {
 	for (int i=0;i<Linked.size();++i) {
         SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(Linked[i])->Data;
         ss->TheSound.Stop();
-        if (ss->Belong!=TheWorld->Myself.key())
+        if (!ss->Belong)
             ss->TheSound.Unload();
         else
             ss->TheSound.StopEncode();

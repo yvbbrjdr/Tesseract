@@ -23,7 +23,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 SpeakerStatus::SpeakerStatus(int _Number) {
     Number=_Number;
-    Belong=0;
+    Belong=1;
     connect(&TheSound,SIGNAL(encodeSignal(HENCODE,DWORD,const void*,DWORD)),this,SLOT(recvEncode(HENCODE,DWORD,const void*,DWORD)));
 }
 
