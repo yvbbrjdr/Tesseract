@@ -36,7 +36,6 @@ class Sound : public QObject {
 private:
     DWORD handle;
     static void CALLBACK EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD length,void *user);
-    static BOOL CALLBACK RecordRecv(HRECORD handle,const void *buffer,DWORD length,void *user);
 
 public:
     static void Init();
@@ -44,7 +43,8 @@ public:
     Sound();
     ~Sound();
     void LoadFile(const QString &Filename);
-    void LoadRam(void *buffer,DWORD length);
+    void CreateEmptyStream();
+    void StreamPushData(void *buffer,DWORD length);
     void Unload();
     void Pause();
     void Play();
