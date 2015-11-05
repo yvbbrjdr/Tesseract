@@ -21,37 +21,46 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 #include "ControllerStatus.h"
 
-bool ControllerStatus::AddLink(Bnode &b) {
-    if (b.Type!="Speaker"||Linked.indexOf(&b)!=-1)
-        return 0;
-    Linked.push_back(&b);
-    return 1;
+ControllerStatus::ControllerStatus(World *_TheWorld) {
+    TheWorld=_TheWorld;
 }
 
-bool ControllerStatus::RemoveLink(Bnode &b) {
-    if (Linked.indexOf(&b)==-1)
-        return 0;
-    Linked.remove(Linked.indexOf(&b));
-    return 1;
+void ControllerStatus::AddLink(int n) {
+    if (TheWorld->Blocks.find(n)->Type=="Speaker"&&Linked.indexOf(n)==-1)
+        Linked.push_back(n);
+}
+
+void ControllerStatus::RemoveLink(int n) {
+    Linked.removeAll(n);
 }
 
 void ControllerStatus::Play() {
-    for (int i=0;i<Linked.size();++i) {
-        Sound *ss=(Sound*)Linked[i]->Data;
-        ss->Play();
+	for (int i=0;i<Linked.size();++i) {
+        SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(Linked[i])->Data;
+        if (ss->Belong) {
+            ss->TheSound.Move(TheWorld->Blocks.find(Linked[i])->Position);
+            ss->TheSound.Play();
+            ss->TheSound.StartEncode();
+        }
     }
 }
 
 void ControllerStatus::Pause() {
-    for (int i=0;i<Linked.size();++i) {
-        Sound *ss=(Sound*)Linked[i]->Data;
-        ss->Pause();
+	for (int i=0;i<Linked.size();++i) {
+        SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(Linked[i])->Data;
+        ss->TheSound.Pause();
+        if (ss->Belong)
+            ss->TheSound.StopEncode();
     }
 }
 
 void ControllerStatus::Stop() {
-    for (int i=0;i<Linked.size();++i) {
-        Sound *ss=(Sound*)Linked[i]->Data;
-        ss->Stop();
+	for (int i=0;i<Linked.size();++i) {
+        SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(Linked[i])->Data;
+        ss->TheSound.Stop();
+        if (!ss->Belong)
+            ss->TheSound.Unload();
+        else
+            ss->TheSound.StopEncode();
     }
 }

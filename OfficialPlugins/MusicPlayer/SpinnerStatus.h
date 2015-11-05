@@ -23,20 +23,24 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #define SPINNERSTATUS_H
 
 #include <QVector>
-#include "../../Tesseract/Sound.h"
-#include "../../Tesseract/Block.h"
+#include "../../Tesseract/World.h"
+#include "SpeakerStatus.h"
 
 class SpinnerStatus {
+private:
+    World *TheWorld;
+    Coordinate Position;
 public:
-    QVector<Bnode*>Linked;
+    SpinnerStatus(World*,const Coordinate&);
+    QVector<int>Linked;
     double Speed,Theta;
     bool Spinning;
-    SpinnerStatus();
-    bool AddLink(Bnode&);
-    bool RemoveLink(Bnode&);
-    bool Start();
-    bool Stop();
-    bool Accelerate();
+    void AddLink(int);
+    void RemoveLink(int);
+    void Start();
+    void Stop();
+    void Accelerate();
+    void Delta();
 };
 
 #endif // SPINNERSTATUS_H

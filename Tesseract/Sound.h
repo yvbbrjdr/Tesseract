@@ -36,7 +36,10 @@ class Sound : public QObject {
 private:
     DWORD handle;
     static void CALLBACK EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD length,void *user);
-    static BOOL CALLBACK RecordRecv(HRECORD handle,const void *buffer,DWORD length,void *user);
+    static DWORD CALLBACK SendBuf(void *buffer,DWORD length,void *user);
+    static QWORD CALLBACK ReturnZero(void *user);
+    static void CALLBACK DoNothing(void *user);
+    static BOOL CALLBACK ReturnFalse(QWORD offset, void *user);
 
 public:
     static void Init();
@@ -44,7 +47,9 @@ public:
     Sound();
     ~Sound();
     void LoadFile(const QString &Filename);
-    void LoadRam(void *buffer,DWORD length);
+    void CreateEmptyStream();
+    void StreamPushData(const void *buffer, DWORD length, bool tobuf);
+    void ClearBuf();
     void Unload();
     void Pause();
     void Play();
@@ -57,10 +62,10 @@ public:
     QVector<float> GetFFTData();
     int Status;
     bool Encoding;
+    QByteArray buf;
 
 signals:
     void encodeSignal(HENCODE handle,DWORD channel,const void *buffer,DWORD length);
-    void recordSignal(HRECORD handle,const void *buffer,DWORD length);
 };
 
 #endif // SOUND

@@ -25,6 +25,9 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 TesseractWidget::TesseractWidget(Socket *_TheSocket,int PlayerNum,QString PlayerName,QGLWidget *parent) : QGLWidget(parent), ui(new Ui::TesseractWidget) {
     ui->setupUi(this);
     TheSocket=_TheSocket;
+    QThread *tt=new QThread(TheSocket);
+    TheSocket->moveToThread(tt);
+    tt->start();
     connect(TheSocket,SIGNAL(readVariantMap(int,QString,quint16,const QVariantMap&)),this,SLOT(recvVariantMap(int,QString,quint16,const QVariantMap&)));
     connect(TheSocket,SIGNAL(sockDisconnect(int,QString,quint16)),this,SLOT(sockDisconnect(int,QString,quint16)));
     memset(KeyStatus,0,sizeof(KeyStatus));
@@ -48,7 +51,7 @@ TesseractWidget::TesseractWidget(Socket *_TheSocket,int PlayerNum,QString Player
     GLTimer=new QTimer;
     GLTimer->start(16);
     connect(GLTimer,SIGNAL(timeout()),this,SLOT(DrawScene()));
-    TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),"",1));
+    TheWorld->RegisterBlock(Block("Stone",Coordinate(.2,.2,.2),""));
     currentblocktype="Stone";
     QVariantMap qvm;
     qvm.insert("type","getbasic");
