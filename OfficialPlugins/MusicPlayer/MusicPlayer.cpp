@@ -181,12 +181,15 @@ void MusicPlayer::blockDestroyEvent(QMap<int,Bnode>::iterator TheBlock) {
 }
 
 void MusicPlayer::recvEncode(int Number,const void *buffer,DWORD length) {
-    QVariantMap qvm;
-    qvm.insert("type","mdata");
-    QByteArray qba((const char*)buffer,length);
-    qvm.insert("data",qba.toBase64());
-    qvm.insert("num",Number);
-    emit TheSocket->sendVariantMap(qvm,-1);
+    SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(Number)->Data;
+    if (ss->TheSound.Encoding) {
+        QVariantMap qvm;
+        qvm.insert("type","mdata");
+        QByteArray qba((const char*)buffer,length);
+        qvm.insert("data",qba.toBase64());
+        qvm.insert("num",Number);
+        emit TheSocket->sendVariantMap(qvm,-1);
+    }
 }
 
 void MusicPlayer::serverBlockCreateEvent(QMap<int,Bnode>::iterator TheBlock) {
