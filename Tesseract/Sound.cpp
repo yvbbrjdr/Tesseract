@@ -79,7 +79,8 @@ void Sound::LoadFile(const QString &Filename) {
 }
 
 void Sound::Unload() {
-    BASS_ChannelStop(handle);
+    StopEncode();
+    Stop();
     BASS_StreamFree(handle);
     handle=0;
     Status=UNLOAD;
