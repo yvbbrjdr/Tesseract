@@ -351,12 +351,35 @@ void MusicPlayer::delta() {
     }
 }
 
-void MusicPlayer::drawBlockEvent(QMap<int,Bnode>::iterator TheBlock,bool&) {
+void MusicPlayer::drawBlockEvent(QMap<int,Bnode>::iterator TheBlock,bool &Cancel) {
     if (TheBlock->Type=="FFT") {
         FFTStatus *fs=(FFTStatus*)TheBlock->Data;
-        QVector<float>fftdata=fs->GetData();
+        QVector<float>fftdata=fs->GetData(),data;
         if (fftdata.size()!=0) {
-
+            Cancel=1;
+            GLfloat c[4]={.1,.1,.8,1};
+            glMaterialfv(GL_FRONT_AND_BACK,GL_AMBIENT_AND_DIFFUSE,c);
+            Coordinate &h=TheBlock->HalfSize,&p=TheBlock->Position;
+            float sum=0;
+            for (int i=0;i<512;++i) {
+                sum+=fftdata[i];
+                if ((i+1)%32==0) {
+                    data.push_back(sum/32);
+                    sum=0;
+                }
+            }
+            Coordinate TopLeft=Coordinate(p.x+h.x,p.y+h.y,p.z+h.z),DownRight=Coordinate(p.x+h.x,p.y-h.y,p.z-h.z);
+            double height=TopLeft.y-DownRight.y,width=TopLeft.x-DownRight.x+TopLeft.z-DownRight.z;
+            if (width<0)
+                width=-width;
+            for (int i=0;i<16;++i) {
+                glBegin(GL_POLYGON);
+                    glVertex3f(TopLeft.x,DownRight.y,TopLeft.z-width*(16-i)/18);
+                    glVertex3f(TopLeft.x,DownRight.y,TopLeft.z-width*(17-i)/18);
+                    glVertex3f(TopLeft.x,DownRight.y+data[i]*height,TopLeft.z-width*(17-i)/18);
+                    glVertex3f(TopLeft.x,DownRight.y+data[i]*height,TopLeft.z-width*(16-i)/18);
+                glEnd();
+            }
         }
     }
 }

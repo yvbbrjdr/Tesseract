@@ -33,6 +33,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "SpinnerStatus.h"
 #include "FFTStatus.h"
 #include <QByteArray>
+#include <QtOpenGL/QtOpenGL>
 
 class MusicPlayer:public QObject,public Plugin {
     Q_OBJECT
