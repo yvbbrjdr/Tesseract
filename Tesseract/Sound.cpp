@@ -94,6 +94,7 @@ void Sound::Pause() {
 
 void Sound::Play() {
     if (Status!=UNLOAD) {
+        BASS_StreamPutFileData(handle,buf.data(),buf.length());
         BASS_ChannelPlay(handle,FALSE);
         Status=PLAY;
     }
@@ -117,7 +118,7 @@ void Sound::Move(Coordinate Position) {
 
 void Sound::StartEncode() {
     if ((Status!=UNLOAD)&&(!Encoding)) {
-        BASS_Encode_Start(handle,"lame --alt-preset cbr 128 - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
+        BASS_Encode_Start(handle,"lame -f - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
         Encoding=1;
     }
 }
@@ -146,12 +147,15 @@ void Sound::CreateEmptyStream() {
         Unload();
     }
     BASS_FILEPROCS bfp={Sound::DoNothing,Sound::ReturnZero,Sound::SendBuf,Sound::ReturnFalse};
-    handle=BASS_StreamCreateFileUser(STREAMFILE_BUFFER,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_STREAM_BLOCK,&bfp,this);
+    handle=BASS_StreamCreateFileUser(STREAMFILE_BUFFERPUSH,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_STREAM_BLOCK,&bfp,this);
     Status=STOP;
 }
 
-void Sound::StreamPushData(const void *buffer,DWORD length) {
-    buf.append((const char*)buffer,length);
+void Sound::StreamPushData(const void *buffer,DWORD length,bool tobuf) {
+    if (tobuf)
+        buf.append((const char*)buffer,length);
+    else
+        BASS_StreamPutFileData(handle,buffer,length);
 }
 
 void Sound::ClearBuf() {
