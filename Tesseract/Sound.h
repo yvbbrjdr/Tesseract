@@ -48,7 +48,7 @@ public:
     ~Sound();
     void LoadFile(const QString &Filename);
     void CreateEmptyStream();
-    void StreamPushData(const void *buffer,DWORD length);
+    void StreamPushData(const void *buffer, DWORD length, bool tobuf);
     void ClearBuf();
     void Unload();
     void Pause();
