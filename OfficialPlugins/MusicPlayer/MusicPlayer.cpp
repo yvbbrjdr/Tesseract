@@ -230,9 +230,14 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
             SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(num)->Data;
             if (!ss->Belong) {
                 QByteArray buffer=QByteArray::fromBase64(qvm["data"].toByteArray());
-                if (ss->TheSound.Status==UNLOAD)
+                if (ss->TheSound.Status==UNLOAD) {
+                    ss->TheSound.ClearBuf();
+                    ss->TheSound.StreamPushData(buffer.data(),buffer.size());
                     ss->TheSound.CreateEmptyStream();
-                ss->TheSound.StreamPushData(buffer.data(),buffer.size());
+                    ss->TheSound.Move(TheWorld->Blocks.find(num)->Position);
+                    ss->TheSound.Play();
+                } else
+                    ss->TheSound.StreamPushData(buffer.data(),buffer.size());
             }
         }
     } else if (qvm["type"].toString()=="controller") {
@@ -244,6 +249,7 @@ void MusicPlayer::clientRecvVariantMap(const int,const QString&,const quint16,co
                 for (int i=0;i<cs->Linked.size();++i) {
                     SpeakerStatus *ss=(SpeakerStatus*)TheWorld->Blocks.find(cs->Linked[i])->Data;
                     ss->Belong=0;
+                    ss->TheSound.Unload();
                 }
             } else if (qvm["oper"].toString()=="f") {
                 cs->Pause();
