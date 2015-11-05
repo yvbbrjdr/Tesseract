@@ -26,17 +26,22 @@ void Sound::EncodeRecv(HENCODE handle,DWORD channel,const void *buffer,DWORD len
     emit sp->encodeSignal(handle,channel,buffer,length);
 }
 
-void Sound::c(void*) {}
+DWORD Sound::SendBuf(void *buffer,DWORD length,void *user) {
+    Sound *s=(Sound*)user;
+    if ((int)length>s->buf.size())
+        length=s->buf.size();
+    memcpy(buffer,s->buf.data(),length);
+    s->buf=s->buf.right(s->buf.size()-length);
+    return length;
+}
 
-QWORD Sound::l(void*) {
+QWORD Sound::ReturnZero(void*) {
     return 0;
 }
 
-DWORD Sound::r(void*,DWORD,void*) {
-    return 0;
-}
+void Sound::DoNothing(void*) {}
 
-BOOL Sound::s(QWORD,void*) {
+BOOL Sound::ReturnFalse(QWORD, void*) {
     return FALSE;
 }
 
@@ -112,7 +117,7 @@ void Sound::Move(Coordinate Position) {
 
 void Sound::StartEncode() {
     if ((Status!=UNLOAD)&&(!Encoding)) {
-        BASS_Encode_Start(handle,"lame -f - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
+        BASS_Encode_Start(handle,"lame --alt-preset cbr 128 - -",BASS_ENCODE_AUTOFREE,Sound::EncodeRecv,this);
         Encoding=1;
     }
 }
@@ -140,16 +145,17 @@ void Sound::CreateEmptyStream() {
     if (Status!=UNLOAD) {
         Unload();
     }
-    BASS_FILEPROCS bfp={Sound::c,Sound::l,Sound::r,Sound::s};
-    handle=BASS_StreamCreateFileUser(STREAMFILE_BUFFERPUSH,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D,&bfp,NULL);
+    BASS_FILEPROCS bfp={Sound::DoNothing,Sound::ReturnZero,Sound::SendBuf,Sound::ReturnFalse};
+    handle=BASS_StreamCreateFileUser(STREAMFILE_BUFFER,BASS_SAMPLE_MONO|BASS_SAMPLE_SOFTWARE|BASS_SAMPLE_3D|BASS_STREAM_BLOCK,&bfp,this);
     Status=STOP;
-    Play();
 }
 
-void Sound::StreamPushData(void *buffer,DWORD length) {
-    if (Status!=UNLOAD) {
-        BASS_StreamPutFileData(handle,buffer,length);
-    }
+void Sound::StreamPushData(const void *buffer,DWORD length) {
+    buf.append((const char*)buffer,length);
+}
+
+void Sound::ClearBuf() {
+    buf.clear();
 }
 
 QVector<float> Sound::GetFFTData() {

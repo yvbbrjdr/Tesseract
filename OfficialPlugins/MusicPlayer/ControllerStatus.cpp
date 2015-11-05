@@ -41,10 +41,6 @@ void ControllerStatus::Play() {
             ss->TheSound.Move(TheWorld->Blocks.find(Linked[i])->Position);
             ss->TheSound.Play();
             ss->TheSound.StartEncode();
-        } else {
-            ss->TheSound.CreateEmptyStream();
-            ss->TheSound.Move(TheWorld->Blocks.find(Linked[i])->Position);
-            ss->TheSound.Play();
         }
     }
 }
