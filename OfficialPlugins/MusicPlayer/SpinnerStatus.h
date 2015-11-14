@@ -33,7 +33,7 @@ private:
 public:
     SpinnerStatus(World*,const Coordinate&);
     QVector<int>Linked;
-    double Speed,Theta;
+    double Speed;
     bool Spinning;
     void AddLink(int);
     void RemoveLink(int);

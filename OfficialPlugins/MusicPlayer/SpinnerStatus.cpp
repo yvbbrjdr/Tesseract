@@ -23,7 +23,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 
 SpinnerStatus::SpinnerStatus(World *_TheWorld,const Coordinate &_Position) {
     Spinning=0;
-    Theta=0;
     TheWorld=_TheWorld;
     Position=_Position;
 }
@@ -57,10 +56,9 @@ void SpinnerStatus::Delta() {
             SpeakerStatus *spst=(SpeakerStatus*)b.Data;
             Coordinate r=b.Position-Position;
             r.y=0;
-            double Radius=r.Length();
+            double Radius=r.Length(),Theta=atan2(r.z,r.x)+Speed;
             b.Position=Coordinate(Position.x+Radius*cos(Theta),b.Position.y,Position.z+Radius*sin(Theta));
             spst->TheSound.Move(b.Position);
         }
-        Theta+=Speed;
     }
 }
