@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "MusicPlayer.h"
 
 MusicPlayer::MusicPlayer() {
-    Name="MusicPlayer1.1";
+    Name="MusicPlayer-v1.1-v0.6";
     Essential=1;
 }
 

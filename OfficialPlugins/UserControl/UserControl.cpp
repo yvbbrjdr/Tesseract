@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "UserControl.h"
 
 UserControl::UserControl() {
-    Name="UserControl1.0";
+    Name="UserControl-v1.0-v0.6";
     Essential=1;
 }
 

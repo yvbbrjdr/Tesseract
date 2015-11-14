@@ -22,6 +22,6 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "PluginTemplate.h"
 
 PluginTemplate::PluginTemplate() {
-    Name="PluginTemplate1.0";
+    Name="PluginTemplate-v1.0-v0.6";
     Essential=0;
 }

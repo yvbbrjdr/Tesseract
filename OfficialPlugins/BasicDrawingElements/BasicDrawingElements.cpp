@@ -22,7 +22,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 #include "BasicDrawingElements.h"
 
 BasicDrawingElements::BasicDrawingElements() {
-    Name="BasicDrawingElements1.0";
+    Name="BasicDrawingElements-v1.0-v0.6";
 }
 
 void BasicDrawingElements::clientLoad(World *w,Socket*) {
